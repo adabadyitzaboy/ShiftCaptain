@@ -1,0 +1,64 @@
+*,*:before,*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#shiftHolder {
+	margin-top: 20px;
+	table {
+		border-collapse: collapse;
+		border-spacing: 0;
+		thead {
+			border-bottom: 1px solid #000;
+		}
+		tr td:first-child{
+			background-color: #fff;	
+		}
+		
+		td {
+			padding: 0;
+		}
+		.AM {
+			background-color: #fff;
+			color: #000;
+		}
+		.PM {
+			background-color: #000;
+			color: #fff;
+		}
+		.closed {
+			background-color: #000;
+		}
+		.open {
+			background-color: #fff;
+		}
+		.taken {
+			background-color: green;
+		}
+		.temp {
+			background-color: yellow;
+		}
+		tr.row-border, tr.row-border td{
+			background-color: #000;
+			height: 2px;
+			max-height: 2px;
+		}
+		.open, .closed, .taken {
+			border: 1px solid #000;
+		}
+	}
+}
+#Employees {
+	.draggable {
+		background-color: #fff;
+	}
+	.over-max-hours {
+		background-color: #cc0000;
+	}
+	.under-min-hours {
+		background-color: #cc0000;
+	}
+	[class*="column"] + [class*="column"]:last-child {
+		float: left;
+	}
+}

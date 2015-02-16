@@ -1,0 +1,43 @@
+﻿@model ShiftCaptain.Models.Version
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Version</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.IsActive)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IsActive)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.IsReadyForApproval)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IsReadyForApproval)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.IsApproved)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IsApproved)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

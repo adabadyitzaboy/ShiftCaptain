@@ -1,0 +1,78 @@
+﻿@model ShiftCaptain.Models.BuildingView
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>BuildingView</legend>
+    
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhoneNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhoneNumber)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ManagerPhone)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ManagerPhone)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Line1)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Line1)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Line2)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Line2)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.City)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.City)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.State)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.State)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ZipCode)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ZipCode)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Country)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Country)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.BuildingId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

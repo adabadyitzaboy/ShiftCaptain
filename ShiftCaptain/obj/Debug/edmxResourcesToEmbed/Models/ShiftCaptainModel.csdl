@@ -1,0 +1,511 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ShiftCaptainModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="ShiftCaptainEntities" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="Addresses" EntityType="ShiftCaptainModel.Address" />
+    <EntitySet Name="Buildings" EntityType="ShiftCaptainModel.Building" />
+    <EntitySet Name="Preferences" EntityType="ShiftCaptainModel.Preference" />
+    <EntitySet Name="Rooms" EntityType="ShiftCaptainModel.Room" />
+    <EntitySet Name="RoomHours" EntityType="ShiftCaptainModel.RoomHour" />
+    <EntitySet Name="RoomInstances" EntityType="ShiftCaptainModel.RoomInstance" />
+    <EntitySet Name="Shifts" EntityType="ShiftCaptainModel.Shift" />
+    <EntitySet Name="ShiftPreferences" EntityType="ShiftCaptainModel.ShiftPreference" />
+    <EntitySet Name="sysdiagrams" EntityType="ShiftCaptainModel.sysdiagram" />
+    <EntitySet Name="Users" EntityType="ShiftCaptainModel.User" />
+    <EntitySet Name="UserInstances" EntityType="ShiftCaptainModel.UserInstance" />
+    <EntitySet Name="Versions" EntityType="ShiftCaptainModel.Version" />
+    <EntitySet Name="BuildingViews" EntityType="ShiftCaptainModel.BuildingView" />
+    <EntitySet Name="RoomViews" EntityType="ShiftCaptainModel.RoomView" />
+    <EntitySet Name="UserViews" EntityType="ShiftCaptainModel.UserView" />
+    <AssociationSet Name="FK__Building__Addres__7C5A637C" Association="ShiftCaptainModel.FK__Building__Addres__7C5A637C">
+      <End Role="Address" EntitySet="Addresses" />
+      <End Role="Building" EntitySet="Buildings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__User__AddressId__08C03A61" Association="ShiftCaptainModel.FK__User__AddressId__08C03A61">
+      <End Role="Address" EntitySet="Addresses" />
+      <End Role="User" EntitySet="Users" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Room__BuildingId__7F36D027" Association="ShiftCaptainModel.FK__Room__BuildingId__7F36D027">
+      <End Role="Building" EntitySet="Buildings" />
+      <End Role="Room" EntitySet="Rooms" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftPref__Prefe__18027DF1" Association="ShiftCaptainModel.FK__ShiftPref__Prefe__18027DF1">
+      <End Role="Preference" EntitySet="Preferences" />
+      <End Role="ShiftPreference" EntitySet="ShiftPreferences" />
+    </AssociationSet>
+    <AssociationSet Name="FK__RoomInsta__RoomI__02133CD2" Association="ShiftCaptainModel.FK__RoomInsta__RoomI__02133CD2">
+      <End Role="Room" EntitySet="Rooms" />
+      <End Role="RoomInstance" EntitySet="RoomInstances" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Shift__RoomId__10615C29" Association="ShiftCaptainModel.FK__Shift__RoomId__10615C29">
+      <End Role="Room" EntitySet="Rooms" />
+      <End Role="Shift" EntitySet="Shifts" />
+    </AssociationSet>
+    <AssociationSet Name="FK__RoomHours__RoomI__05E3CDB6" Association="ShiftCaptainModel.FK__RoomHours__RoomI__05E3CDB6">
+      <End Role="RoomInstance" EntitySet="RoomInstances" />
+      <End Role="RoomHours" EntitySet="RoomHours" />
+    </AssociationSet>
+    <AssociationSet Name="FK__RoomInsta__Versi__0307610B" Association="ShiftCaptainModel.FK__RoomInsta__Versi__0307610B">
+      <End Role="Version" EntitySet="Versions" />
+      <End Role="RoomInstance" EntitySet="RoomInstances" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Shift__UserId__0F6D37F0" Association="ShiftCaptainModel.FK__Shift__UserId__0F6D37F0">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Shift" EntitySet="Shifts" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Shift__VersionId__11558062" Association="ShiftCaptainModel.FK__Shift__VersionId__11558062">
+      <End Role="Version" EntitySet="Versions" />
+      <End Role="Shift" EntitySet="Shifts" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftPref__UserI__161A357F" Association="ShiftCaptainModel.FK__ShiftPref__UserI__161A357F">
+      <End Role="User" EntitySet="Users" />
+      <End Role="ShiftPreference" EntitySet="ShiftPreferences" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShiftPref__Versi__170E59B8" Association="ShiftCaptainModel.FK__ShiftPref__Versi__170E59B8">
+      <End Role="Version" EntitySet="Versions" />
+      <End Role="ShiftPreference" EntitySet="ShiftPreferences" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserInsta__UserI__0B9CA70C" Association="ShiftCaptainModel.FK__UserInsta__UserI__0B9CA70C">
+      <End Role="User" EntitySet="Users" />
+      <End Role="UserInstance" EntitySet="UserInstances" />
+    </AssociationSet>
+    <AssociationSet Name="FK__UserInsta__Versi__0C90CB45" Association="ShiftCaptainModel.FK__UserInsta__Versi__0C90CB45">
+      <End Role="Version" EntitySet="Versions" />
+      <End Role="UserInstance" EntitySet="UserInstances" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Address">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Line1" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="Line2" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="City" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="State" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="9" Unicode="true" FixedLength="false" />
+    <Property Name="Country" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Buildings" Relationship="ShiftCaptainModel.FK__Building__Addres__7C5A637C" FromRole="Address" ToRole="Building" />
+    <NavigationProperty Name="Users" Relationship="ShiftCaptainModel.FK__User__AddressId__08C03A61" FromRole="Address" ToRole="User" />
+  </EntityType>
+  <EntityType Name="Building">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+    <Property Name="AddressId" Type="Int32" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="ManagerPhone" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Address" Relationship="ShiftCaptainModel.FK__Building__Addres__7C5A637C" FromRole="Building" ToRole="Address" />
+    <NavigationProperty Name="Rooms" Relationship="ShiftCaptainModel.FK__Room__BuildingId__7F36D027" FromRole="Building" ToRole="Room" />
+  </EntityType>
+  <EntityType Name="Preference">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="Description" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="Color" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="CanWork" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="ShiftPreferences" Relationship="ShiftCaptainModel.FK__ShiftPref__Prefe__18027DF1" FromRole="Preference" ToRole="ShiftPreference" />
+  </EntityType>
+  <EntityType Name="Room">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+    <Property Name="RoomNumber" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="BuildingId" Type="Int32" Nullable="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <NavigationProperty Name="Building" Relationship="ShiftCaptainModel.FK__Room__BuildingId__7F36D027" FromRole="Room" ToRole="Building" />
+    <NavigationProperty Name="RoomInstances" Relationship="ShiftCaptainModel.FK__RoomInsta__RoomI__02133CD2" FromRole="Room" ToRole="RoomInstance" />
+    <NavigationProperty Name="Shifts" Relationship="ShiftCaptainModel.FK__Shift__RoomId__10615C29" FromRole="Room" ToRole="Shift" />
+  </EntityType>
+  <EntityType Name="RoomHour">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="RoomInstanceId" Type="Int32" Nullable="false" />
+    <Property Name="Day" Type="Int32" Nullable="false" />
+    <Property Name="StartTime" Type="Time" Nullable="false" Precision="0" />
+    <Property Name="Duration" Type="Time" Nullable="false" Precision="0" />
+    <NavigationProperty Name="RoomInstance" Relationship="ShiftCaptainModel.FK__RoomHours__RoomI__05E3CDB6" FromRole="RoomHours" ToRole="RoomInstance" />
+  </EntityType>
+  <EntityType Name="RoomInstance">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="RoomId" Type="Int32" Nullable="false" />
+    <Property Name="VersionId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Room" Relationship="ShiftCaptainModel.FK__RoomInsta__RoomI__02133CD2" FromRole="RoomInstance" ToRole="Room" />
+    <NavigationProperty Name="RoomHours" Relationship="ShiftCaptainModel.FK__RoomHours__RoomI__05E3CDB6" FromRole="RoomInstance" ToRole="RoomHours" />
+    <NavigationProperty Name="Version" Relationship="ShiftCaptainModel.FK__RoomInsta__Versi__0307610B" FromRole="RoomInstance" ToRole="Version" />
+  </EntityType>
+  <EntityType Name="Shift">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="RoomId" Type="Int32" Nullable="false" />
+    <Property Name="VersionId" Type="Int32" Nullable="false" />
+    <Property Name="Day" Type="Int32" Nullable="false" />
+    <Property Name="StartTime" Type="Time" Nullable="false" Precision="0" />
+    <Property Name="Duration" Type="Time" Nullable="false" Precision="0" />
+    <NavigationProperty Name="Room" Relationship="ShiftCaptainModel.FK__Shift__RoomId__10615C29" FromRole="Shift" ToRole="Room" />
+    <NavigationProperty Name="User" Relationship="ShiftCaptainModel.FK__Shift__UserId__0F6D37F0" FromRole="Shift" ToRole="User" />
+    <NavigationProperty Name="Version" Relationship="ShiftCaptainModel.FK__Shift__VersionId__11558062" FromRole="Shift" ToRole="Version" />
+  </EntityType>
+  <EntityType Name="ShiftPreference">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="VersionId" Type="Int32" Nullable="false" />
+    <Property Name="PreferenceId" Type="Int32" Nullable="false" />
+    <Property Name="Day" Type="Int32" Nullable="false" />
+    <Property Name="StartTime" Type="Time" Nullable="false" Precision="0" />
+    <Property Name="Duration" Type="Time" Nullable="false" Precision="0" />
+    <NavigationProperty Name="Preference" Relationship="ShiftCaptainModel.FK__ShiftPref__Prefe__18027DF1" FromRole="ShiftPreference" ToRole="Preference" />
+    <NavigationProperty Name="User" Relationship="ShiftCaptainModel.FK__ShiftPref__UserI__161A357F" FromRole="ShiftPreference" ToRole="User" />
+    <NavigationProperty Name="Version" Relationship="ShiftCaptainModel.FK__ShiftPref__Versi__170E59B8" FromRole="ShiftPreference" ToRole="Version" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+    <Property Name="Pass" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="FName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="MName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="LName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="NickName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="AddressId" Type="Int32" />
+    <Property Name="EmployeeId" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="IsShiftManager" Type="Boolean" Nullable="false" />
+    <Property Name="IsManager" Type="Boolean" Nullable="false" />
+    <Property Name="Locked" Type="Boolean" Nullable="false" />
+    <Property Name="LastLogin" Type="DateTime" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="IsMale" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="Address" Relationship="ShiftCaptainModel.FK__User__AddressId__08C03A61" FromRole="User" ToRole="Address" />
+    <NavigationProperty Name="Shifts" Relationship="ShiftCaptainModel.FK__Shift__UserId__0F6D37F0" FromRole="User" ToRole="Shift" />
+    <NavigationProperty Name="ShiftPreferences" Relationship="ShiftCaptainModel.FK__ShiftPref__UserI__161A357F" FromRole="User" ToRole="ShiftPreference" />
+    <NavigationProperty Name="UserInstances" Relationship="ShiftCaptainModel.FK__UserInsta__UserI__0B9CA70C" FromRole="User" ToRole="UserInstance" />
+  </EntityType>
+  <EntityType Name="UserInstance">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="VersionId" Type="Int32" Nullable="false" />
+    <Property Name="MinHours" Type="Time" Nullable="false" Precision="0" />
+    <Property Name="MaxHours" Type="Time" Nullable="false" Precision="0" />
+    <Property Name="CurrentHours" Type="Decimal" Nullable="false" Precision="9" Scale="1" />
+    <NavigationProperty Name="User" Relationship="ShiftCaptainModel.FK__UserInsta__UserI__0B9CA70C" FromRole="UserInstance" ToRole="User" />
+    <NavigationProperty Name="Version" Relationship="ShiftCaptainModel.FK__UserInsta__Versi__0C90CB45" FromRole="UserInstance" ToRole="Version" />
+  </EntityType>
+  <EntityType Name="Version">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="IsReadyForApproval" Type="Boolean" Nullable="false" />
+    <Property Name="IsApproved" Type="Boolean" Nullable="false" />
+    <NavigationProperty Name="RoomInstances" Relationship="ShiftCaptainModel.FK__RoomInsta__Versi__0307610B" FromRole="Version" ToRole="RoomInstance" />
+    <NavigationProperty Name="Shifts" Relationship="ShiftCaptainModel.FK__Shift__VersionId__11558062" FromRole="Version" ToRole="Shift" />
+    <NavigationProperty Name="ShiftPreferences" Relationship="ShiftCaptainModel.FK__ShiftPref__Versi__170E59B8" FromRole="Version" ToRole="ShiftPreference" />
+    <NavigationProperty Name="UserInstances" Relationship="ShiftCaptainModel.FK__UserInsta__Versi__0C90CB45" FromRole="Version" ToRole="UserInstance" />
+  </EntityType>
+  <EntityType Name="BuildingView">
+    <Key>
+      <PropertyRef Name="BuildingId" />
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="BuildingId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="ManagerPhone" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="AddressId" Type="Int32" />
+    <Property Name="Line1" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="Line2" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="City" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="State" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="ZipCode" Type="String" MaxLength="9" Unicode="true" FixedLength="false" />
+    <Property Name="Country" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="RoomView">
+    <Key>
+      <PropertyRef Name="BuildingId" />
+      <PropertyRef Name="BuildingName" />
+      <PropertyRef Name="RoomId" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="RoomNumber" />
+    </Key>
+    <Property Name="BuildingId" Type="Int32" Nullable="false" />
+    <Property Name="BuildingName" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+    <Property Name="RoomId" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+    <Property Name="RoomNumber" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="RoomInstanceId" Type="Int32" />
+    <Property Name="VersionId" Type="Int32" />
+    <Property Name="SundayId" Type="Int32" />
+    <Property Name="SundayInstanceId" Type="Int32" />
+    <Property Name="SundayStartTime" Type="Time" Precision="0" />
+    <Property Name="SundayDuration" Type="Time" Precision="0" />
+    <Property Name="MondayId" Type="Int32" />
+    <Property Name="MondayInstanceId" Type="Int32" />
+    <Property Name="MondayStartTime" Type="Time" Precision="0" />
+    <Property Name="MondayDuration" Type="Time" Precision="0" />
+    <Property Name="TuesdayId" Type="Int32" />
+    <Property Name="TuesdayInstanceId" Type="Int32" />
+    <Property Name="TuesdayStartTime" Type="Time" Precision="0" />
+    <Property Name="TuesdayDuration" Type="Time" Precision="0" />
+    <Property Name="WednesdayId" Type="Int32" />
+    <Property Name="WednesdayInstanceId" Type="Int32" />
+    <Property Name="WednesdayStartTime" Type="Time" Precision="0" />
+    <Property Name="WednesdayDuration" Type="Time" Precision="0" />
+    <Property Name="ThursdayId" Type="Int32" />
+    <Property Name="ThursdayInstanceId" Type="Int32" />
+    <Property Name="ThursdayStartTime" Type="Time" Precision="0" />
+    <Property Name="ThursdayDuration" Type="Time" Precision="0" />
+    <Property Name="FridayId" Type="Int32" />
+    <Property Name="FridayInstanceId" Type="Int32" />
+    <Property Name="FridayStartTime" Type="Time" Precision="0" />
+    <Property Name="FridayDuration" Type="Time" Precision="0" />
+    <Property Name="SaturdayId" Type="Int32" />
+    <Property Name="SaturdayInstanceId" Type="Int32" />
+    <Property Name="SaturdayStartTime" Type="Time" Precision="0" />
+    <Property Name="SaturdayDuration" Type="Time" Precision="0" />
+  </EntityType>
+  <EntityType Name="UserView">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="EmailAddress" />
+      <PropertyRef Name="FName" />
+      <PropertyRef Name="LName" />
+      <PropertyRef Name="NickName" />
+      <PropertyRef Name="EmployeeId" />
+      <PropertyRef Name="IsShiftManager" />
+      <PropertyRef Name="IsManager" />
+      <PropertyRef Name="Locked" />
+      <PropertyRef Name="IsActive" />
+      <PropertyRef Name="IsMale" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="EmailAddress" Type="String" Nullable="false" MaxLength="500" Unicode="true" FixedLength="false" />
+    <Property Name="Pass" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="FName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="MName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="LName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="NickName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="EmployeeId" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="PhoneNumber" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+    <Property Name="IsShiftManager" Type="Boolean" Nullable="false" />
+    <Property Name="IsManager" Type="Boolean" Nullable="false" />
+    <Property Name="Locked" Type="Boolean" Nullable="false" />
+    <Property Name="LastLogin" Type="DateTime" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" Nullable="false" />
+    <Property Name="IsMale" Type="Boolean" Nullable="false" />
+    <Property Name="MinHours" Type="Time" Precision="0" />
+    <Property Name="MaxHours" Type="Time" Precision="0" />
+    <Property Name="CurrentHours" Type="Decimal" Precision="9" Scale="1" />
+    <Property Name="VersionId" Type="Int32" />
+    <Property Name="AddressId" Type="Int32" />
+    <Property Name="Line1" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="Line2" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="City" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="State" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+    <Property Name="ZipCode" Type="String" MaxLength="9" Unicode="true" FixedLength="false" />
+    <Property Name="Country" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
+  </EntityType>
+  <Association Name="FK__Building__Addres__7C5A637C">
+    <End Role="Address" Type="ShiftCaptainModel.Address" Multiplicity="0..1" />
+    <End Role="Building" Type="ShiftCaptainModel.Building" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Address">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Building">
+        <PropertyRef Name="AddressId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__User__AddressId__08C03A61">
+    <End Role="Address" Type="ShiftCaptainModel.Address" Multiplicity="0..1" />
+    <End Role="User" Type="ShiftCaptainModel.User" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Address">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="User">
+        <PropertyRef Name="AddressId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Room__BuildingId__7F36D027">
+    <End Role="Building" Type="ShiftCaptainModel.Building" Multiplicity="1" />
+    <End Role="Room" Type="ShiftCaptainModel.Room" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Building">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Room">
+        <PropertyRef Name="BuildingId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftPref__Prefe__18027DF1">
+    <End Role="Preference" Type="ShiftCaptainModel.Preference" Multiplicity="1" />
+    <End Role="ShiftPreference" Type="ShiftCaptainModel.ShiftPreference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Preference">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftPreference">
+        <PropertyRef Name="PreferenceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__RoomInsta__RoomI__02133CD2">
+    <End Role="Room" Type="ShiftCaptainModel.Room" Multiplicity="1" />
+    <End Role="RoomInstance" Type="ShiftCaptainModel.RoomInstance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Room">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RoomInstance">
+        <PropertyRef Name="RoomId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Shift__RoomId__10615C29">
+    <End Role="Room" Type="ShiftCaptainModel.Room" Multiplicity="1" />
+    <End Role="Shift" Type="ShiftCaptainModel.Shift" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Room">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Shift">
+        <PropertyRef Name="RoomId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__RoomHours__RoomI__05E3CDB6">
+    <End Role="RoomInstance" Type="ShiftCaptainModel.RoomInstance" Multiplicity="1" />
+    <End Role="RoomHours" Type="ShiftCaptainModel.RoomHour" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RoomInstance">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RoomHours">
+        <PropertyRef Name="RoomInstanceId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__RoomInsta__Versi__0307610B">
+    <End Role="Version" Type="ShiftCaptainModel.Version" Multiplicity="1" />
+    <End Role="RoomInstance" Type="ShiftCaptainModel.RoomInstance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Version">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RoomInstance">
+        <PropertyRef Name="VersionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Shift__UserId__0F6D37F0">
+    <End Role="User" Type="ShiftCaptainModel.User" Multiplicity="1" />
+    <End Role="Shift" Type="ShiftCaptainModel.Shift" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Shift">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Shift__VersionId__11558062">
+    <End Role="Version" Type="ShiftCaptainModel.Version" Multiplicity="1" />
+    <End Role="Shift" Type="ShiftCaptainModel.Shift" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Version">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Shift">
+        <PropertyRef Name="VersionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftPref__UserI__161A357F">
+    <End Role="User" Type="ShiftCaptainModel.User" Multiplicity="1" />
+    <End Role="ShiftPreference" Type="ShiftCaptainModel.ShiftPreference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftPreference">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShiftPref__Versi__170E59B8">
+    <End Role="Version" Type="ShiftCaptainModel.Version" Multiplicity="1" />
+    <End Role="ShiftPreference" Type="ShiftCaptainModel.ShiftPreference" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Version">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ShiftPreference">
+        <PropertyRef Name="VersionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserInsta__UserI__0B9CA70C">
+    <End Role="User" Type="ShiftCaptainModel.User" Multiplicity="1" />
+    <End Role="UserInstance" Type="ShiftCaptainModel.UserInstance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserInstance">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__UserInsta__Versi__0C90CB45">
+    <End Role="Version" Type="ShiftCaptainModel.Version" Multiplicity="1" />
+    <End Role="UserInstance" Type="ShiftCaptainModel.UserInstance" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Version">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserInstance">
+        <PropertyRef Name="VersionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

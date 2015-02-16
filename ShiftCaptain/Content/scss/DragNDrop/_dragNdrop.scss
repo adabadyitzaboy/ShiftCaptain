@@ -1,0 +1,29 @@
+.dnd-moving-div {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 200px;
+	max-width: 200px;
+	background: #fff;
+	pointer-events: none;
+	cursor: move;
+	* {
+		pointer-events: none;
+		cursor: move;
+	}
+}
+.drop-section, .draggable {
+	-moz-user-select: -moz-none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.draggable {
+	cursor: pointer;
+}
+.drop-section.dragging .taken {
+	cursor: no-drop;
+}

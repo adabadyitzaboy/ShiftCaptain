@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@Styles.Render("~/Content/stylesheets/app.css")
+@Styles.Render("~/Content/stylesheets/normalize.css")
+@Html.Hidden("versionId", (object)ViewBag.VersionId)
+<section id="Employees">
+    <div class="row">
+
+    </div>
+</section>
+<section id="Errors"><ul></ul></section>
+<section id="Shifts">
+    <div class="row">
+        <div class="small-12 large-4 columns">
+            <label for="BuildingID">Building</label>
+            @Html.DropDownList("BuildingID")
+        </div>
+        <div class="small-12 large-4 columns">
+            <label for="RoomID">Room</label>
+            @Html.DropDownList("RoomID")
+        </div>
+        <div class="small-12 large-4 columns left">
+            <label for="ShiftDuration">Shift Length</label>
+            <select id="ShiftDuration">
+                <option value="2">2 hours</option>
+                <option value="2.5">2 1/2 hours</option>
+                <option value="3">3 hours</option>
+                <option value="3.5">3 1/2 hours</option>
+                <option value="4" selected="selected">4 hours</option>
+                <option value="4.5">4 1/2 hours</option>
+                <option value="5">5 hours</option>
+                <option value="5.5">5 1/2 hours</option>
+                <option value="6">6 hours</option>
+                <option value="6.5">6 1/2 hours</option>
+            </select>
+        </div>
+    </div>
+</section>
+<section id="shiftHolder" class="drop-section">
+    <div class="row">
+        <div class="small-12 large-12 columns">
+            <table>
+            </table>
+        </div>
+    </div>
+</section>
+@Scripts.Render("~/Scripts/jquery-1.7.1.min.js")
+@Scripts.Render("~/Scripts/DragNDrop/drag-n-drop.js")
+@Scripts.Render("~/Scripts/Shift.js")
