@@ -50,13 +50,13 @@
 }
 #Employees {
 	.draggable {
-		background-color: #fff;
+		background-color: green;
 	}
 	.over-max-hours {
 		background-color: #cc0000;
 	}
 	.under-min-hours {
-		background-color: #cc0000;
+		background-color: yellow;
 	}
 	[class*="column"] + [class*="column"]:last-child {
 		float: left;

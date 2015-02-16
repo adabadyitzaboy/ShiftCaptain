@@ -1,57 +1,14 @@
-﻿var dragger = dnd.drag;
+﻿$.ajaxSetup({ global: false });
+var dragger = dnd.drag;
+var sc = ShiftCaptain;
+
 var openTD = function (s, classname, extra) {
     return "<td class='open " + (classname || "") + "' s='" + s + "' " + (extra || "") + ">&nbsp;</td>";
 }
-var validateShift = function (shiftInfo, callback, fail) {
-    var versionId = $("#versionId").val();
-    $.get("/Shift/Validate", { VersionId: versionId, ShiftId: shiftInfo.ShiftId, RoomId: shiftInfo.roomId, UserId: shiftInfo.userId, Day: shiftInfo.day, StartTime: shiftInfo.startTime, Duration: shiftInfo.duration }, function (data, success) {
-        console.log(data);
-        callback(data);
-    }, 'json').fail(fail);
-};
-var postShift = function (shiftInfo, callback, fail) {
-    var versionId = $("#versionId").val();
-    var isPost = shiftInfo.ShiftId != null;
-    $.post(isPost? "/Shift/Update":"/Shift/Create", { VersionId: versionId, ShiftId: shiftInfo.ShiftId, RoomId: shiftInfo.roomId, UserId: shiftInfo.userId, Day: shiftInfo.day, StartTime: shiftInfo.startTime, Duration: shiftInfo.duration }, function (data, success) {
-        console.log(data);
-        callback(data);
-    }, 'json').fail(fail);
-};
-var removeShift = function (shiftId, fail) {
-    $.post("/Shift/Delete/" + shiftId, function (success) {
-    }).fail(fail);
-};
-var getShifts = function (roomId, callback, fail) {
-    var versionId = $("#versionId").val();
-    $.get("/Shift/List", { VersionId: versionId, RoomId: roomId }, function (data, success) {
-        console.log(data);
-        callback(data);
-    }, 'json').fail(fail);
-};
-var getRooms = function (buildingId, callback, fail) {
-    var versionId = $("#versionId").val();
-    $.get("/Room/List", { VersionId: versionId, BuildingId: buildingId }, function (data, success) {
-        console.log(data);
-        callback(data);
-    }, 'json').fail(fail);
-};
 
-var getRoomHours = function (roomId, callback, fail) {
-    $.get("/Room/ListHours", { RoomInstanceId: roomId}, function (data, success) {
-        console.log(data);
-        callback(data);
-    }, 'json').fail(fail);
-};
-var getEmployees = function (callback, fail) {
-    var versionId = $("#versionId").val();
-    $.get("/User/List", { VersionId: versionId }, function (data, success) {
-        console.log(data);
-        callback(data);
-    }, 'json').fail(fail);
-};
 $("#BuildingID").change(function (val) {
     var buildingId = $(this).val();
-    getRooms(buildingId, function (data) {
+    sc.Room.get(buildingId, function (data) {
         $("#RoomID").empty();
         $("#RoomID").append(data);
         //$("#RoomID").trigger('change');
@@ -89,10 +46,47 @@ var createShiftString = function (shift, s) {
     var cols = shift.Duration.Hours * 2 + (shift.Duration.Minutes == 30 ? 1 : 0);
     return "<td class='taken draggable' s='" + s+ "' colSpan='" + cols + "' shiftid='" + shift.ShiftId + "' starttime='" + outputTime(shift.StartTime) + "' duration='" + outputTime(shift.Duration) + "' userid='"+ shift.UserId + "'>" + shift.NickName + "</td>";
 };
+var currentRoomHours = [];
+var dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var makeRow = function (rC, tbody, dayData, s, e, shifts, start, maxEnd) {
+    var emptyRow = true;
+    var tr = $("<tr class='" + dayName[dayData.Day] + "' day='" + dayData.Day + "'><td>" + (rC == 0 ? dayName[dayData.Day] : "&nbsp;") + "</td></tr>");
+    for (var notOpen = start; notOpen < s; notOpen += .5) {
+        tr.append("<td class='closed'>&nbsp;</td>");
+    }
+    for (var t = s; t < e; t += .5) {
+        var shift = getShiftAtTime(t, shifts);
+        if (shift) {
+            emptyRow = false;
+            tr.append(createShiftString(shift, t));
+            t += shift.Duration.Hours + (shift.Duration.Minutes / 60) - .5;
+        } else {
+            tr.append(openTD(t));
+        }
+    }
+
+    for (var notOpen = e; notOpen < maxEnd; notOpen += .5) {
+        tr.append("<td class='closed' s='" + notOpen + "'>&nbsp;</td>");
+    }
+    tbody.append(tr);
+    if (shifts.length > 0) {
+        //recursive call
+        if (rC == 0) {
+            tr.addClass('first-row');
+        }
+        makeRow(++rC, tbody, dayData, s, e, shifts, start, maxEnd);
+    } else if (!emptyRow) {
+        makeRow(++rC, tbody, dayData, s, e, shifts, start, maxEnd);
+    } else {
+        tr.addClass('empty-row');
+    }
+};
+
 $("#RoomID").change(function (val) {
     var roomId = $(this).val();
-    getRoomHours(roomId, function (data) {
-        getShifts(roomId, function (roomShifts) {
+    sc.Room.getHours(roomId, function (data) {
+        currentRoomHours = data;
+        sc.Shift.get(roomId, function (roomShifts) {
             var sh = $("#shiftHolder table");
             sh.empty();
             var minStart = null;
@@ -116,48 +110,18 @@ $("#RoomID").change(function (val) {
             }
             sh.append($("<thead></thead>").append(topRow));
             var tbody = $("<tbody></tbody>");
-            var dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
             var borderRow;
-            var makeRow = function (rC, tbody, dayData, s, e, shifts) {
-                var emptyRow = true;
-                var tr = $("<tr class='" + dayName[dayData.Day] + "' day='" + dayData.Day + "'><td>" + (rC == 0 ? dayName[dayData.Day] : "&nbsp;") + "</td></tr>");
-                for (var notOpen = start; notOpen < s; notOpen += .5) {
-                    tr.append("<td class='closed'>&nbsp;</td>");
-                }
-                for (var t = s; t < e; t += .5) {
-                    var shift = getShiftAtTime(t, shifts);
-                    if (shift) {
-                        emptyRow = false;
-                        tr.append(createShiftString(shift, t));
-                        t += shift.Duration.Hours + (shift.Duration.Minutes / 60) - .5;
-                    } else {
-                        //tr.append($(openTD).attr("s", t));
-                        tr.append(openTD(t));
-                    }
-                }
-
-                for (var notOpen = e; notOpen < maxEnd; notOpen += .5) {
-                    tr.append("<td class='closed' s='" + notOpen + "'>&nbsp;</td>");
-                }
-                tbody.append(tr);
-                if (shifts.length > 0) {
-                    //recursive call
-                    makeRow(++rC, tbody, dayData, s, e, shifts);
-                } else if (!emptyRow) {
-                    makeRow(++rC, tbody, dayData, s, e, shifts);
-                } else {
-                    tr.addClass('empty-row');
-                }
-            };
             for (var idx = 0; idx < data.length; idx++) {
                 var dayData = data[idx];
                 var dayShifts = FilterShifts(roomShifts, dayData.Day);
                 if (dayShifts.length > 0) {
                     window.a = dayShifts;
                 }
-                var s = dayData.StartTime.Hours + dayData.StartTime.Minutes / 60;
-                var e = s + dayData.Duration.Hours + dayData.Duration.Minutes / 60;
-                makeRow(0, tbody, dayData, s, e, dayShifts);
+                dayData.s = dayData.StartTime.Hours + dayData.StartTime.Minutes / 60;
+                dayData.e = dayData.s + dayData.Duration.Hours + dayData.Duration.Minutes / 60;
+                dayData.MinStart = start;
+                dayData.MaxEnd = maxEnd;
+                makeRow(0, tbody, dayData, dayData.s, dayData.e, dayShifts, start, maxEnd);
 
                 
                 if (idx < data.length - 1) {
@@ -184,19 +148,20 @@ $("#RoomID").trigger('change');
 var timeToDecimal = function (time) {
     return time.Hours + time.Minutes/60;
 }
-getEmployees(function (employees) {
+var createUser = function (employee) {
+    var colorClass = "";
+    if (employee.CurrentHours > timeToDecimal(employee.MaxHours)) {
+        colorClass = "over-max-hours";
+    } else if (employee.CurrentHours < timeToDecimal(employee.MinHours)) {
+        colorClass = "under-min-hours";
+    }
+    return $("<user class='small-6 large-3 columns draggable " + colorClass + "' minhours='" + outputTime(employee.MinHours) + "' maxhours='" + outputTime(employee.MaxHours) + "' currenthours='" + employee.CurrentHours + "' employeeid='" + employee.EmployeeId + "' userid='" + employee.UserId + "'>" + employee.NickName + "</user>");
+};
+sc.User.get(null, function (employees) {
     var empHolder = $("#Employees .row");
     empHolder.empty();
     for (var idx = 0; idx < employees.length ; idx++) {
-        var emp = employees[idx];
-        var colorClass = "";
-        if (emp.CurrentHours > timeToDecimal(emp.MaxHours)) {
-            colorClass = "over-max-hours";
-        } else if (emp.CurrentHours < timeToDecimal(emp.MinHours)) {
-            colorClass = "under-min-hours";
-        }
-        var div = $("<div class='small-6 large-3 columns draggable " + colorClass + "' minhours='" + outputTime(emp.MinHours) + "' maxhours='" + outputTime(emp.MaxHours) + "' currenthours='" + emp.CurrentHours + "' employeeid='" + emp.EmployeeId + "' userid='" + emp.UserId + "'>" + emp.NickName + "</div>");
-        empHolder.append(div);
+        empHolder.append(createUser(employees[idx]));
     }
 
 });
@@ -256,8 +221,12 @@ dragger.addFunction('onMovedAround', function (dragElement, dropElement, temp) {
     var $dropElement = $(dropElement);
     updateTemp();
     var shiftInfo = getShiftInfo($dragElement, $dropElement);
-    postShift(shiftInfo, function (shift) {
-        dropElementFN($(createShiftString(shift[0], shiftInfo.s)), $dropElement);
+
+    var updateOrCreate = shiftInfo.ShiftId != null? "update": "create";
+    sc.Shift[updateOrCreate](shiftInfo, function (shift) {
+        var $newShift = $(createShiftString(shift[0], shiftInfo.s));
+        dropElementFN($newShift, $dropElement);
+        dragComplete($newShift, $(temp));
     });
 });
 var updateTemp = function () {
@@ -281,7 +250,7 @@ dragger.addFunction('validateDrop', function (dragElement, dropElement, callback
         }
     }
     var shiftInfo = getShiftInfo($dragElement, $dropElement);
-    validateShift(shiftInfo, callback, function (xhr, textStatus, errorThrown) {
+    sc.Shift.validate(shiftInfo, callback, function (xhr, textStatus, errorThrown) {
         displayError(xhr.responseText);
         callback(false);
     });
@@ -290,7 +259,9 @@ dragger.addFunction('validateDrop', function (dragElement, dropElement, callback
 dragger.addFunction('onDraggedOut', function (element, temp) {
     var $element = $(element);
     updateTemp();
-    removeShift($element.attr('shiftid'));
+    sc.Shift.remove($element.attr('shiftid'), function (success) {
+        dragComplete(null, $(temp));
+    });
 });
 
 dragger.addFunction('onDragStart', function (element) {
@@ -299,3 +270,35 @@ dragger.addFunction('onDragStart', function (element) {
         return replaceWithOpen($element, true);
     }
 });
+var dragComplete = function ($newShift, $temp) {
+    //check old row to see if it's now empty
+    var tr = $temp.closest('tr');
+    var dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var day = parseInt(tr.attr('day'));
+    if (!tr.hasClass('first-row') && tr.find(".taken").length == 0 && $(".drop-section ." + dayName[day]).length > 1) {
+        //row is empty.   AND not the only row for this day         
+        tr.remove();
+    }
+    if ($newShift) {
+        //check to see if day has an "empty-row"
+        tr = $newShift.closest('tr');
+        day = parseInt(tr.attr('day'));
+        var oldEmptyRow = $(".drop-section ." + dayName[day] + ".empty-row");
+        if (oldEmptyRow.find(".taken").length > 0) {
+            oldEmptyRow.removeClass(".empty-row");
+            var fakeBody = $("<fake></fake>");
+            var dayData = currentRoomHours[day];
+            makeRow(1/* just can't be zero*/, fakeBody, dayData, dayData.s, dayData.e, [], dayData.MinStart, dayData.MaxEnd);
+            $(fakeBody.children()).insertAfter(oldEmptyRow);
+        }
+    }
+
+    //createUser
+    sc.User.get($newShift.attr('userid'), function (employees) {
+        for (var idx = 0; idx < employees.length ; idx++) {
+            var userId = employees[idx].UserId;
+            $("#Employees .row user[userid='" + userId + "'").replaceWith(createUser(employees[idx]));
+        }
+
+    });
+};

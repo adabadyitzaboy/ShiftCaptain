@@ -271,52 +271,49 @@ From [User] U
 JOIN [Version] V on 1 = 1
 WHERE U.IsManager = 0
 
+
 Insert into [Shift]
-Select U.Id,
+Select UI.UserId,
 R.Id,
-V.Id,
+UI.VersionId,
 1,
 cast('08:00:00' as datetime),
 cast('2:00:00' as time)
-FROM [User] U
+FROM [UserInstance] UI
 JOIN Room R on 1 = 1
-JOIN [Version] V on 1 = 1
-UNION Select U.Id,
+UNION Select UI.UserId,
 R.Id,
-V.Id,
+UI.VersionId,
 2,
 cast('08:00:00' as datetime),
 cast('2:00:00' as time)
-FROM [User] U
+FROM [UserInstance] UI
 JOIN Room R on 1 = 1
-JOIN [Version] V on 1 = 1
-UNION Select U.Id,
+UNION Select UI.UserId,
 R.Id,
-V.Id,
+UI.VersionId,
 3,
 cast('08:00:00' as datetime),
 cast('2:00:00' as time)
-FROM [User] U
+FROM [UserInstance] UI
 JOIN Room R on 1 = 1
-JOIN [Version] V on 1 = 1
-UNION Select U.Id,
+UNION Select UI.UserId,
 R.Id,
-V.Id,
+UI.VersionId,
 4,
 cast('08:00:00' as datetime),
 cast('2:00:00' as time)
-FROM [User] U
+FROM [UserInstance] UI
 JOIN Room R on 1 = 1
-JOIN [Version] V on 1 = 1
-UNION Select U.Id,
+UNION Select UI.UserId,
 R.Id,
-V.Id,
+UI.VersionId,
 5,
 cast('08:00:00' as datetime),
 cast('2:00:00' as time)
-FROM [User] U
+FROM [UserInstance] UI
 JOIN Room R on 1 = 1
-JOIN [Version] V on 1 = 1
+
 
 Insert Into Preference
 Values ('Unavailable', 'Shifts that you cannot work.', 'Red', 0),

@@ -282,7 +282,10 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\Room\CRUD.js" />
     <Content Include="Scripts\Shift.js" />
+    <Content Include="Scripts\Shift\CRUD.js" />
+    <Content Include="Scripts\User\CRUD.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

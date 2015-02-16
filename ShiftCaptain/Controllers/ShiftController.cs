@@ -21,12 +21,12 @@ namespace ShiftCaptain.Controllers
         }
         private object IsValid(Shift shift)
         {
-            var userInstance = db.UserInstances.FirstOrDefault(uv => uv.Id == shift.UserId && uv.VersionId == shift.VersionId);
+            var userInstance = db.UserInstances.FirstOrDefault(uv => uv.UserId == shift.UserId && uv.VersionId == shift.VersionId);
             if (userInstance == null)
             {
                 return new { error = "User does not exist in this version given"};
             }
-            if (shift.Id == null || shift.Id == 0)
+            if (shift.Id == 0)
             {
                 var maxHours = userInstance.MaxHours;
                 var currentHours = GetCurrentHours(shift.VersionId, shift.UserId);
@@ -101,7 +101,7 @@ namespace ShiftCaptain.Controllers
             db.Shifts.Add(shift);
             db.SaveChanges();
 
-            var user = db.UserInstances.First(uv => uv.Id == UserId && uv.VersionId == VersionId);
+            var user = db.UserInstances.First(uv => uv.UserId == UserId && uv.VersionId == VersionId);
             user.CurrentHours = (decimal) GetCurrentHours(VersionId, UserId).TotalHours;
             db.SaveChanges();
 
@@ -123,7 +123,7 @@ namespace ShiftCaptain.Controllers
             db.Entry(shift).State = EntityState.Modified;
             db.SaveChanges();
 
-            var user = db.UserInstances.First(uv => uv.Id == shift.UserId && uv.VersionId == shift.VersionId);
+            var user = db.UserInstances.First(uv => uv.UserId == shift.UserId && uv.VersionId == shift.VersionId);
             user.CurrentHours = (decimal)GetCurrentHours(shift.VersionId, shift.UserId).TotalHours;
             db.SaveChanges();
 

@@ -13,9 +13,9 @@ namespace ShiftCaptain.Controllers
     {
         private ShiftCaptainEntities db = new ShiftCaptainEntities();
 
-        public JsonResult List(int VersionId = 0)
+        public JsonResult List(int VersionId = 0, int UserId = 0)
         {
-            var result = db.UserViews.Where(uv => uv.VersionId == VersionId).Select(uv => new { uv.NickName, uv.UserId, uv.MinHours, uv.MaxHours, uv.EmployeeId, uv.CurrentHours});
+            var result = db.UserViews.Where(uv => uv.VersionId == VersionId && (UserId == 0 || uv.UserId == UserId)).Select(uv => new { uv.NickName, uv.UserId, uv.MinHours, uv.MaxHours, uv.EmployeeId, uv.CurrentHours});
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
