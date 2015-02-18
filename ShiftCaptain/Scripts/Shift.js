@@ -1,7 +1,57 @@
 ﻿$.ajaxSetup({ global: false });
 var dragger = dnd.drag;
 var sc = ShiftCaptain;
+var typing = null;
+var typeData = "";
+var doneTyping = function () {
+    if (typeData != "") {
+        console.log(typeData);
+        var duration = $("#ShiftDuration");
+        var exists = duration.find("[value='" + typeData + "']");
+        if (exists.length) {
+            duration.val(typeData);
+        } else {
+            var isDecimal = true;
+            try{
+                parseFloat(typeData).toFixed(1);
+            } catch (ex) {
+                isDecimal = false;
+                console.log("Duration must be a decimal or integer - " + typeData);
+            }
+            if (isDecimal) {
+                var custom = duration.find(".custom");
+                if (!custom.length) {
+                    custom = $("<option class='custom' value='" + typeData + "'>" + typeData + " hours</option>");
+                    duration.append(custom);
+                } else {
+                    custom.val(typeData);
+                    custom.text(typeData + " hours");
+                }
+                duration.val(typeData);
 
+            }
+        }
+        typeData = "";
+    }
+};
+$(document.body).on('keypress', function (key) {
+    if (!key.ctrlKey && !key.shiftKey && ((key.charCode >= 48 && key.charCode <= 57) || key.charCode == 46)) {
+        if (key.charCode == 46) {
+            typeData += ".";
+        } else {
+            typeData += (key.charCode - 48);
+        }
+        if (typing != null) {
+            clearTimeout(typing);
+        }
+        typing = setTimeout(function () {
+            doneTyping();
+        }, 500);
+    } else if (typing) {
+        clearTimeout(typing);
+        typing = null;
+    }
+});
 var openTD = function (s, classname, extra) {
     return "<td class='open " + (classname || "") + "' s='" + s + "' " + (extra || "") + ">&nbsp;</td>";
 }

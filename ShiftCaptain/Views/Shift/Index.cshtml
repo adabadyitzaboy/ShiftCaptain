@@ -3,9 +3,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-@Styles.Render("~/Content/stylesheets/app.css")
-@Styles.Render("~/Content/stylesheets/normalize.css")
+
 @Html.Hidden("versionId", (object)ViewBag.VersionId)
 <section id="Employees">
     <div class="row">
@@ -48,9 +46,10 @@
         </div>
     </div>
 </section>
-@Scripts.Render("~/Scripts/jquery-1.7.1.min.js")
-@Scripts.Render("~/Scripts/Shift/CRUD.js")
-@Scripts.Render("~/Scripts/Room/CRUD.js")
-@Scripts.Render("~/Scripts/User/CRUD.js")
-@Scripts.Render("~/Scripts/DragNDrop/drag-n-drop.js")
-@Scripts.Render("~/Scripts/Shift.js")
+@section scripts {
+    @Scripts.Render("~/Scripts/Shift/CRUD.js")
+    @Scripts.Render("~/Scripts/Room/CRUD.js")
+    @Scripts.Render("~/Scripts/User/CRUD.js")
+    @Scripts.Render("~/Scripts/DragNDrop/drag-n-drop.js")
+    @Scripts.Render("~/Scripts/Shift.js")
+}

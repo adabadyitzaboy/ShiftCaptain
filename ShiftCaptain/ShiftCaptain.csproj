@@ -122,6 +122,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Controllers\BuildingController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
@@ -316,6 +317,9 @@
     <Content Include="Views\Version\Edit.cshtml" />
     <Content Include="Views\Version\Delete.cshtml" />
     <Content Include="Views\Shift\Index.cshtml" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

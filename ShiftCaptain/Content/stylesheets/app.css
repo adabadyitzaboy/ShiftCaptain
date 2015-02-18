@@ -9255,21 +9255,47 @@ th.hide-for-touch {
   border: 1px solid #000;
 }
 
-/* line 52, ../scss/Pages/_shifts.scss */
+/* line 51, ../scss/Pages/_shifts.scss */
+#Employees {
+  margin-top: 40px;
+}
+/* line 53, ../scss/Pages/_shifts.scss */
 #Employees .draggable {
   background-color: green;
 }
-/* line 55, ../scss/Pages/_shifts.scss */
+/* line 56, ../scss/Pages/_shifts.scss */
 #Employees .over-max-hours {
   background-color: #cc0000;
 }
-/* line 58, ../scss/Pages/_shifts.scss */
+/* line 59, ../scss/Pages/_shifts.scss */
 #Employees .under-min-hours {
   background-color: yellow;
 }
-/* line 61, ../scss/Pages/_shifts.scss */
+/* line 62, ../scss/Pages/_shifts.scss */
 #Employees [class*="column"] + [class*="column"]:last-child {
   float: left;
+}
+
+/* line 1, ../scss/Pages/_common.scss */
+p.site-title {
+  margin-top: 1.25rem;
+}
+
+/* line 4, ../scss/Pages/_common.scss */
+.clearboth {
+  clear: both;
+}
+
+/* line 7, ../scss/Pages/_common.scss */
+nav ul#menu {
+  list-style-type: none;
+}
+/* line 9, ../scss/Pages/_common.scss */
+nav ul#menu li {
+  float: left;
+  margin-left: 1rem;
+  color: #000;
+  padding: 0.1875rem 1rem;
 }
 
 /* line 1, ../scss/DragNDrop/_dragNdrop.scss */
