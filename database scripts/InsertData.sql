@@ -20,37 +20,37 @@ Insert into RoomHours
 Select RI.ID,
 1,--day
 cast('08:00' as time),--start time
-cast('08:00' as time)--duration
+8--duration
 From RoomInstance RI
 JOIN Room R on R.Id = RI.RoomId
 UNION Select RI.ID,
 2,--day
 cast('08:00' as time),--start time
-cast('08:00' as time)--duration
+8--duration
 From RoomInstance RI
 JOIN Room R on R.Id = RI.RoomId
 UNION Select RI.ID,
 3,--day
 cast('08:00' as time),--start time
-cast('08:00' as time)--duration
+8--duration
 From RoomInstance RI
 JOIN Room R on R.Id = RI.RoomId
 UNION Select RI.ID,
 4,--day
 cast('08:00' as time),--start time
-cast('08:00' as time)--duration
+8--duration
 From RoomInstance RI
 JOIN Room R on R.Id = RI.RoomId
 UNION Select RI.ID,
 5,--day
 cast('08:00' as time),--start time
-cast('12:00' as time)--duration
+12--duration
 From RoomInstance RI
 JOIN Room R on R.Id = RI.RoomId
 Select RI.ID,
 6,--day
 cast('08:00' as time),--start time
-cast('12:00' as time)--duration
+12--duration
 From RoomInstance RI
 JOIN Room R on R.Id = RI.RoomId
 
@@ -264,8 +264,8 @@ null,--LastLogin
 Insert into UserInstance
 Select U.Id,
 V.Id,
-cast('20:00' as time),--Min Hours
-cast('20:00' as time),--Max Hours
+20,--Min Hours
+20,--Max Hours
 0--Current Hours
 From [User] U
 JOIN [Version] V on 1 = 1
@@ -278,42 +278,41 @@ R.Id,
 UI.VersionId,
 1,
 cast('08:00:00' as datetime),
-cast('2:00:00' as time)
+2
 FROM [UserInstance] UI
-JOIN Room R on 1 = 1
+JOIN Room R on R.Id = 1
 UNION Select UI.UserId,
 R.Id,
 UI.VersionId,
 2,
 cast('08:00:00' as datetime),
-cast('2:00:00' as time)
+2
 FROM [UserInstance] UI
-JOIN Room R on 1 = 1
+JOIN Room R on R.Id = 1
 UNION Select UI.UserId,
 R.Id,
 UI.VersionId,
 3,
 cast('08:00:00' as datetime),
-cast('2:00:00' as time)
+2
 FROM [UserInstance] UI
-JOIN Room R on 1 = 1
+JOIN Room R on R.Id = 1
 UNION Select UI.UserId,
 R.Id,
 UI.VersionId,
 4,
 cast('08:00:00' as datetime),
-cast('2:00:00' as time)
+2
 FROM [UserInstance] UI
-JOIN Room R on 1 = 1
+JOIN Room R on R.Id = 1
 UNION Select UI.UserId,
 R.Id,
 UI.VersionId,
 5,
 cast('08:00:00' as datetime),
-cast('2:00:00' as time)
+2
 FROM [UserInstance] UI
-JOIN Room R on 1 = 1
-
+JOIN Room R on R.Id = 1
 
 Insert Into Preference
 Values ('Unavailable', 'Shifts that you cannot work.', 'Red', 0),
@@ -335,7 +334,7 @@ FROM
 	P.Id As PreferenceId,
 	'1' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890733'
@@ -343,7 +342,7 @@ FROM
 	P.Id As PreferenceId,
 	'2' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890733'
@@ -351,7 +350,7 @@ FROM
 	P.Id As PreferenceId,
 	'3' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890733'
@@ -359,7 +358,7 @@ FROM
 	P.Id As PreferenceId,
 	'4' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890733'
@@ -367,7 +366,7 @@ FROM
 	P.Id As PreferenceId,
 	'5' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890733'
@@ -376,7 +375,7 @@ FROM
 	P.Id As PreferenceId,
 	'1' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890734'
@@ -384,7 +383,7 @@ FROM
 	P.Id As PreferenceId,
 	'2' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890734'
@@ -392,7 +391,7 @@ FROM
 	P.Id As PreferenceId,
 	'3' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890734'
@@ -400,7 +399,7 @@ FROM
 	P.Id As PreferenceId,
 	'4' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890734'
@@ -408,7 +407,7 @@ FROM
 	P.Id As PreferenceId,
 	'5' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890734'
@@ -417,7 +416,7 @@ FROM
 	P.Id As PreferenceId,
 	'1' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890743'
@@ -425,7 +424,7 @@ FROM
 	P.Id As PreferenceId,
 	'2' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890743'
@@ -433,7 +432,7 @@ FROM
 	P.Id As PreferenceId,
 	'3' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890743'
@@ -441,7 +440,7 @@ FROM
 	P.Id As PreferenceId,
 	'4' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890743'
@@ -449,7 +448,7 @@ FROM
 	P.Id As PreferenceId,
 	'5' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890743'
@@ -458,7 +457,7 @@ FROM
 	P.Id As PreferenceId,
 	'1' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890943'
@@ -466,7 +465,7 @@ FROM
 	P.Id As PreferenceId,
 	'2' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890943'
@@ -474,7 +473,7 @@ FROM
 	P.Id As PreferenceId,
 	'3' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890943'
@@ -482,7 +481,7 @@ FROM
 	P.Id As PreferenceId,
 	'4' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890943'
@@ -490,7 +489,7 @@ FROM
 	P.Id As PreferenceId,
 	'5' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '8890943'
@@ -499,7 +498,7 @@ FROM
 	P.Id As PreferenceId,
 	'1' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '88907431'
@@ -507,7 +506,7 @@ FROM
 	P.Id As PreferenceId,
 	'2' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '88907431'
@@ -515,7 +514,7 @@ FROM
 	P.Id As PreferenceId,
 	'3' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '88907431'
@@ -523,7 +522,7 @@ FROM
 	P.Id As PreferenceId,
 	'4' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '88907431'
@@ -531,7 +530,7 @@ FROM
 	P.Id As PreferenceId,
 	'5' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '88907431'
@@ -540,7 +539,7 @@ FROM
 	P.Id As PreferenceId,
 	'1' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '28890743'
@@ -548,7 +547,7 @@ FROM
 	P.Id As PreferenceId,
 	'2' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '28890743'
@@ -556,7 +555,7 @@ FROM
 	P.Id As PreferenceId,
 	'3' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '28890743'
@@ -564,7 +563,7 @@ FROM
 	P.Id As PreferenceId,
 	'4' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '28890743'
@@ -572,7 +571,7 @@ FROM
 	P.Id As PreferenceId,
 	'5' As DayId,
 	cast('8:00:00' as time) as StartTime,
-	cast('2:00:00' as time) as Duration
+	2 as Duration
 	FROM [User] U
 	JOIN [Preference] P on P.Name = 'Prefer'
 	Where EmployeeId = '28890743'
@@ -581,11 +580,55 @@ FROM
 	
 ) U 
 JOIN [Version] V on 1 = 1
+Where U.UserId != 1
+
+
+Insert into ShiftPreference
+Values(
+	1,--UserId
+	1,--VersionId
+	1,--PreferenceId
+	1,--DayId
+	cast('8:00:00' as time),--StartTime
+	8--Duration
+),
+(
+	1,--UserId
+	1,--VersionId
+	1,--PreferenceId
+	2,--DayId
+	cast('8:00:00' as time),--StartTime
+	8--Duration
+),
+(
+	1,--UserId
+	1,--VersionId
+	1,--PreferenceId
+	3,--DayId
+	cast('8:00:00' as time),--StartTime
+	8--Duration
+),
+(
+	1,--UserId
+	1,--VersionId
+	1,--PreferenceId
+	4,--DayId
+	cast('8:00:00' as time),--StartTime
+	8--Duration
+),
+(
+	1,--UserId
+	1,--VersionId
+	1,--PreferenceId
+	5,--DayId
+	cast('8:00:00' as time),--StartTime
+	12--Duration
+)
 
 
 Update UserInstance 
 set CurrentHours =
-(Select cast(SUM(DATEDIFF(MINUTE, '0:00:00', Duration)) as decimal(38,1)) /60
+(Select Sum(Duration)
 from [Shift] s
 where S.VersionId = UserInstance.VersionId
 and S.UserId = UserInstance.UserId

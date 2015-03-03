@@ -29,8 +29,8 @@ namespace ShiftCaptain.Models
         public Nullable<System.DateTime> LastLogin { get; set; }
         public bool IsActive { get; set; }
         public bool IsMale { get; set; }
-        public Nullable<System.TimeSpan> MinHours { get; set; }
-        public Nullable<System.TimeSpan> MaxHours { get; set; }
+        public Nullable<decimal> MinHours { get; set; }
+        public Nullable<decimal> MaxHours { get; set; }
         public Nullable<decimal> CurrentHours { get; set; }
         public Nullable<int> VersionId { get; set; }
         public Nullable<int> AddressId { get; set; }

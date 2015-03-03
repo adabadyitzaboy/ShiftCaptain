@@ -6,17 +6,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ShiftCaptain.Models;
+using ShiftCaptain.Helpers;
 
 namespace ShiftCaptain.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         private ShiftCaptainEntities db = new ShiftCaptainEntities();
 
         public JsonResult List(int VersionId = 0, int UserId = 0)
         {
-            var result = db.UserViews.Where(uv => uv.VersionId == VersionId && (UserId == 0 || uv.UserId == UserId)).Select(uv => new { uv.NickName, uv.UserId, uv.MinHours, uv.MaxHours, uv.EmployeeId, uv.CurrentHours});
-            return Json(result, JsonRequestBehavior.AllowGet);
+            var result = db.UserViews.Where(uv => uv.VersionId == VersionId && (UserId == 0 || uv.UserId == UserId));
+            return Json(EntitySelector.SelectUserInstance(result), JsonRequestBehavior.AllowGet);
         }
 
         private UserView GetUserView(int id = 0)

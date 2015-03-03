@@ -20,7 +20,7 @@ namespace ShiftCaptain.Models
         public int PreferenceId { get; set; }
         public int Day { get; set; }
         public System.TimeSpan StartTime { get; set; }
-        public System.TimeSpan Duration { get; set; }
+        public decimal Duration { get; set; }
     
         public virtual Preference Preference { get; set; }
         public virtual User User { get; set; }

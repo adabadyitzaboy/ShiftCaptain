@@ -6502,115 +6502,6 @@ table tr td {
   border-radius: 3px;
 }
 
-/* Tooltips */
-/* line 38, ../scss/foundation/components/_tooltips.scss */
-.has-tip {
-  border-bottom: dotted 1px #CCCCCC;
-  cursor: help;
-  font-weight: bold;
-  color: #333333;
-}
-/* line 44, ../scss/foundation/components/_tooltips.scss */
-.has-tip:hover, .has-tip:focus {
-  border-bottom: dotted 1px #003f54;
-  color: #008CBA;
-}
-/* line 50, ../scss/foundation/components/_tooltips.scss */
-.has-tip.tip-left, .has-tip.tip-right {
-  float: none !important;
-}
-
-/* line 54, ../scss/foundation/components/_tooltips.scss */
-.tooltip {
-  display: none;
-  position: absolute;
-  z-index: 1006;
-  font-weight: normal;
-  font-size: 0.875rem;
-  line-height: 1.3;
-  padding: 0.75rem;
-  max-width: 300px;
-  left: 50%;
-  width: 100%;
-  color: #FFFFFF;
-  background: #333333;
-}
-/* line 68, ../scss/foundation/components/_tooltips.scss */
-.tooltip > .nub {
-  display: block;
-  left: 5px;
-  position: absolute;
-  width: 0;
-  height: 0;
-  border: solid 5px;
-  border-color: transparent transparent #333333 transparent;
-  top: -10px;
-  pointer-events: none;
-}
-/* line 79, ../scss/foundation/components/_tooltips.scss */
-.tooltip > .nub.rtl {
-  left: auto;
-  right: 5px;
-}
-/* line 85, ../scss/foundation/components/_tooltips.scss */
-.tooltip.radius {
-  border-radius: 3px;
-}
-/* line 88, ../scss/foundation/components/_tooltips.scss */
-.tooltip.round {
-  border-radius: 1000px;
-}
-/* line 90, ../scss/foundation/components/_tooltips.scss */
-.tooltip.round > .nub {
-  left: 2rem;
-}
-/* line 95, ../scss/foundation/components/_tooltips.scss */
-.tooltip.opened {
-  color: #008CBA !important;
-  border-bottom: dotted 1px #003f54 !important;
-}
-
-/* line 101, ../scss/foundation/components/_tooltips.scss */
-.tap-to-close {
-  display: block;
-  font-size: 0.625rem;
-  color: #777777;
-  font-weight: normal;
-}
-
-@media only screen and (min-width: 40.063em) {
-  /* line 110, ../scss/foundation/components/_tooltips.scss */
-  .tooltip > .nub {
-    border-color: transparent transparent #333333 transparent;
-    top: -10px;
-  }
-  /* line 114, ../scss/foundation/components/_tooltips.scss */
-  .tooltip.tip-top > .nub {
-    border-color: #333333 transparent transparent transparent;
-    top: auto;
-    bottom: -10px;
-  }
-  /* line 120, ../scss/foundation/components/_tooltips.scss */
-  .tooltip.tip-left, .tooltip.tip-right {
-    float: none !important;
-  }
-  /* line 123, ../scss/foundation/components/_tooltips.scss */
-  .tooltip.tip-left > .nub {
-    border-color: transparent transparent transparent #333333;
-    right: -10px;
-    left: auto;
-    top: 50%;
-    margin-top: -5px;
-  }
-  /* line 130, ../scss/foundation/components/_tooltips.scss */
-  .tooltip.tip-right > .nub {
-    border-color: transparent #333333 transparent transparent;
-    right: auto;
-    left: -10px;
-    top: 50%;
-    margin-top: -5px;
-  }
-}
 /* line 113, ../scss/foundation/components/_top-bar.scss */
 meta.foundation-mq-topbar {
   font-family: "/only screen and (min-width:40.063em)/";
@@ -9197,100 +9088,160 @@ th.hide-for-touch {
   box-sizing: border-box;
 }
 
-/* line 6, ../scss/Pages/_shifts.scss */
-#shiftHolder {
-  margin-top: 20px;
-}
 /* line 8, ../scss/Pages/_shifts.scss */
 #shiftHolder table {
   border-collapse: collapse;
   border-spacing: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
-/* line 11, ../scss/Pages/_shifts.scss */
+/* line 14, ../scss/Pages/_shifts.scss */
 #shiftHolder table thead {
   border-bottom: 1px solid #000;
 }
-/* line 14, ../scss/Pages/_shifts.scss */
+/* line 16, ../scss/Pages/_shifts.scss */
+#shiftHolder table thead th {
+  border-right: 1px solid #000;
+}
+/* line 18, ../scss/Pages/_shifts.scss */
+#shiftHolder table thead th.PM {
+  border-top: 1px solid #000;
+}
+/* line 23, ../scss/Pages/_shifts.scss */
 #shiftHolder table tr td:first-child {
   background-color: #fff;
 }
-/* line 18, ../scss/Pages/_shifts.scss */
+/* line 27, ../scss/Pages/_shifts.scss */
 #shiftHolder table td {
   padding: 0;
 }
-/* line 21, ../scss/Pages/_shifts.scss */
+/* line 30, ../scss/Pages/_shifts.scss */
 #shiftHolder table .AM {
   background-color: #fff;
   color: #000;
 }
-/* line 25, ../scss/Pages/_shifts.scss */
+/* line 34, ../scss/Pages/_shifts.scss */
 #shiftHolder table .PM {
   background-color: #000;
   color: #fff;
 }
-/* line 29, ../scss/Pages/_shifts.scss */
+/* line 38, ../scss/Pages/_shifts.scss */
 #shiftHolder table .closed {
   background-color: #000;
 }
-/* line 32, ../scss/Pages/_shifts.scss */
+/* line 41, ../scss/Pages/_shifts.scss */
 #shiftHolder table .open {
   background-color: #fff;
 }
-/* line 35, ../scss/Pages/_shifts.scss */
+/* line 44, ../scss/Pages/_shifts.scss */
 #shiftHolder table .taken {
   background-color: green;
 }
-/* line 38, ../scss/Pages/_shifts.scss */
+/* line 47, ../scss/Pages/_shifts.scss */
 #shiftHolder table .temp {
   background-color: yellow;
 }
-/* line 41, ../scss/Pages/_shifts.scss */
+/* line 50, ../scss/Pages/_shifts.scss */
 #shiftHolder table tr.row-border, #shiftHolder table tr.row-border td {
   background-color: #000;
   height: 2px;
   max-height: 2px;
+  border: 1px solid #000;
 }
-/* line 46, ../scss/Pages/_shifts.scss */
+/* line 56, ../scss/Pages/_shifts.scss */
 #shiftHolder table .open, #shiftHolder table .closed, #shiftHolder table .taken {
   border: 1px solid #000;
 }
 
-/* line 51, ../scss/Pages/_shifts.scss */
-#Employees {
-  margin-top: 40px;
+/* line 62, ../scss/Pages/_shifts.scss */
+header .content-wrapper {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1;
+  background: #fff;
 }
-/* line 53, ../scss/Pages/_shifts.scss */
+
+/* line 70, ../scss/Pages/_shifts.scss */
+#Employees {
+  max-height: 300px;
+  overflow-y: scroll;
+}
+/* line 73, ../scss/Pages/_shifts.scss */
+#Employees div {
+  padding: 10px;
+  text-align: center;
+}
+/* line 77, ../scss/Pages/_shifts.scss */
+#Employees user {
+  display: block;
+  padding: 5px;
+}
+/* line 81, ../scss/Pages/_shifts.scss */
 #Employees .draggable {
   background-color: green;
 }
-/* line 56, ../scss/Pages/_shifts.scss */
+/* line 84, ../scss/Pages/_shifts.scss */
 #Employees .over-max-hours {
   background-color: #cc0000;
 }
-/* line 59, ../scss/Pages/_shifts.scss */
+/* line 87, ../scss/Pages/_shifts.scss */
 #Employees .under-min-hours {
   background-color: yellow;
 }
-/* line 62, ../scss/Pages/_shifts.scss */
+/* line 90, ../scss/Pages/_shifts.scss */
 #Employees [class*="column"] + [class*="column"]:last-child {
   float: left;
 }
 
-/* line 1, ../scss/Pages/_common.scss */
-p.site-title {
-  margin-top: 1.25rem;
+/* line 95, ../scss/Pages/_shifts.scss */
+#Preferences {
+  max-height: 300px;
+  overflow-y: scroll;
+}
+/* line 98, ../scss/Pages/_shifts.scss */
+#Preferences div {
+  padding: 10px;
+  text-align: center;
+}
+/* line 102, ../scss/Pages/_shifts.scss */
+#Preferences preference {
+  display: block;
+  padding: 5px;
+}
+/* line 106, ../scss/Pages/_shifts.scss */
+#Preferences [class*="column"] + [class*="column"]:last-child {
+  float: left;
 }
 
+/* line 110, ../scss/Pages/_shifts.scss */
+.dnd-moving-div preference {
+  background-color: #fff !important;
+}
+
+/* line 2, ../scss/Pages/_common.scss */
+header p.site-title {
+  margin-top: 1.25rem;
+}
 /* line 4, ../scss/Pages/_common.scss */
+header p.site-title img {
+  max-height: 100px;
+}
+/* line 8, ../scss/Pages/_common.scss */
+header select {
+  margin-top: 20px;
+}
+
+/* line 12, ../scss/Pages/_common.scss */
 .clearboth {
   clear: both;
 }
 
-/* line 7, ../scss/Pages/_common.scss */
+/* line 15, ../scss/Pages/_common.scss */
 nav ul#menu {
   list-style-type: none;
 }
-/* line 9, ../scss/Pages/_common.scss */
+/* line 17, ../scss/Pages/_common.scss */
 nav ul#menu li {
   float: left;
   margin-left: 1rem;
@@ -9298,24 +9249,67 @@ nav ul#menu li {
   padding: 0.1875rem 1rem;
 }
 
+/* line 24, ../scss/Pages/_common.scss */
+.tooltip {
+  position: absolute;
+  z-index: 1005;
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #000;
+}
+/* line 30, ../scss/Pages/_common.scss */
+.tooltip.user, .tooltip.preference {
+  min-width: 375px;
+}
+/* line 33, ../scss/Pages/_common.scss */
+.tooltip.shiftpreference {
+  min-width: 225px;
+}
+/* line 37, ../scss/Pages/_common.scss */
+.tooltip.user label, .tooltip.shift label, .tooltip.shiftpreference label, .tooltip.preference label {
+  float: left;
+  width: 50%;
+}
+
+/* line 43, ../scss/Pages/_common.scss */
+tip-master {
+  display: none !important;
+}
+
+@media (min-width: 1000px) {
+  /* line 48, ../scss/Pages/_common.scss */
+  body {
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* line 53, ../scss/Pages/_common.scss */
+  body > header > .content-wrapper {
+    left: 0;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+  }
+}
 /* line 1, ../scss/DragNDrop/_dragNdrop.scss */
 .dnd-moving-div {
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1002;
   width: 200px;
   max-width: 200px;
   background: #fff;
   pointer-events: none;
   cursor: move;
 }
-/* line 10, ../scss/DragNDrop/_dragNdrop.scss */
+/* line 11, ../scss/DragNDrop/_dragNdrop.scss */
 .dnd-moving-div * {
   pointer-events: none;
   cursor: move;
 }
 
-/* line 15, ../scss/DragNDrop/_dragNdrop.scss */
+/* line 16, ../scss/DragNDrop/_dragNdrop.scss */
 .drop-section, .draggable {
   -moz-user-select: -moz-none;
   -moz-user-select: none;
@@ -9326,12 +9320,12 @@ nav ul#menu li {
   user-select: none;
 }
 
-/* line 24, ../scss/DragNDrop/_dragNdrop.scss */
+/* line 25, ../scss/DragNDrop/_dragNdrop.scss */
 .draggable {
   cursor: pointer;
 }
 
-/* line 27, ../scss/DragNDrop/_dragNdrop.scss */
+/* line 28, ../scss/DragNDrop/_dragNdrop.scss */
 .drop-section.dragging .taken {
   cursor: no-drop;
 }

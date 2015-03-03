@@ -1,0 +1,141 @@
+﻿@model ShiftCaptain.Models.RoomView
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>RoomView</legend>
+    
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.BuildingName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.BuildingName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.RoomNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.RoomNumber)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhoneNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhoneNumber)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.SundayStartTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SundayStartTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.SundayDuration)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SundayDuration)
+    </div>
+    
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MondayStartTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MondayStartTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MondayDuration)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MondayDuration)
+    </div>
+    
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.TuesdayStartTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TuesdayStartTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.TuesdayDuration)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TuesdayDuration)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.WednesdayStartTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.WednesdayStartTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.WednesdayDuration)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.WednesdayDuration)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ThursdayStartTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ThursdayStartTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.ThursdayDuration)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.ThursdayDuration)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.FridayStartTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FridayStartTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.FridayDuration)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FridayDuration)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.SaturdayStartTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SaturdayStartTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.SaturdayDuration)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SaturdayDuration)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.RoomInstanceId/* id=Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

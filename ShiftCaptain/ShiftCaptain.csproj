@@ -123,9 +123,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BuildingController.cs" />
+    <Compile Include="Controllers\EntitySelector.cs" />
+    <Compile Include="Controllers\PreferenceController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
+    <Compile Include="Controllers\ShiftPreferenceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VersionController.cs" />
     <Compile Include="Global.asax.cs">
@@ -200,26 +204,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Content\images\header\logo.png" />
     <Content Include="Content\stylesheets\app.css" />
     <Content Include="Content\stylesheets\normalize.css" />
     <Content Include="Global.asax" />
-    <EntityDeploy Include="Models\ShiftCaptainModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ShiftCaptainModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\ShiftCaptainModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ShiftCaptainModel.edmx</DependentUpon>
-      <LastGenOutput>ShiftCaptainModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\ShiftCaptainModel.edmx.diagram">
-      <DependentUpon>ShiftCaptainModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\ShiftCaptainModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ShiftCaptainModel.edmx</DependentUpon>
-      <LastGenOutput>ShiftCaptainModel.cs</LastGenOutput>
-    </Content>
     <Content Include="Content\config.rb" />
     <Content Include="Content\scss\app.scss" />
     <Content Include="Content\scss\DragNDrop\_dragNdrop.scss" />
@@ -267,7 +255,31 @@
     <Content Include="Content\scss\normalize.scss" />
     <Content Include="Content\scss\Pages\_shifts.scss" />
     <Content Include="Content\scss\_settings.scss" />
+    <EntityDeploy Include="Models\ShiftCaptainModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ShiftCaptainModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\ShiftCaptainModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ShiftCaptainModel.edmx</DependentUpon>
+      <LastGenOutput>ShiftCaptainModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\ShiftCaptainModel.edmx.diagram">
+      <DependentUpon>ShiftCaptainModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\ShiftCaptainModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ShiftCaptainModel.edmx</DependentUpon>
+      <LastGenOutput>ShiftCaptainModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="Content\scss\Pages\_common.scss" />
+    <None Include="Properties\PublishProfiles\iis pub.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\CommonShift.js" />
+    <Content Include="Scripts\Preference\CRUD.js" />
+    <Content Include="Scripts\ShiftPreference.js" />
+    <Content Include="Scripts\ShiftPreference\CRUD.js" />
     <Content Include="Scripts\DragNDrop\drag-n-drop.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -320,6 +332,16 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\Tip\_User.cshtml" />
+    <Content Include="Views\Shared\Tip\_Shift.cshtml" />
+    <Content Include="Views\Preference\Index.cshtml" />
+    <Content Include="Views\Preference\Details.cshtml" />
+    <Content Include="Views\Preference\Create.cshtml" />
+    <Content Include="Views\Preference\Edit.cshtml" />
+    <Content Include="Views\Preference\Delete.cshtml" />
+    <Content Include="Views\ShiftPreference\Index.cshtml" />
+    <Content Include="Views\Shared\Tip\_Preference.cshtml" />
+    <Content Include="Views\Shared\Tip\_ShiftPreference.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -346,7 +368,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>1157</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:1917/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

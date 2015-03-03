@@ -9,7 +9,7 @@ using ShiftCaptain.Models;
 
 namespace ShiftCaptain.Controllers
 {
-    public class VersionController : Controller
+    public class VersionController : BaseController
     {
         private ShiftCaptainEntities db = new ShiftCaptainEntities();
 

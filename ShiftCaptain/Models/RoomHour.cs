@@ -18,7 +18,7 @@ namespace ShiftCaptain.Models
         public int RoomInstanceId { get; set; }
         public int Day { get; set; }
         public System.TimeSpan StartTime { get; set; }
-        public System.TimeSpan Duration { get; set; }
+        public decimal Duration { get; set; }
     
         public virtual RoomInstance RoomInstance { get; set; }
     }

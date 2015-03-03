@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+@section header {
+    <section id="Preferences">
+        <div class="row">
+        </div>
+    </section>
+    <section id="Errors"></section>
+    <section id="Dropdowns" class="row">
+        <div class="small-12 large-4 columns">
+            <label for="UserID">User</label>
+            @Html.DropDownList("UserID")
+        </div>
+        <div class="small-12 large-4 columns left">
+            <label for="ShiftDuration">Shift Length</label>
+            <select id="ShiftDuration">
+                <option value="2">2 hours</option>
+                <option value="2.5">2 1/2 hours</option>
+                <option value="3">3 hours</option>
+                <option value="3.5">3 1/2 hours</option>
+                <option value="4" selected="selected">4 hours</option>
+                <option value="4.5">4 1/2 hours</option>
+                <option value="5">5 hours</option>
+                <option value="5.5">5 1/2 hours</option>
+                <option value="6">6 hours</option>
+                <option value="6.5">6 1/2 hours</option>
+            </select>
+        </div>
+    </section>
+}
+<section id="shiftHolder" class="drop-section">
+    <div class="row">
+        <div class="small-12 large-12 columns">
+            <table>
+            </table>
+        </div>
+    </div>
+</section>
+@Html.Partial("Tip/_User")
+@Html.Partial("Tip/_Shift")
+@Html.Partial("Tip/_Preference")
+@Html.Partial("Tip/_ShiftPreference")
+@section scripts {
+    @Scripts.Render("~/Scripts/Preference/CRUD.js")
+    @Scripts.Render("~/Scripts/Shift/CRUD.js")
+    @Scripts.Render("~/Scripts/ShiftPreference/CRUD.js")
+    @Scripts.Render("~/Scripts/Room/CRUD.js")
+    @Scripts.Render("~/Scripts/User/CRUD.js")
+    @Scripts.Render("~/Scripts/DragNDrop/drag-n-drop.js")
+    @Scripts.Render("~/Scripts/CommonShift.js")
+    @Scripts.Render("~/Scripts/ShiftPreference.js")
+}

@@ -25,30 +25,30 @@ namespace ShiftCaptain.Models
         public Nullable<int> SundayId { get; set; }
         public Nullable<int> SundayInstanceId { get; set; }
         public Nullable<System.TimeSpan> SundayStartTime { get; set; }
-        public Nullable<System.TimeSpan> SundayDuration { get; set; }
+        public Nullable<decimal> SundayDuration { get; set; }
         public Nullable<int> MondayId { get; set; }
         public Nullable<int> MondayInstanceId { get; set; }
         public Nullable<System.TimeSpan> MondayStartTime { get; set; }
-        public Nullable<System.TimeSpan> MondayDuration { get; set; }
+        public Nullable<decimal> MondayDuration { get; set; }
         public Nullable<int> TuesdayId { get; set; }
         public Nullable<int> TuesdayInstanceId { get; set; }
         public Nullable<System.TimeSpan> TuesdayStartTime { get; set; }
-        public Nullable<System.TimeSpan> TuesdayDuration { get; set; }
+        public Nullable<decimal> TuesdayDuration { get; set; }
         public Nullable<int> WednesdayId { get; set; }
         public Nullable<int> WednesdayInstanceId { get; set; }
         public Nullable<System.TimeSpan> WednesdayStartTime { get; set; }
-        public Nullable<System.TimeSpan> WednesdayDuration { get; set; }
+        public Nullable<decimal> WednesdayDuration { get; set; }
         public Nullable<int> ThursdayId { get; set; }
         public Nullable<int> ThursdayInstanceId { get; set; }
         public Nullable<System.TimeSpan> ThursdayStartTime { get; set; }
-        public Nullable<System.TimeSpan> ThursdayDuration { get; set; }
+        public Nullable<decimal> ThursdayDuration { get; set; }
         public Nullable<int> FridayId { get; set; }
         public Nullable<int> FridayInstanceId { get; set; }
         public Nullable<System.TimeSpan> FridayStartTime { get; set; }
-        public Nullable<System.TimeSpan> FridayDuration { get; set; }
+        public Nullable<decimal> FridayDuration { get; set; }
         public Nullable<int> SaturdayId { get; set; }
         public Nullable<int> SaturdayInstanceId { get; set; }
         public Nullable<System.TimeSpan> SaturdayStartTime { get; set; }
-        public Nullable<System.TimeSpan> SaturdayDuration { get; set; }
+        public Nullable<decimal> SaturdayDuration { get; set; }
     }
 }

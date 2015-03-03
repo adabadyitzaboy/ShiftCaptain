@@ -1,0 +1,10 @@
+install iis
+Start -> control panel -> Programs -> Turn on/off features
+
+Turn on the following features:
+Internet Information Services ->Web Management Tools -> IIS Management Service
+Internet Information Services ->World Wide Web Services -> asp.net
+
+
+If the IIS site returns an error, then run the following command as an administrator:
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\aspnet_regiis /iru -enable

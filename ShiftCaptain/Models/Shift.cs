@@ -20,7 +20,7 @@ namespace ShiftCaptain.Models
         public int VersionId { get; set; }
         public int Day { get; set; }
         public System.TimeSpan StartTime { get; set; }
-        public System.TimeSpan Duration { get; set; }
+        public decimal Duration { get; set; }
     
         public virtual Room Room { get; set; }
         public virtual User User { get; set; }

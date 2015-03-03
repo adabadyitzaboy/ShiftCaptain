@@ -1,0 +1,153 @@
+﻿@model IEnumerable<ShiftCaptain.Models.UserView>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.EmailAddress)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NickName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmployeeId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsShiftManager)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsManager)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Locked)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastLogin)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsMale)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MinHours)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MaxHours)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Line1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Line2)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.City)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.State)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ZipCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Country)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmailAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NickName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EmployeeId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhoneNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsShiftManager)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsManager)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Locked)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastLogin)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsActive)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsMale)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MinHours)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MaxHours)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Line1)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Line2)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.City)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.State)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ZipCode)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Country)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.UserId/* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Details", "Details", new { id = item.UserId/* id=item.PrimaryKey */ }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.UserId/* id=item.PrimaryKey */ })
+        </td>
+    </tr>
+}
+
+</table>

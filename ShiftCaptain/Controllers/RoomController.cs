@@ -6,27 +6,25 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ShiftCaptain.Models;
+using ShiftCaptain.Helpers;
 
 namespace ShiftCaptain.Controllers
 {
-    public class RoomController : Controller
+    public class RoomController : BaseController
     {
-        public RoomController()
-        {
-            ViewData["VersionId"] = 1;
-        }
+
         private ShiftCaptainEntities db = new ShiftCaptainEntities();
 
         public JsonResult List(int VersionId = 0, int BuildingId = 0)
         {
-            var result = db.RoomViews.Where(rv => rv.VersionId == VersionId && rv.BuildingId == BuildingId).Select(rv => new { rv.RoomInstanceId, rv.Name });
-            return Json(result, JsonRequestBehavior.AllowGet);
+            var result = db.RoomViews.Where(rv => rv.VersionId == VersionId && rv.BuildingId == BuildingId);
+            return Json(EntitySelector.SelectRoomInstance(result), JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult ListHours(int RoomInstanceId = 0)
+        public JsonResult ListHours(int VersionId = 0, int RoomInstanceId = 0)
         {
-            var result = db.RoomHours.Where(rh => rh.RoomInstanceId == RoomInstanceId).Select(rh => new { rh.Day, rh.StartTime, rh.Duration });
-            return Json(result, JsonRequestBehavior.AllowGet);
+            var result = db.RoomHours.Where(rh => rh.RoomInstanceId == RoomInstanceId || (RoomInstanceId == 0 && rh.RoomInstance.VersionId == VersionId));
+            return Json(EntitySelector.SelectRoomHours(result), JsonRequestBehavior.AllowGet);
         }
 
         private RoomView GetRoomView(int id = 0)
@@ -123,7 +121,7 @@ namespace ShiftCaptain.Controllers
                     Id = roomview.SundayInstanceId.HasValue ? (int)roomview.SundayInstanceId : 0,
                     Day = 0,
                     StartTime = (TimeSpan)roomview.SundayStartTime,
-                    Duration = (TimeSpan)roomview.SundayDuration
+                    Duration = (Decimal)roomview.SundayDuration
                 });
 
             }
@@ -142,7 +140,7 @@ namespace ShiftCaptain.Controllers
                     Id = roomview.MondayInstanceId.HasValue ? (int)roomview.MondayInstanceId : 0,
                     Day = 1,
                     StartTime = (TimeSpan)roomview.MondayStartTime,
-                    Duration = (TimeSpan)roomview.MondayDuration
+                    Duration = (Decimal)roomview.MondayDuration
                 });
 
             }
@@ -161,7 +159,7 @@ namespace ShiftCaptain.Controllers
                     Id = roomview.TuesdayInstanceId.HasValue ? (int)roomview.TuesdayInstanceId : 0,
                     Day = 2,
                     StartTime = (TimeSpan)roomview.TuesdayStartTime,
-                    Duration = (TimeSpan)roomview.TuesdayDuration
+                    Duration = (Decimal)roomview.TuesdayDuration
                 });
 
             }
@@ -180,7 +178,7 @@ namespace ShiftCaptain.Controllers
                     Id = roomview.WednesdayInstanceId.HasValue ? (int)roomview.WednesdayInstanceId : 0,
                     Day = 3,
                     StartTime = (TimeSpan)roomview.WednesdayStartTime,
-                    Duration = (TimeSpan)roomview.WednesdayDuration
+                    Duration = (Decimal)roomview.WednesdayDuration
                 });
 
             }
@@ -199,7 +197,7 @@ namespace ShiftCaptain.Controllers
                     Id = roomview.ThursdayInstanceId.HasValue ? (int)roomview.ThursdayInstanceId : 0,
                     Day = 4,
                     StartTime = (TimeSpan)roomview.ThursdayStartTime,
-                    Duration = (TimeSpan)roomview.ThursdayDuration
+                    Duration = (Decimal)roomview.ThursdayDuration
                 });
 
             }
@@ -218,7 +216,7 @@ namespace ShiftCaptain.Controllers
                     Id = roomview.FridayInstanceId.HasValue ? (int)roomview.FridayInstanceId : 0,
                     Day = 5,
                     StartTime = (TimeSpan)roomview.FridayStartTime,
-                    Duration = (TimeSpan)roomview.FridayDuration
+                    Duration = (Decimal)roomview.FridayDuration
                 });
 
             }
@@ -237,7 +235,7 @@ namespace ShiftCaptain.Controllers
                     Id = roomview.SaturdayInstanceId.HasValue ? (int)roomview.SaturdayInstanceId : 0,
                     Day = 6,
                     StartTime = (TimeSpan)roomview.SaturdayStartTime,
-                    Duration = (TimeSpan)roomview.SaturdayDuration
+                    Duration = (Decimal)roomview.SaturdayDuration
                 });
 
             }

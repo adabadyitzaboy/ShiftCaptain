@@ -93,7 +93,7 @@ Create Table RoomHours
 	RoomInstanceId int not null Foreign Key REFERENCES RoomInstance(Id),
 	[Day] int not null,
 	StartTime time(0) not null,
-	Duration time(0) not null
+	Duration decimal(9,1) not null
 )
 
 Create Table [User]
@@ -121,8 +121,8 @@ Create Table UserInstance
 	Id int Primary Key not null identity,
 	UserId int not null Foreign Key REFERENCES [User](Id),
 	VersionId int not null Foreign Key REFERENCES [Version](Id),
-	MinHours time(0) not null,
-	MaxHours time(0) not null,
+	MinHours decimal(9,1) not null,
+	MaxHours decimal(9,1) not null,
 	CurrentHours decimal(9,1) not null
 )
 
@@ -134,7 +134,7 @@ Create Table [Shift]
 	VersionId int not null Foreign Key REFERENCES [Version](Id),
 	[Day] int not null,
 	StartTime time(0) not null,
-	Duration time(0) not null
+	Duration decimal(9,1) not null
 )
 
 Create Table Preference
@@ -154,7 +154,7 @@ Create Table ShiftPreference
 	PreferenceId int not null Foreign Key REFERENCES Preference(Id),
 	[Day] int not null,
 	StartTime time(0) not null,
-	Duration time(0) not null
+	Duration decimal(9,1) not null
 )
 Go
 Create View UserView

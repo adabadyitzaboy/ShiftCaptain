@@ -1,0 +1,410 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <LastUsedBuildConfiguration>Release</LastUsedBuildConfiguration>
+    <LastUsedPlatform>Any CPU</LastUsedPlatform>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>02/11/2015 09:56:34</publishTime>
+    </File>
+    <File Include="bin/EntityFramework.dll">
+      <publishTime>02/11/2015 09:45:03</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>02/10/2015 19:57:53</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>02/11/2015 09:56:34</publishTime>
+    </File>
+    <File Include="bin/ShiftCaptain.dll">
+      <publishTime>02/27/2015 12:12:51</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>02/10/2015 19:57:55</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>02/10/2015 19:57:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>02/10/2015 19:57:55</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>02/10/2015 19:57:56</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>02/10/2015 19:57:55</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>02/11/2015 09:56:35</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>02/10/2015 19:57:53</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>02/10/2015 19:57:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>02/10/2015 19:57:54</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>02/10/2015 19:57:54</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>02/11/2015 09:56:34</publishTime>
+    </File>
+    <File Include="Content/config.rb">
+      <publishTime>02/16/2015 15:34:38</publishTime>
+    </File>
+    <File Include="Content/images/header/logo.png">
+      <publishTime>02/06/2015 08:46:17</publishTime>
+    </File>
+    <File Include="Content/scss/app.scss">
+      <publishTime>02/20/2015 13:34:47</publishTime>
+    </File>
+    <File Include="Content/scss/DragNDrop/_dragNdrop.scss">
+      <publishTime>02/23/2015 12:12:38</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_accordion.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_alert-boxes.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_block-grid.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_breadcrumbs.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_button-groups.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_buttons.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_clearing.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_dropdown-buttons.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_dropdown.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_flex-video.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_forms.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_global.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_grid.scss">
+      <publishTime>02/13/2015 14:54:28</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_icon-bar.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_inline-lists.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_joyride.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_keystrokes.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_labels.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_magellan.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_offcanvas.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_orbit.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_pagination.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_panels.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_pricing-tables.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_progress-bars.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_range-slider.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_reveal.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_side-nav.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_split-buttons.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_sub-nav.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_switches.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_tables.scss">
+      <publishTime>02/13/2015 15:24:41</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_tabs.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_thumbs.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_toolbar.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_tooltips.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_top-bar.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_type.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/components/_visibility.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/_functions.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/foundation/_settings.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/normalize.scss">
+      <publishTime>02/13/2015 13:06:07</publishTime>
+    </File>
+    <File Include="Content/scss/Pages/_common.scss">
+      <publishTime>02/25/2015 12:57:00</publishTime>
+    </File>
+    <File Include="Content/scss/Pages/_shifts.scss">
+      <publishTime>02/24/2015 13:15:11</publishTime>
+    </File>
+    <File Include="Content/scss/_settings.scss">
+      <publishTime>02/13/2015 13:45:13</publishTime>
+    </File>
+    <File Include="Content/stylesheets/app.css">
+      <publishTime>02/25/2015 12:57:03</publishTime>
+    </File>
+    <File Include="Content/stylesheets/normalize.css">
+      <publishTime>02/16/2015 15:34:47</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>02/10/2015 19:57:37</publishTime>
+    </File>
+    <File Include="Models/ShiftCaptainModel.Context.tt">
+      <publishTime>02/19/2015 14:13:55</publishTime>
+    </File>
+    <File Include="Models/ShiftCaptainModel.edmx.diagram">
+      <publishTime>02/19/2015 14:14:00</publishTime>
+    </File>
+    <File Include="Models/ShiftCaptainModel.tt">
+      <publishTime>02/19/2015 14:13:55</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>02/11/2015 09:56:37</publishTime>
+    </File>
+    <File Include="Scripts/app.js">
+      <publishTime>02/23/2015 15:18:57</publishTime>
+    </File>
+    <File Include="Scripts/CommonShift.js">
+      <publishTime>02/24/2015 14:00:08</publishTime>
+    </File>
+    <File Include="Scripts/DragNDrop/drag-n-drop.js">
+      <publishTime>02/23/2015 15:38:53</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.7.1.js">
+      <publishTime>02/11/2015 09:50:18</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.7.1.min.js">
+      <publishTime>02/11/2015 09:50:18</publishTime>
+    </File>
+    <File Include="Scripts/jquery-ui-1.8.20.js">
+      <publishTime>02/11/2015 09:50:19</publishTime>
+    </File>
+    <File Include="Scripts/jquery-ui-1.8.20.min.js">
+      <publishTime>02/11/2015 09:50:19</publishTime>
+    </File>
+    <File Include="Scripts/jquery.unobtrusive-ajax.js">
+      <publishTime>02/11/2015 09:50:19</publishTime>
+    </File>
+    <File Include="Scripts/jquery.unobtrusive-ajax.min.js">
+      <publishTime>02/11/2015 09:50:19</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.js">
+      <publishTime>02/11/2015 09:50:19</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.min.js">
+      <publishTime>02/11/2015 09:50:19</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.js">
+      <publishTime>02/11/2015 09:50:19</publishTime>
+    </File>
+    <File Include="Scripts/jquery.validate.unobtrusive.min.js">
+      <publishTime>02/11/2015 09:50:19</publishTime>
+    </File>
+    <File Include="Scripts/knockout-2.1.0.debug.js">
+      <publishTime>02/11/2015 09:50:21</publishTime>
+    </File>
+    <File Include="Scripts/knockout-2.1.0.js">
+      <publishTime>02/11/2015 09:50:21</publishTime>
+    </File>
+    <File Include="Scripts/modernizr-2.5.3.js">
+      <publishTime>02/11/2015 09:50:19</publishTime>
+    </File>
+    <File Include="Scripts/Preference/CRUD.js">
+      <publishTime>02/23/2015 17:03:14</publishTime>
+    </File>
+    <File Include="Scripts/Room/CRUD.js">
+      <publishTime>02/24/2015 09:12:17</publishTime>
+    </File>
+    <File Include="Scripts/Shift.js">
+      <publishTime>02/23/2015 16:50:30</publishTime>
+    </File>
+    <File Include="Scripts/Shift/CRUD.js">
+      <publishTime>02/20/2015 20:24:44</publishTime>
+    </File>
+    <File Include="Scripts/ShiftPreference.js">
+      <publishTime>02/24/2015 14:02:58</publishTime>
+    </File>
+    <File Include="Scripts/ShiftPreference/CRUD.js">
+      <publishTime>02/24/2015 13:49:07</publishTime>
+    </File>
+    <File Include="Scripts/User/CRUD.js">
+      <publishTime>02/20/2015 20:24:41</publishTime>
+    </File>
+    <File Include="Scripts/_references.js">
+      <publishTime>02/11/2015 09:50:19</publishTime>
+    </File>
+    <File Include="Views/Building/Create.cshtml">
+      <publishTime>02/12/2015 09:16:08</publishTime>
+    </File>
+    <File Include="Views/Building/Delete.cshtml">
+      <publishTime>02/12/2015 08:44:36</publishTime>
+    </File>
+    <File Include="Views/Building/Details.cshtml">
+      <publishTime>02/12/2015 08:51:06</publishTime>
+    </File>
+    <File Include="Views/Building/Edit.cshtml">
+      <publishTime>02/12/2015 08:50:35</publishTime>
+    </File>
+    <File Include="Views/Building/Index.cshtml">
+      <publishTime>02/12/2015 09:17:20</publishTime>
+    </File>
+    <File Include="Views/Preference/Create.cshtml">
+      <publishTime>02/23/2015 16:57:20</publishTime>
+    </File>
+    <File Include="Views/Preference/Delete.cshtml">
+      <publishTime>02/23/2015 16:57:20</publishTime>
+    </File>
+    <File Include="Views/Preference/Details.cshtml">
+      <publishTime>02/23/2015 16:57:20</publishTime>
+    </File>
+    <File Include="Views/Preference/Edit.cshtml">
+      <publishTime>02/23/2015 16:57:20</publishTime>
+    </File>
+    <File Include="Views/Preference/Index.cshtml">
+      <publishTime>02/23/2015 16:57:19</publishTime>
+    </File>
+    <File Include="Views/Room/Create.cshtml">
+      <publishTime>02/12/2015 13:33:28</publishTime>
+    </File>
+    <File Include="Views/Room/Delete.cshtml">
+      <publishTime>02/12/2015 13:33:20</publishTime>
+    </File>
+    <File Include="Views/Room/Details.cshtml">
+      <publishTime>02/12/2015 13:33:04</publishTime>
+    </File>
+    <File Include="Views/Room/Edit.cshtml">
+      <publishTime>02/12/2015 11:53:59</publishTime>
+    </File>
+    <File Include="Views/Room/Index.cshtml">
+      <publishTime>02/12/2015 13:33:32</publishTime>
+    </File>
+    <File Include="Views/Shared/Error.cshtml">
+      <publishTime>02/11/2015 09:50:16</publishTime>
+    </File>
+    <File Include="Views/Shared/Tip/_Preference.cshtml">
+      <publishTime>02/24/2015 09:08:14</publishTime>
+    </File>
+    <File Include="Views/Shared/Tip/_Shift.cshtml">
+      <publishTime>02/22/2015 21:36:11</publishTime>
+    </File>
+    <File Include="Views/Shared/Tip/_ShiftPreference.cshtml">
+      <publishTime>02/24/2015 14:04:13</publishTime>
+    </File>
+    <File Include="Views/Shared/Tip/_User.cshtml">
+      <publishTime>02/20/2015 16:18:38</publishTime>
+    </File>
+    <File Include="Views/Shared/_Layout.cshtml">
+      <publishTime>02/25/2015 12:55:15</publishTime>
+    </File>
+    <File Include="Views/Shift/Index.cshtml">
+      <publishTime>02/23/2015 16:20:12</publishTime>
+    </File>
+    <File Include="Views/ShiftPreference/Index.cshtml">
+      <publishTime>02/24/2015 14:04:25</publishTime>
+    </File>
+    <File Include="Views/User/Create.cshtml">
+      <publishTime>02/12/2015 13:34:47</publishTime>
+    </File>
+    <File Include="Views/User/Delete.cshtml">
+      <publishTime>02/11/2015 21:41:46</publishTime>
+    </File>
+    <File Include="Views/User/Details.cshtml">
+      <publishTime>02/12/2015 13:36:20</publishTime>
+    </File>
+    <File Include="Views/User/Edit.cshtml">
+      <publishTime>02/12/2015 13:36:54</publishTime>
+    </File>
+    <File Include="Views/User/Index.cshtml">
+      <publishTime>02/12/2015 13:37:50</publishTime>
+    </File>
+    <File Include="Views/Version/Create.cshtml">
+      <publishTime>02/12/2015 13:51:15</publishTime>
+    </File>
+    <File Include="Views/Version/Delete.cshtml">
+      <publishTime>02/12/2015 13:46:56</publishTime>
+    </File>
+    <File Include="Views/Version/Details.cshtml">
+      <publishTime>02/12/2015 13:46:55</publishTime>
+    </File>
+    <File Include="Views/Version/Edit.cshtml">
+      <publishTime>02/12/2015 13:52:12</publishTime>
+    </File>
+    <File Include="Views/Version/Index.cshtml">
+      <publishTime>02/12/2015 13:46:55</publishTime>
+    </File>
+    <File Include="Views/Web.config">
+      <publishTime>02/11/2015 09:58:29</publishTime>
+    </File>
+    <File Include="Views/_ViewStart.cshtml">
+      <publishTime>02/11/2015 09:50:16</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>02/27/2015 12:12:52</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

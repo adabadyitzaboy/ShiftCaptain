@@ -17,8 +17,8 @@ namespace ShiftCaptain.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         public int VersionId { get; set; }
-        public System.TimeSpan MinHours { get; set; }
-        public System.TimeSpan MaxHours { get; set; }
+        public decimal MinHours { get; set; }
+        public decimal MaxHours { get; set; }
         public decimal CurrentHours { get; set; }
     
         public virtual User User { get; set; }

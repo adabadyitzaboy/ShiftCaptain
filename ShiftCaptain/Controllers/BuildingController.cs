@@ -9,7 +9,7 @@ using ShiftCaptain.Models;
 
 namespace ShiftCaptain.Controllers
 {
-    public class BuildingController : Controller
+    public class BuildingController : BaseController
     {
         private ShiftCaptainEntities db = new ShiftCaptainEntities();
         private BuildingView GetBuildingView(int id = 0)
