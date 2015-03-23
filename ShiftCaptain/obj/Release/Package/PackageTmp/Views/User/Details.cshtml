@@ -113,50 +113,16 @@
     <div class="editor-field">
         @Html.DisplayFor(model => model.MaxHours)
     </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Line1)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Line1)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Line2)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Line2)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.City)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.City)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.State)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.State)
-    </div>
-
-    <div class="editor-label">
-        @Html.DisplayNameFor(model => model.ZipCode)
-    </div>
-    <div class="editor-field">
-        @Html.DisplayFor(model => model.ZipCode)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Country)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Country)
+    <div class="small-12 large-2 columns address-holder">
+        <h3>Address</h3>
+        @if (String.IsNullOrEmpty(Model.Line1)){
+            <p>N/A</p>
+        }else{
+            @Html.Partial("Templates/_UserAddress", Model)
+        }
     </div>
 </fieldset>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.UserId/* id=Model.PrimaryKey */ }) |
+    @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.ActionLink("Edit", "Edit", new { id=Model.UserId }) @Html.Raw(" | ") } 
     @Html.ActionLink("Back to List", "Index")
 </p>

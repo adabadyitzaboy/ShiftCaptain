@@ -8,8 +8,21 @@
         @Styles.Render("~/Content/css")
         @Scripts.Render("~/bundles/modernizr")
     </head>
-    <body>
+    <body  class="@if (ShiftCaptain.Infrastructure.SessionManager.IsLoggedIn)
+            {
+                @Html.Raw(((ShiftCaptain.Controllers.BaseController)ViewContext.Controller).ClassName)
+            }"
+        >
         <header>
+            @if (ShiftCaptain.Infrastructure.SessionManager.IsLoggedIn)
+            {
+                <div class="welcome-bar">Hello @ShiftCaptain.Infrastructure.SessionManager.NickName
+                    <ul class="sub-bar">
+                        <li>@Html.ActionLink("My Profile", "EditProfile", "User")</li>
+                        <li>@Html.ActionLink("Logout", "LogOff", "Login")</li>
+                    </ul>
+                </div>
+            }
             <div class="content-wrapper">
                 <div class="row">
                     <div class="small-6 large-3 columns">
@@ -19,26 +32,30 @@
                             </a>
                         </p>
                     </div>
-                    <div class="small-6 large-7 columns">
-                        @*<section id="login">
-                            @Html.Partial("_LoginPartial")
-                        </section>*@
-                        <nav>
-                            <ul id="menu">
-                               <li>@Html.ActionLink("Shifts", "Index", "Shift")</li>
-                               <li>@Html.ActionLink("Shift Preferences", "Index", "ShiftPreference")</li>
-                               <li>@Html.ActionLink("Preferences", "Index", "Preference")</li>
-                                <li>@Html.ActionLink("Buildings", "Index", "Building")</li>
-                                <li>@Html.ActionLink("Rooms", "Index", "Room")</li>
-                                <li>@Html.ActionLink("Users", "Index", "User")</li>
-                                <li>@Html.ActionLink("Versions", "Index", "Version")</li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="small-6 large-2 columns">
-                        @Html.DropDownList("VersionId")
-                    </div>
+                    @if(ShiftCaptain.Infrastructure.SessionManager.IsLoggedIn){
+                        <div class="small-6 large-7 columns">
+                            <nav>
+                                <ul id="menu">
+                                   <li>@Html.ActionLink("Shifts", "Index", "Shift")</li>
+                                   <li>@Html.ActionLink("Shift Preferences", "Index", "ShiftPreference")</li>
+                                   <li>@Html.ActionLink("Preferences", "Index", "Preference")</li>
+                                   @if(ShiftCaptain.Infrastructure.SessionManager.IsManager || ShiftCaptain.Infrastructure.SessionManager.IsShiftManager){
+                                       <li>@Html.ActionLink("Buildings", "Index", "Building")</li>
+                                       <li>@Html.ActionLink("Rooms", "Index", "Room")</li>
+                                       <li>@Html.ActionLink("Users", "Index", "User")</li>
+                                       <li>@Html.ActionLink("Versions", "Index", "Version")</li>
+                                   }
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="small-6 large-2 columns">
+                            @if(@ViewBag.VersionId != null){
+                                @Html.DropDownList("VersionId")
+                            }
+                        </div>
+                    }
                 </div>
+                
                 @RenderSection("header", required: false)
             </div>
             

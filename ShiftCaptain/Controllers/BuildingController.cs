@@ -6,11 +6,16 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ShiftCaptain.Models;
+using ShiftCaptain.Filters;
 
 namespace ShiftCaptain.Controllers
 {
     public class BuildingController : BaseController
     {
+        public BuildingController()
+        {
+            ClassName = "building";
+        }
         private ShiftCaptainEntities db = new ShiftCaptainEntities();
         private BuildingView GetBuildingView(int id = 0)
         {
@@ -18,7 +23,7 @@ namespace ShiftCaptain.Controllers
         }
         //
         // GET: /Building/
-
+        [ShiftManagerAccess]
         public ActionResult Index()
         {
             return View(db.BuildingViews.ToList());
@@ -26,7 +31,7 @@ namespace ShiftCaptain.Controllers
 
         //
         // GET: /Building/Details/5
-
+        [ShiftManagerAccess]
         public ActionResult Details(int id = 0)
         {
             BuildingView buildingview = GetBuildingView(id);
@@ -39,7 +44,7 @@ namespace ShiftCaptain.Controllers
 
         //
         // GET: /Building/Create
-
+        [ManagerAccess]
         public ActionResult Create()
         {
             return View();
@@ -47,8 +52,9 @@ namespace ShiftCaptain.Controllers
 
         //
         // POST: /Building/Create
-
+        [ManagerAccess]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(BuildingView buildingview)
         {
             if (ModelState.IsValid)
@@ -84,7 +90,7 @@ namespace ShiftCaptain.Controllers
 
         //
         // GET: /Building/Edit/5
-
+        [ManagerAccess]
         public ActionResult Edit(int id = 0)
         {
             BuildingView buildingview = GetBuildingView(id);
@@ -99,6 +105,8 @@ namespace ShiftCaptain.Controllers
         // POST: /Building/Edit/5
 
         [HttpPost]
+        [ManagerAccess]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(BuildingView buildingview)
         {
             if (ModelState.IsValid)
@@ -147,7 +155,7 @@ namespace ShiftCaptain.Controllers
 
         //
         // GET: /Building/Delete/5
-
+        [ManagerAccess]
         public ActionResult Delete(int id = 0)
         {
             BuildingView buildingview = GetBuildingView(id);
@@ -162,6 +170,8 @@ namespace ShiftCaptain.Controllers
         // POST: /Building/Delete/5
 
         [HttpPost, ActionName("Delete")]
+        [ManagerAccess]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             var building = db.Buildings.Find(id);

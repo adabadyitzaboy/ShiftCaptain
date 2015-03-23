@@ -52,6 +52,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="OmidID.Web.Security.EFMembershipProvider">
+      <HintPath>..\packages\EFMembership-WebMatrix.3.1\lib\net451\OmidID.Web.Security.EFMembershipProvider.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
@@ -120,82 +123,107 @@
     <Reference Include="WebGrease">
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
     </Reference>
+    <Reference Include="WebMatrix.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.Data.2.0.20710.0\lib\net40\WebMatrix.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.WebData.2.0.30506.0\lib\net40\WebMatrix.WebData.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BuildingController.cs" />
+    <Compile Include="Controllers\EmailTemplateController.cs" />
     <Compile Include="Controllers\EntitySelector.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\ManageScheduleController.cs" />
     <Compile Include="Controllers\PreferenceController.cs" />
     <Compile Include="Controllers\RoomController.cs" />
     <Compile Include="Controllers\ShiftController.cs" />
     <Compile Include="Controllers\ShiftPreferenceController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VersionController.cs" />
+    <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
+    <Compile Include="Filters\Membership.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Authentication.cs" />
+    <Compile Include="Infrastructure\EmailManager.cs" />
+    <Compile Include="Infrastructure\SessionManager.cs" />
     <Compile Include="Models\Address.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Building.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BuildingView.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CantWorkViolation_Result.cs">
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ConflictingShifts_Result.cs">
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\EmailTemplate.cs">
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Metadata.cs" />
+    <Compile Include="Models\NoShiftCoverage_Result.cs">
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PartialClasses.cs" />
     <Compile Include="Models\Preference.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Room.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RoomHour.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RoomInstance.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RoomView.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Shift.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ShiftCaptainModel.Context.cs">
+    <Compile Include="Models\ShiftCaptain.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ShiftCaptainModel.Context.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ShiftCaptainModel.cs">
+    <Compile Include="Models\ShiftCaptain.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ShiftCaptainModel.Designer.cs">
+    <Compile Include="Models\ShiftCaptain.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ShiftCaptainModel.edmx</DependentUpon>
+      <DependentUpon>ShiftCaptain.edmx</DependentUpon>
     </Compile>
     <Compile Include="Models\ShiftPreference.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\sysdiagram.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\User.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserInstance.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserView.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Version.cs">
-      <DependentUpon>ShiftCaptainModel.tt</DependentUpon>
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShiftCaptainEntities.cs" />
@@ -255,28 +283,34 @@
     <Content Include="Content\scss\normalize.scss" />
     <Content Include="Content\scss\Pages\_shifts.scss" />
     <Content Include="Content\scss\_settings.scss" />
-    <EntityDeploy Include="Models\ShiftCaptainModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ShiftCaptainModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\ShiftCaptainModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ShiftCaptainModel.edmx</DependentUpon>
-      <LastGenOutput>ShiftCaptainModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\ShiftCaptainModel.edmx.diagram">
-      <DependentUpon>ShiftCaptainModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\ShiftCaptainModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>ShiftCaptainModel.edmx</DependentUpon>
-      <LastGenOutput>ShiftCaptainModel.cs</LastGenOutput>
-    </Content>
     <Content Include="Content\scss\Pages\_common.scss" />
+    <Content Include="Content\scss\Pages\_header.scss" />
+    <Content Include="Content\scss\Pages\_room.scss" />
+    <Content Include="Content\scss\Pages\_manageSchedules.scss" />
+    <EntityDeploy Include="Models\ShiftCaptain.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ShiftCaptain.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\ShiftCaptain.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ShiftCaptain.edmx</DependentUpon>
+      <LastGenOutput>ShiftCaptain.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\ShiftCaptain.edmx.diagram">
+      <DependentUpon>ShiftCaptain.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\ShiftCaptain.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ShiftCaptain.edmx</DependentUpon>
+      <LastGenOutput>ShiftCaptain.cs</LastGenOutput>
+    </Content>
     <None Include="Properties\PublishProfiles\iis pub.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\Clone.js" />
     <Content Include="Scripts\CommonShift.js" />
+    <Content Include="Scripts\sort.js" />
+    <Content Include="Scripts\DisplayShift.js" />
     <Content Include="Scripts\Preference\CRUD.js" />
     <Content Include="Scripts\ShiftPreference.js" />
     <Content Include="Scripts\ShiftPreference\CRUD.js" />
@@ -342,6 +376,23 @@
     <Content Include="Views\ShiftPreference\Index.cshtml" />
     <Content Include="Views\Shared\Tip\_Preference.cshtml" />
     <Content Include="Views\Shared\Tip\_ShiftPreference.cshtml" />
+    <Content Include="Views\Shared\Templates\_User.cshtml" />
+    <Content Include="Views\Shared\Templates\_Shift.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\User\EditProfile.cshtml" />
+    <Content Include="Views\Shared\Templates\_UserAddress.cshtml" />
+    <Content Include="Views\Shared\Templates\_BuildingAddress.cshtml" />
+    <Content Include="Views\EmailTemplate\Index.cshtml" />
+    <Content Include="Views\EmailTemplate\Details.cshtml" />
+    <Content Include="Views\EmailTemplate\Edit.cshtml" />
+    <Content Include="Views\EmailTemplate\ForgotPassword.cshtml" />
+    <Content Include="Views\EmailTemplate\ResetPassword.cshtml" />
+    <Content Include="Views\ManageSchedule\ValidateSchedule.cshtml" />
+    <Content Include="Views\ManageSchedule\_ScheduleErrors.cshtml" />
+    <Content Include="Views\ManageSchedule\ApproveSchedule.cshtml" />
+    <Content Include="Views\ManageSchedule\CloneSchedule.cshtml" />
+    <Content Include="Views\ManageSchedule\_CloneUser.cshtml" />
+    <Content Include="Views\ManageSchedule\_CloneRoom.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

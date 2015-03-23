@@ -1,14 +1,3 @@
-header {
-	p.site-title{
-		margin-top: 1.25rem;
-		img {
-			max-height: 100px;
-		}
-	}
-	select {
-		margin-top: 20px;
-	}
-}
 .clearboth{
 	clear: both;
 }
@@ -43,7 +32,33 @@ nav ul#menu {
 tip-master {
 	display: none !important;
 }
-
+.address-holder {
+	border: 1px solid #000;
+	
+}
+.display-label, .label {
+	font-weight: bold;
+}
+.has-expansion {
+	position: relative;
+	.expansion {
+		display: none;
+	}
+	&:hover .expansion, &.open .expansion {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: -220px;
+		background: #fff;
+		width: 300px;
+		border: 2px solid #000;
+		padding: 10px;
+	}
+}
+.error-message, .validation-summary-errors{
+	color: red;
+	margin-bottom: 10px;
+}
 @media (min-width: 1000px){
 	body {
 		max-width: 95%;

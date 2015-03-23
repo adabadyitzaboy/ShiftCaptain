@@ -1,0 +1,17 @@
+﻿@model ShiftCaptain.Models.Clone
+
+@using (Html.BeginForm())
+{
+    <div class="row">
+        <div class="small-12 large-5 columns">
+            @Html.ListBox("users", Model.User)
+        </div>
+        <div class="small-12 large-2 columns">
+            <input type="button" id="btnCloneUser" value=">" />
+            <input type="button" id="btnRemoveUser" value="<" />
+        </div>        
+        <div class="small-12 large-5 columns">
+            @Html.ListBoxFor(model => model.CloneUser, new List<SelectListItem>(), new { });
+        </div>
+    </div>
+}

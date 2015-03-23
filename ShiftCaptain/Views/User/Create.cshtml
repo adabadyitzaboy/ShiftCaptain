@@ -7,6 +7,7 @@
 <h2>Create</h2>
 
 @using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
     <fieldset>
@@ -159,6 +160,10 @@
         <p>
             <input type="submit" value="Create" />
         </p>
+        
+        <div>
+            @Html.ValidationMessage("CustomError")
+        </div>
     </fieldset>
 }
 

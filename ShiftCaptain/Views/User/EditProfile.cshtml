@@ -1,0 +1,196 @@
+﻿@model ShiftCaptain.Models.UserView
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>@ShiftCaptain.Infrastructure.SessionManager.NickName</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Profile</legend>
+        @Html.HiddenFor(model => model.UserId)
+        
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EmailAddress)
+        </div>
+        <div class="editor-field">
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){
+                @Html.EditorFor(model => model.EmailAddress)
+                @Html.ValidationMessageFor(model => model.EmailAddress)
+            } else {
+                @Html.DisplayFor(model => model.EmailAddress)
+            }
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FName)
+            @Html.ValidationMessageFor(model => model.FName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.MName)
+            @Html.ValidationMessageFor(model => model.MName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.LName)
+            @Html.ValidationMessageFor(model => model.LName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NickName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.NickName)
+            @Html.ValidationMessageFor(model => model.NickName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.EmployeeId)
+        </div>
+        <div class="editor-field">
+            
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){
+                @Html.EditorFor(model => model.EmployeeId)
+                @Html.ValidationMessageFor(model => model.EmployeeId)
+            }else{
+                @Html.HiddenFor(model => model.EmployeeId)
+                @Html.DisplayFor(model => model.EmployeeId)
+            }
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PhoneNumber)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PhoneNumber)
+            @Html.ValidationMessageFor(model => model.PhoneNumber)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsShiftManager)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.IsShiftManager, new { disabled = "disabled", @readonly = "readonly" })
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsManager)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.IsManager, new { disabled = "disabled", @readonly = "readonly" })
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.IsMale)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.IsMale)
+            @Html.ValidationMessageFor(model => model.IsMale)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MinHours)
+        </div>
+        <div class="editor-field">
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){
+                @Html.EditorFor(model => model.MinHours)
+                @Html.ValidationMessageFor(model => model.MinHours)
+            }else{
+                @Html.HiddenFor(model => model.MinHours)
+                @Html.DisplayFor(model => model.MinHours)
+            }
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CurrentHours)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.CurrentHours)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MaxHours)
+        </div>
+        <div class="editor-field">
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){
+                @Html.EditorFor(model => model.MaxHours)
+                @Html.ValidationMessageFor(model => model.MaxHours)
+            }else{
+                @Html.HiddenFor(model => model.MaxHours)
+                @Html.DisplayFor(model => model.MaxHours)
+            }
+        </div>
+
+        <h3>Address</h3>
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Line1)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Line1)
+            @Html.ValidationMessageFor(model => model.Line1)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Line2)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Line2)
+            @Html.ValidationMessageFor(model => model.Line2)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.City)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.City)
+            @Html.ValidationMessageFor(model => model.City)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.State)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.State)
+            @Html.ValidationMessageFor(model => model.State)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.ZipCode)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.ZipCode)
+            @Html.ValidationMessageFor(model => model.ZipCode)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Country)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Country)
+            @Html.ValidationMessageFor(model => model.Country)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -31,3 +31,9 @@ D:\GitHub\ShiftCaptain\ShiftCaptain\bin\System.Web.WebPages.Razor.xml
 D:\GitHub\ShiftCaptain\ShiftCaptain\obj\Release\ShiftCaptain.csprojResolveAssemblyReference.cache
 D:\GitHub\ShiftCaptain\ShiftCaptain\obj\Release\ShiftCaptain.dll
 D:\GitHub\ShiftCaptain\ShiftCaptain\obj\Release\ShiftCaptain.pdb
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\OmidID.Web.Security.EFMembershipProvider.dll
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.Data.dll
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.WebData.dll
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\OmidID.Web.Security.EFMembershipProvider.pdb
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.Data.xml
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.WebData.xml

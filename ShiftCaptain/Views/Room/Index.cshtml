@@ -9,7 +9,7 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table>
+<table class="sortable">
     <tr><th>
             @Html.DisplayNameFor(model => model.BuildingName)
         </th>
@@ -23,46 +23,53 @@
             @Html.DisplayNameFor(model => model.PhoneNumber)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SundayStartTime)
+            Sunday
+            <ul>
+                <li>Start</li>
+                <li>Duration</li>
+            </ul>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.SundayDuration)
+            Monday
+            <ul>
+                <li>Start</li>
+                <li>Duration</li>
+            </ul>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.MondayStartTime)
+            Tuesday
+            <ul>
+                <li>Start</li>
+                <li>Duration</li>
+            </ul>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.MondayDuration)
+           Wednesday
+            <ul>
+                <li>Start</li>
+                <li>Duration</li>
+            </ul>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TuesdayStartTime)
+            Thursday
+            <ul>
+                <li>Start</li>
+                <li>Duration</li>
+            </ul>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.TuesdayDuration)
+            Friday
+            <ul>
+                <li>Start</li>
+                <li>Duration</li>
+            </ul>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.WednesdayStartTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.WednesdayDuration)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ThursdayStartTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ThursdayDuration)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FridayStartTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FridayDuration)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SaturdayStartTime)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SaturdayDuration)
+            Saturday
+            <ul>
+                <li>Start</li>
+                <li>Duration</li>
+            </ul>
         </th>
         <th></th>
     </tr>
@@ -82,53 +89,56 @@
             @Html.DisplayFor(modelItem => item.PhoneNumber)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.SundayStartTime)
+            <ul>
+                <li>@Html.DisplayFor(modelItem => item.SundayStartTime)</li>        
+                <li>@Html.DisplayFor(modelItem => item.SundayDuration)</li>
+            </ul>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.SundayDuration)
+            <ul>
+                <li>@Html.DisplayFor(modelItem => item.MondayStartTime)</li>        
+                <li>@Html.DisplayFor(modelItem => item.MondayDuration)</li>
+            </ul>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.MondayStartTime)
+            <ul>
+                <li>@Html.DisplayFor(modelItem => item.TuesdayStartTime)</li>        
+                <li>@Html.DisplayFor(modelItem => item.TuesdayDuration)</li>
+            </ul>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.MondayDuration)
+            <ul>
+                <li>@Html.DisplayFor(modelItem => item.WednesdayStartTime)</li>        
+                <li>@Html.DisplayFor(modelItem => item.WednesdayDuration)</li>
+            </ul>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.TuesdayStartTime)
+            <ul>
+                <li>@Html.DisplayFor(modelItem => item.ThursdayStartTime)</li>        
+                <li>@Html.DisplayFor(modelItem => item.ThursdayDuration)</li>
+            </ul>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.TuesdayDuration)
+            <ul>
+                <li>@Html.DisplayFor(modelItem => item.FridayStartTime)</li>        
+                <li>@Html.DisplayFor(modelItem => item.FridayDuration)</li>
+            </ul>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.WednesdayStartTime)
+            <ul>
+                <li>@Html.DisplayFor(modelItem => item.SaturdayStartTime)</li>        
+                <li>@Html.DisplayFor(modelItem => item.SaturdayDuration)</li>
+            </ul>
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.WednesdayDuration)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ThursdayStartTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ThursdayDuration)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FridayStartTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FridayDuration)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SaturdayStartTime)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SaturdayDuration)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.RoomInstanceId/* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { id = item.RoomInstanceId/* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.RoomInstanceId/* id=item.PrimaryKey */ })
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.ActionLink("Edit", "Edit", new { id = item.RoomInstanceId }) @Html.Raw(" | ") } 
+                                                                       @Html.ActionLink("Details", "Details", new { id=item.RoomInstanceId }) 
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.RoomInstanceId }) }
         </td>
     </tr>
 }
 
 </table>
+@section scripts {
+    @Scripts.Render("~/Scripts/sort.js")
+}

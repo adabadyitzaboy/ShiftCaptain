@@ -4953,56 +4953,6 @@ kbd {
   border-radius: 3px;
 }
 
-/* line 91, ../scss/foundation/components/_labels.scss */
-.label {
-  font-weight: normal;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
-  text-align: center;
-  text-decoration: none;
-  line-height: 1;
-  white-space: nowrap;
-  display: inline-block;
-  position: relative;
-  margin-bottom: auto;
-  padding: 0.25rem 0.5rem 0.25rem;
-  font-size: 0.6875rem;
-  background-color: #008CBA;
-  color: #FFFFFF;
-}
-/* line 96, ../scss/foundation/components/_labels.scss */
-.label.radius {
-  border-radius: 3px;
-}
-/* line 97, ../scss/foundation/components/_labels.scss */
-.label.round {
-  border-radius: 1000px;
-}
-/* line 99, ../scss/foundation/components/_labels.scss */
-.label.alert {
-  background-color: #f04124;
-  color: #FFFFFF;
-}
-/* line 100, ../scss/foundation/components/_labels.scss */
-.label.warning {
-  background-color: #f08a24;
-  color: #FFFFFF;
-}
-/* line 101, ../scss/foundation/components/_labels.scss */
-.label.success {
-  background-color: #43AC6A;
-  color: #FFFFFF;
-}
-/* line 102, ../scss/foundation/components/_labels.scss */
-.label.secondary {
-  background-color: #e7e7e7;
-  color: #333333;
-}
-/* line 103, ../scss/foundation/components/_labels.scss */
-.label.info {
-  background-color: #a0d3e8;
-  color: #333333;
-}
-
 /* line 18, ../scss/foundation/components/_magellan.scss */
 [data-magellan-expedition], [data-magellan-expedition-clone] {
   background: #FFFFFF;
@@ -9081,6 +9031,166 @@ th.hide-for-touch {
     display: table-cell !important;
   }
 }
+/* line 1, ../scss/Pages/_common.scss */
+.clearboth {
+  clear: both;
+}
+
+/* line 4, ../scss/Pages/_common.scss */
+nav ul#menu {
+  list-style-type: none;
+}
+/* line 6, ../scss/Pages/_common.scss */
+nav ul#menu li {
+  float: left;
+  margin-left: 1rem;
+  color: #000;
+  padding: 0.1875rem 1rem;
+}
+
+/* line 13, ../scss/Pages/_common.scss */
+.tooltip {
+  position: absolute;
+  z-index: 1005;
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #000;
+}
+/* line 19, ../scss/Pages/_common.scss */
+.tooltip.user, .tooltip.preference {
+  min-width: 375px;
+}
+/* line 22, ../scss/Pages/_common.scss */
+.tooltip.shiftpreference {
+  min-width: 225px;
+}
+/* line 26, ../scss/Pages/_common.scss */
+.tooltip.user label, .tooltip.shift label, .tooltip.shiftpreference label, .tooltip.preference label {
+  float: left;
+  width: 50%;
+}
+
+/* line 32, ../scss/Pages/_common.scss */
+tip-master {
+  display: none !important;
+}
+
+/* line 35, ../scss/Pages/_common.scss */
+.address-holder {
+  border: 1px solid #000;
+}
+
+/* line 39, ../scss/Pages/_common.scss */
+.display-label, .label {
+  font-weight: bold;
+}
+
+/* line 42, ../scss/Pages/_common.scss */
+.has-expansion {
+  position: relative;
+}
+/* line 44, ../scss/Pages/_common.scss */
+.has-expansion .expansion {
+  display: none;
+}
+/* line 47, ../scss/Pages/_common.scss */
+.has-expansion:hover .expansion, .has-expansion.open .expansion {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: -220px;
+  background: #fff;
+  width: 300px;
+  border: 2px solid #000;
+  padding: 10px;
+}
+
+/* line 58, ../scss/Pages/_common.scss */
+.error-message, .validation-summary-errors {
+  color: red;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 1000px) {
+  /* line 63, ../scss/Pages/_common.scss */
+  body {
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* line 68, ../scss/Pages/_common.scss */
+  body > header > .content-wrapper {
+    left: 0;
+    padding-left: 2.5%;
+    padding-right: 2.5%;
+  }
+}
+/* line 3, ../scss/Pages/_header.scss */
+header p.site-title {
+  margin-top: 1.25rem;
+}
+/* line 5, ../scss/Pages/_header.scss */
+header p.site-title img {
+  max-height: 100px;
+}
+/* line 9, ../scss/Pages/_header.scss */
+header select {
+  margin-top: 20px;
+}
+/* line 12, ../scss/Pages/_header.scss */
+header .welcome-bar {
+  position: fixed;
+  top: 0;
+  right: 10%;
+  z-index: 2;
+  background: #00fff5;
+  font-size: .9em;
+  max-height: 20px;
+  padding: 0 5px;
+}
+/* line 21, ../scss/Pages/_header.scss */
+header .welcome-bar:after, header .welcome-bar:before {
+  content: " ";
+  position: absolute;
+  display: block;
+  height: 0;
+  width: 0;
+  top: 0;
+  z-index: 2;
+}
+/* line 30, ../scss/Pages/_header.scss */
+header .welcome-bar:before {
+  left: -20px;
+  border-top: 20px solid #00fff5;
+  border-left: 20px solid transparent;
+}
+/* line 35, ../scss/Pages/_header.scss */
+header .welcome-bar:after {
+  right: -20px;
+  border-top: 20px solid #00fff5;
+  border-right: 20px solid transparent;
+}
+/* line 40, ../scss/Pages/_header.scss */
+header .welcome-bar .sub-bar {
+  display: none;
+  position: relative;
+  background: #00fff5;
+  width: 100%;
+  margin: 0;
+  padding: 2px 10px;
+  top: -1px;
+  left: -2px;
+}
+/* line 49, ../scss/Pages/_header.scss */
+header .welcome-bar .sub-bar li {
+  list-style-type: none;
+}
+/* line 53, ../scss/Pages/_header.scss */
+header .welcome-bar:hover .sub-bar {
+  display: block;
+}
+
 /* line 1, ../scss/Pages/_shifts.scss */
 *, *:before, *:after {
   -moz-box-sizing: border-box;
@@ -9219,78 +9329,30 @@ header .content-wrapper {
   background-color: #fff !important;
 }
 
-/* line 2, ../scss/Pages/_common.scss */
-header p.site-title {
-  margin-top: 1.25rem;
+/* line 3, ../scss/Pages/_room.scss */
+body.room table th {
+  text-align: center;
 }
-/* line 4, ../scss/Pages/_common.scss */
-header p.site-title img {
-  max-height: 100px;
+/* line 6, ../scss/Pages/_room.scss */
+body.room table ul {
+  margin: 0;
+  padding: 0;
+  display: block;
+  min-width: 120px;
 }
-/* line 8, ../scss/Pages/_common.scss */
-header select {
-  margin-top: 20px;
-}
-
-/* line 12, ../scss/Pages/_common.scss */
-.clearboth {
-  clear: both;
-}
-
-/* line 15, ../scss/Pages/_common.scss */
-nav ul#menu {
+/* line 11, ../scss/Pages/_room.scss */
+body.room table ul li {
+  padding: 0 3px;
+  display: inline;
   list-style-type: none;
+  color: green;
 }
-/* line 17, ../scss/Pages/_common.scss */
-nav ul#menu li {
-  float: left;
-  margin-left: 1rem;
-  color: #000;
-  padding: 0.1875rem 1rem;
-}
-
-/* line 24, ../scss/Pages/_common.scss */
-.tooltip {
-  position: absolute;
-  z-index: 1005;
-  background: #fff;
-  padding: 15px;
-  border: 1px solid #000;
-}
-/* line 30, ../scss/Pages/_common.scss */
-.tooltip.user, .tooltip.preference {
-  min-width: 375px;
-}
-/* line 33, ../scss/Pages/_common.scss */
-.tooltip.shiftpreference {
-  min-width: 225px;
-}
-/* line 37, ../scss/Pages/_common.scss */
-.tooltip.user label, .tooltip.shift label, .tooltip.shiftpreference label, .tooltip.preference label {
-  float: left;
-  width: 50%;
+/* line 16, ../scss/Pages/_room.scss */
+body.room table ul li + li {
+  border-left: 1px solid #000;
+  color: #c00;
 }
 
-/* line 43, ../scss/Pages/_common.scss */
-tip-master {
-  display: none !important;
-}
-
-@media (min-width: 1000px) {
-  /* line 48, ../scss/Pages/_common.scss */
-  body {
-    max-width: 95%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* line 53, ../scss/Pages/_common.scss */
-  body > header > .content-wrapper {
-    left: 0;
-    padding-left: 2.5%;
-    padding-right: 2.5%;
-  }
-}
 /* line 1, ../scss/DragNDrop/_dragNdrop.scss */
 .dnd-moving-div {
   position: absolute;

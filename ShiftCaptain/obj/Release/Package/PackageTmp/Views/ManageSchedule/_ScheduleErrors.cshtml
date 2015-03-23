@@ -1,0 +1,57 @@
+﻿@model ShiftCaptain.Models.VersionErrors
+
+<div class="row version-errors">
+    <div class="small-12 large-12 columns">
+        <ul>
+            @foreach (var item in Model.UserConstraintViolations)
+            {
+                <li>@item</li>
+            }
+        </ul>
+    </div>
+    
+    <div class="small-12 large-12 columns">
+        <ul>
+            @foreach (var item in Model.NoShiftCoverages)
+            {
+                <li>No shift coverage for room @item.Name day @item.Day time @((int) item.Time):@(item.Time % 60)</li>
+            }
+        </ul>
+    </div>
+    
+    <div class="small-12 large-12 columns">
+        <h3>Work Preference Violations</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>NickName</th>
+                    <th colspan="3">
+                        Preference
+                        <div>Day Time Duration</div>
+                    </th>
+                    <th>Shift
+                        <div>Room Day Time, Duration</div>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CantWorkViolations)
+                {
+                <tr>
+                    <td>@item.NickName</td>
+                    <td>@(Enum.GetName(typeof(DayOfWeek),item.PreferenceDay))</td><td>@item.PreferenceTime.Value.Hours:@(item.PreferenceTime.Value.Minutes == 0? "00": "30")</td><td>@item.PreferenceDuration.Value</td>
+                    <td>@item.ShiftRoom @(Enum.GetName(typeof(DayOfWeek),item.ShiftDay)) @item.ShiftTime.Value.Hours:@(item.ShiftTime.Value.Minutes == 0? "00": "30"), @item.ShiftDuration.Value</td>
+                </tr>
+                }            
+            </tbody>
+        </table>
+        @*<ul>
+            @foreach (var item in Model.CantWorkViolations)
+            {
+                <li>@item.NickName.  Shift violates No work preference.  Preference @item.PreferenceId @(Enum.GetName(typeof(DayOfWeek),item.PreferenceDay)) time @item.PreferenceTime.Value.Hours:@(item.PreferenceTime.Value.Minutes == 0? "00": "30") duration @item.PreferenceDuration.Value hours - Shift @item.ShiftId room @item.ShiftRoom @(Enum.GetName(typeof(DayOfWeek),item.ShiftDay)) time @item.ShiftTime.Value.Hours:@(item.ShiftTime.Value.Minutes == 0? "00": "30") duration @item.ShiftDuration.Value hours</li>
+            }
+        </ul>*@
+    </div>
+        
+</div>

@@ -42,12 +42,31 @@ if exists (select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'RoomView'
 
 if exists (select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'ShiftView')
     drop view ShiftView;
+	
+if exists (select * from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'EmailTemplate')
+    drop table EmailTemplate;
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'NoShiftCoverage')
+    drop function [NoShiftCoverage];
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'CantWorkViolation')
+    drop function [CantWorkViolation];
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'ConflictingShifts')
+    drop function [ConflictingShifts];
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'UTILfn_Split')
+    drop function [UTILfn_Split];
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'sp_clone_schedule')
+    drop procedure [sp_clone_schedule];
+
 
 Create Table [Version]
 (
 	Id int Primary Key not null identity,
 	Name nvarchar(500) not null,
 	IsActive bit not null,
+	IsVisible bit not null,
 	IsReadyForApproval bit not null,
 	IsApproved bit not null
 )
@@ -111,6 +130,7 @@ Create Table [User]
 	IsShiftManager bit not null,
 	IsManager bit not null,
 	Locked bit not null,
+	NumTries int not null,
 	LastLogin DateTime,
 	IsActive bit not null,
 	IsMale bit not null 
@@ -122,8 +142,7 @@ Create Table UserInstance
 	UserId int not null Foreign Key REFERENCES [User](Id),
 	VersionId int not null Foreign Key REFERENCES [Version](Id),
 	MinHours decimal(9,1) not null,
-	MaxHours decimal(9,1) not null,
-	CurrentHours decimal(9,1) not null
+	MaxHours decimal(9,1) not null
 )
 
 Create Table [Shift]
@@ -177,7 +196,7 @@ U.IsActive,
 U.IsMale,
 UI.MinHours,
 UI.MaxHours,
-UI.CurrentHours,
+(Select sum(Duration) from [Shift] S Where S.UserId = U.Id AND S.VersionId = UI.VersionId) As CurrentHours,
 UI.VersionId,
 A.Id As AddressId,
 A.Line1,
@@ -188,6 +207,7 @@ A.ZipCode,
 A.Country
 from [User] U
 LEFT JOIN UserInstance UI on UI.UserId = U.Id
+
 LEFT JOIN [Address] A
 on U.AddressId = A.Id
 Go
@@ -220,32 +240,32 @@ select
  R.PhoneNumber,
  RI.Id as RoomInstanceId,
  RI.VersionId,
- Sun.Id as SundayId,
- Sun.[Day] as SundayInstanceId,
+ Sun.[Day] as SundayId,
+ Sun.Id as SundayInstanceId,
  Sun.StartTime as SundayStartTime,
  Sun.Duration as SundayDuration,
- Mon.Id as MondayId,
- Mon.[Day] as MondayInstanceId,
+ Mon.[Day] as MondayId,
+ Mon.Id as MondayInstanceId,
  Mon.StartTime as MondayStartTime,
  Mon.Duration as MondayDuration,
- Tues.Id as TuesdayId,
- Tues.[Day] as TuesdayInstanceId,
+ Tues.[Day] as TuesdayId,
+ Tues.Id as TuesdayInstanceId,
  Tues.StartTime as TuesdayStartTime,
  Tues.Duration as TuesdayDuration,
- Wed.Id as WednesdayId,
- Wed.[Day] as WednesdayInstanceId,
+ Wed.[Day] as WednesdayId,
+ Wed.Id as WednesdayInstanceId,
  Wed.StartTime as WednesdayStartTime,
  Wed.Duration as WednesdayDuration,
- Thurs.Id as ThursdayId,
- Thurs.[Day] as ThursdayInstanceId,
+ Thurs.[Day] as ThursdayId,
+ Thurs.Id as ThursdayInstanceId,
  Thurs.StartTime as ThursdayStartTime,
  Thurs.Duration as ThursdayDuration,
- Fri.Id as FridayId,
- Fri.[Day] as FridayInstanceId,
+ Fri.[Day] as FridayId,
+ Fri.Id as FridayInstanceId,
  Fri.StartTime as FridayStartTime,
  Fri.Duration as FridayDuration,
- Sat.Id as SaturdayId,
- Sat.[Day] as SaturdayInstanceId,
+ Sat.[Day] as SaturdayId,
+ Sat.Id as SaturdayInstanceId,
  Sat.StartTime as SaturdayStartTime,
  Sat.Duration as SaturdayDuration
 from [room] R
@@ -272,3 +292,269 @@ Go
 --from [Shift] S
 --JOIN [User] U on S.UserId = U.Id
 --Go
+Create Table EmailTemplate
+(
+	Name nvarchar(50) Primary Key not null,
+	IsActive bit not null,
+	[Subject] nvarchar(100) not null,
+	[Body] nvarchar(4000) not null
+)
+GO
+CREATE function [dbo].[NoShiftCoverage](
+	@versionId int 
+)
+returns @Rooms table ([RoomId] int, Name nvarchar(500), [Day] int, [Time] decimal(9,1))
+BEGIN
+	Declare @hours As table
+	(
+		id int identity Primary Key,
+		[time] decimal(9) not null
+	)
+	Declare @counter int
+	Set @counter = 0
+	While(@counter < 1440 /*(24 * 60)*/)
+	Begin
+		insert into @hours
+		Values (@counter)
+
+		set @counter += 30;
+	END
+
+	insert into @Rooms
+	select RI.Roomid, R.Name, RH.[Day], 
+		case when H.[time] < cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as int) THEN H.[time] + 1440 /*(24 * 60)*/ ELSE H.[time] END / 60
+	from Room R
+	JOIN [RoomInstance] RI on RI.RoomId = R.Id
+	JOIN RoomHours RH on RH.RoomInstanceId = RI.Id
+	JOIN @Hours H on 
+	(
+		H.[time] >= cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9))
+		and H.[time] < cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) + Duration
+	) OR
+	(
+		cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) + Duration >= 1440 /*(24 * 60)*/
+		and H.[time] < (cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) + Duration) % 1440 /*(24 * 60)*/
+	)
+	where RI.VersionId = @versionId and
+	not exists(Select 1 from [Shift] s where s.VersionId = RI.VersionId AND s.RoomId = RI.RoomId AND s.[Day] = RH.[Day] AND
+		( 
+			cast(DATEDIFF(minute, '00:00:00',s.StartTime) as decimal(9)) = H.[time]  OR
+			(cast(DATEDIFF(minute, '00:00:00',s.StartTime) as decimal(9)) < H.[time] AND cast(DATEDIFF(minute, '00:00:00',s.StartTime) as decimal(9)) + (s.Duration * 60)> H.[time] ) OR 
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) > H.[time] AND cast(DATEDIFF(minute, '00:00:00',s.StartTime) as decimal(9)) <= H.[time] + 1440 /*(24 * 60)*/ AND cast(DATEDIFF(minute, '00:00:00',s.StartTime) as decimal(9)) + (s.Duration * 60)> H.[time] + 1440 /*(24 * 60)*/)
+		)
+	)
+	return
+END
+GO
+CREATE function [dbo].[CantWorkViolation](
+	@VersionId int 
+)
+returns @Preferences table ([PreferenceId] int, [ShiftId] int, NickName nvarchar(100), PreferenceDay int, PreferenceTime time(7), PreferenceDuration decimal(9,1), ShiftRoom nvarchar(500), ShiftDay int, ShiftTime  time(7), ShiftDuration decimal(9,1))
+BEGIN
+
+	Declare @RoomHours table
+	(
+		[Day] int Primary Key,
+		[start] int
+	)
+
+	insert into @RoomHours
+	select [Day], Min(DATEDIFF(minute, '00:00:00',StartTime))
+	From RoomHours RH
+	JOIN RoomInstance RI on RI.Id = RH.RoomInstanceId
+	Where RI.VersionId = @VersionId
+	Group By [Day]
+
+
+	insert into @Preferences
+	select P.Id, S.Id, U.NickName, P.[Day], P.StartTime, P.Duration, R.Name, S.[Day], S.StartTime, S.Duration
+	from [ShiftPreference] P 
+	JOIN [Preference] Pref on Pref.Id = P.PreferenceId
+	JOIN @RoomHours RH on P.[Day] = RH.[Day]
+	JOIN [Shift] S 
+	on
+		S.UserId = P.UserId AND
+		S.VersionId = P.VersionId AND
+		S.[Day] = P.[Day] 
+	JOIN RoomInstance RI
+	on RI.Id = S.RoomId AND RI.VersionId = P.VersionId
+	JOIN RoomHours RHS
+	on RHS.[Day] = S.[Day] AND RHS.RoomInstanceId = RI.Id
+	JOIN Room R
+	on R.Id = RI.RoomId
+	JOIN [User] U
+	on S.UserId = U.Id
+	WHERE P.VersionId = @VersionId AND 
+	Pref.CanWork = 0 AND
+		( 
+			cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) = cast(DATEDIFF(minute, '00:00:00',P.StartTime) as decimal(9))  OR
+			(cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) < cast(DATEDIFF(minute, '00:00:00',P.StartTime) as decimal(9)) AND cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) + (s.Duration * 60)> cast(DATEDIFF(minute, '00:00:00',P.StartTime) as decimal(9)) ) OR --shift starts before preference but ends after
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',P.StartTime) as decimal(9)) < RH.[start] AND cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) <= cast(DATEDIFF(minute, '00:00:00',P.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/ AND cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) + (s.Duration * 60) > cast(DATEDIFF(minute, '00:00:00',P.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/) OR--overflow and shift starts before preference but ends after
+			(cast(DATEDIFF(minute, '00:00:00',P.StartTime) as decimal(9)) < cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) AND cast(DATEDIFF(minute, '00:00:00',P.StartTime) as decimal(9)) + (P.Duration * 60)> cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) ) OR --preference starts before shift but ends after
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) < cast(DATEDIFF(minute, '00:00:00',RHS.StartTime) as decimal(9)) AND cast(DATEDIFF(minute, '00:00:00',P.StartTime) as decimal(9)) <= cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/ AND cast(DATEDIFF(minute, '00:00:00',P.StartTime) as decimal(9)) + (P.Duration * 60) > cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/)--overflow and preference starts before shift but ends after
+		)
+	return
+END
+GO
+CREATE function [dbo].[ConflictingShifts](
+	@VersionId int 
+)
+returns @ConflictingShifts table (UserId int, NickName nvarchar(100), [Shift1Id] int, Shift1Room nvarchar(500), Shift1Day int, Shift1Time  time(7), Shift1Duration decimal(9,1), [Shift2Id] int, Shift2Room nvarchar(500), Shift2Day int, Shift2Time  time(7), Shift2Duration decimal(9,1))
+BEGIN
+	Declare @RoomHours table
+	(
+		[Day] int Primary Key,
+		[start] int
+	)
+
+	insert into @RoomHours
+	select [Day], Min(DATEDIFF(minute, '00:00:00',StartTime))
+	From RoomHours RH
+	JOIN RoomInstance RI on RI.Id = RH.RoomInstanceId
+	Where RI.VersionId = @VersionId
+	Group By [Day]
+
+
+	insert into @ConflictingShifts
+	select U.id, U.NickName, S1.Id, R1.Name, S1.[Day], S1.StartTime, S1.Duration, S2.Id, R2.Name, S2.[Day], S2.StartTime, S2.Duration
+	from [Shift] S1
+	JOIN [Shift] S2 
+	on
+		S1.UserId = S2.UserId AND
+		S1.VersionId = S2.VersionId AND
+		S1.[Day] = S2.[Day] AND
+		S1.Id < S2.Id--So that this only gets reported once.
+	JOIN RoomInstance RI1
+	on RI1.Id = S1.RoomId AND RI1.VersionId = S1.VersionId
+	JOIN RoomHours RHS1
+	on RHS1.[Day] = S1.[Day] AND RHS1.RoomInstanceId = RI1.Id
+	JOIN Room R1
+	on R1.Id = RI1.RoomId
+	JOIN RoomInstance RI2
+	on RI2.Id = S2.RoomId AND RI2.VersionId = S2.VersionId
+	JOIN RoomHours RHS2
+	on RHS2.[Day] = S2.[Day] AND RHS2.RoomInstanceId = RI2.Id
+	JOIN Room R2
+	on R2.Id = RI2.RoomId
+	JOIN [User] U
+	on S1.UserId = U.Id
+	WHERE S1.VersionId = @VersionId AND 
+		( 
+			cast(DATEDIFF(minute, '00:00:00',S1.StartTime) as decimal(9)) = cast(DATEDIFF(minute, '00:00:00',S2.StartTime) as decimal(9))  OR
+			(cast(DATEDIFF(minute, '00:00:00',S1.StartTime) as decimal(9)) < cast(DATEDIFF(minute, '00:00:00',S2.StartTime) as decimal(9)) AND cast(DATEDIFF(minute, '00:00:00',S1.StartTime) as decimal(9)) + (S1.Duration * 60)> cast(DATEDIFF(minute, '00:00:00',S2.StartTime) as decimal(9)) ) OR --shift1 starts before shift2 but ends after
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',S2.StartTime) as decimal(9)) < cast(DATEDIFF(minute, '00:00:00',RHS2.StartTime) as decimal(9)) AND cast(DATEDIFF(minute, '00:00:00',S1.StartTime) as decimal(9)) <= cast(DATEDIFF(minute, '00:00:00',S2.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/ AND cast(DATEDIFF(minute, '00:00:00',S1.StartTime) as decimal(9)) + (S1.Duration * 60) > cast(DATEDIFF(minute, '00:00:00',S2.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/) OR--overflow and shift1 starts before shift2 but ends after
+			(cast(DATEDIFF(minute, '00:00:00',S2.StartTime) as decimal(9)) < cast(DATEDIFF(minute, '00:00:00',S1.StartTime) as decimal(9)) AND cast(DATEDIFF(minute, '00:00:00',S2.StartTime) as decimal(9)) + (S2.Duration * 60)> cast(DATEDIFF(minute, '00:00:00',S1.StartTime) as decimal(9)) ) OR --shift2 starts before shift1 but ends after
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',S1.StartTime) as decimal(9)) < cast(DATEDIFF(minute, '00:00:00',RHS1.StartTime) as decimal(9)) AND cast(DATEDIFF(minute, '00:00:00',S2.StartTime) as decimal(9)) <= cast(DATEDIFF(minute, '00:00:00',S1.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/ AND cast(DATEDIFF(minute, '00:00:00',S2.StartTime) as decimal(9)) + (S2.Duration * 60) > cast(DATEDIFF(minute, '00:00:00',S1.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/)--overflow and shift2 starts before shift1 but ends after
+		)
+
+	return
+END
+GO
+CREATE function [dbo].[UTILfn_Split](
+ @String nvarchar (max),
+ @Delimiter nvarchar (10)
+ )
+returns @ValueTable table ([row] int identity Primary Key, [Value] nvarchar(max))
+begin
+ declare @NextString nvarchar(max)
+ declare @Pos int
+ declare @NextPos int
+ declare @CommaCheck nvarchar(1)
+ 
+ --Initialize
+ set @NextString = ''
+ set @CommaCheck = right(@String,1) 
+ 
+ --Check for trailing Comma, if not exists, INSERT
+ --if (@CommaCheck <> @Delimiter )
+ set @String = @String + @Delimiter
+ 
+ --Get position of first Comma
+ set @Pos = charindex(@Delimiter,@String)
+ set @NextPos = 1
+ 
+ --Loop while there is still a comma in the String of levels
+ while (@pos <>  0)  
+ begin
+  set @NextString = substring(@String,1,@Pos - 1)
+ 
+  insert into @ValueTable ( [Value]) Values (@NextString)
+ 
+  set @String = substring(@String,@pos +1,len(@String))
+  
+  set @NextPos = @Pos
+  set @pos  = charindex(@Delimiter,@String)
+ end
+ 
+ return 
+end
+
+GO
+
+CREATE PROCEDURE sp_clone_schedule
+(
+	@VersionId int,
+	@VersionName nvarchar(500),
+	@Users nvarchar(max),
+	@Rooms nvarchar(max)
+)
+AS
+BEGIN
+	Set NOCOUNT ON;
+
+	Declare @UserIds table ([row] int not null Primary Key, id int)
+	insert into @UserIds 
+	select [row], [value] from dbo.[UTILfn_Split](@Users, ',')
+	
+
+	Declare @RoomIds table ([row] int not null Primary Key, id int)
+	insert into @RoomIds 
+	select [row], [value] from dbo.[UTILfn_Split](@Rooms, ',')
+
+	insert into [Version]
+	select @VersionName, 0, 0, 0, 0
+	
+	Declare @NewVersionId int
+	set @NewVersionId = @@IDENTITY
+
+	insert into UserInstance
+	select UserId, @NewVersionId, MinHours, MaxHours
+	From UserInstance UI
+	JOIN @UserIds ids
+	on UI.UserId = ids.id
+	Where UI.VersionId = @VersionId
+	
+	insert into RoomInstance
+	select RoomId, @NewVersionId
+	From RoomInstance RI
+	JOIN @RoomIds ids
+	on RI.RoomId = ids.id
+	Where RI.VersionId = @VersionId
+	
+	insert into RoomHours
+	Select RI.Id, [Day], StartTime, Duration
+	From RoomHours RH
+	JOIN RoomInstance ORI
+	on RH.RoomInstanceId = ORI.Id and ORI.VersionId = @VersionId
+	JOIN RoomInstance RI
+	on RI.VersionId = @NewVersionId AND RI.RoomId = ORI.RoomId
+
+	insert into [Shift]
+	select S.UserId, S.RoomId, UI.VersionId, [Day], StartTime, Duration
+	From [Shift] S
+	JOIN UserInstance UI
+	on UI.UserId = S.UserId AND UI.VersionId = @NewVersionId
+	JOIN RoomInstance RI
+	on RI.RoomId = S.RoomId AND RI.VersionId = @NewVersionId
+	Where S.VersionId = @VersionId
+
+	insert into [ShiftPreference]
+	select SP.UserId, UI.VersionId, PreferenceId, [Day], StartTime, Duration
+	From [ShiftPreference] SP
+	JOIN UserInstance UI
+	on UI.UserId = SP.UserId AND UI.VersionId = @NewVersionId
+	Where SP.VersionId = @VersionId
+
+	Select @NewVersionId
+END
+GO

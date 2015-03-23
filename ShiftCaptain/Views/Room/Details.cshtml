@@ -136,6 +136,6 @@
     </div>
 </fieldset>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.RoomInstanceId/* id=Model.PrimaryKey */ }) |
+    @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.ActionLink("Edit", "Edit", new { id=Model.RoomInstanceId }) @Html.Raw(" | ") } 
     @Html.ActionLink("Back to List", "Index")
 </p>

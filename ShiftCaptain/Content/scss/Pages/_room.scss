@@ -1,0 +1,23 @@
+body.room {
+	table {
+		th{
+			text-align: center;
+		}
+		ul{
+			margin: 0;
+			padding: 0;
+			display: block;
+			min-width: 120px;
+			li {
+				padding: 0 3px;
+				display: inline;
+				list-style-type: none;
+				color: green;
+				& + li {
+					border-left: 1px solid #000;
+					color: #c00;
+				}
+			}
+		}
+	}
+}

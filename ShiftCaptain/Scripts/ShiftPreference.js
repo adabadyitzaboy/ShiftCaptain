@@ -57,6 +57,7 @@ sc.Preference.get(null, function (preferences) {
         prefHolder.append(createPreference(preferences[idx]));
     }
     sc.app.resizeHeader();
+    $("#shiftHolder table").trigger("page-ready");
 }, function (error) {
     sc.app.displayError(error);
 });
@@ -64,7 +65,7 @@ sc.Preference.get(null, function (preferences) {
 $("#UserID").change(function (val) {
     var userId = $(this).val();
     sc.ShiftPreference.get(userId, function (preferences) {
-        sc.app.createShiftTable(roomHours, preferences, createShiftElement);
+        sc.app.createShiftTable(roomHours, preferences, createShiftElement, { empty_row: false, border_row: false });
     });
 });
 var getShiftInfo = function ($dragElement, $dropElement) {
@@ -102,7 +103,9 @@ var addDraggerFunctions = function (elementType, $element) {
     return orig;
 };
 var cancelDrag = function (event, temp) {
-    $(temp).replaceWith(this);
+    if (temp != this) {
+        $(temp).replaceWith(this);
+    }
     $(".temp").each(function (index) {
         $(this).remove();
     });
@@ -166,17 +169,18 @@ var dragComplete = function ($newShift, $temp) {
         //row is empty.   AND not the only row for this day         
         tr.remove();
     }
-    if ($newShift) {
-        //check to see if day has an "empty-row"
-        tr = $newShift.closest('tr');
-        day = parseInt(tr.attr('day'));
-        var oldEmptyRow = $(".drop-section ." + dayName[day] + ".empty-row");
-        if (oldEmptyRow.find(".taken").length > 0) {
-            oldEmptyRow.removeClass(".empty-row");
-            var fakeBody = $("<fake></fake>");
-            var dayData = currentRoomHours[day];
-            sc.app.makeRow(1/* just can't be zero*/, fakeBody, dayData, dayData.s, dayData.e, [], dayData.MinStart, dayData.MaxEnd, createShiftElement);
-            $(fakeBody.children()).insertAfter(oldEmptyRow);
-        }
-    }
+    //we don't want an empty row for this page.
+    //if ($newShift) {
+    //    //check to see if day has an "empty-row"
+    //    tr = $newShift.closest('tr');
+    //    day = parseInt(tr.attr('day'));
+    //    var oldEmptyRow = $(".drop-section ." + dayName[day] + ".empty-row");
+    //    if (oldEmptyRow.find(".taken").length > 0) {
+    //        oldEmptyRow.removeClass(".empty-row");
+    //        var fakeBody = $("<fake></fake>");
+    //        var dayData = currentRoomHours[day];
+    //        sc.app.makeRow(1/* just can't be zero*/, fakeBody, dayData, dayData.s, dayData.e, [], dayData.MinStart, dayData.MaxEnd, createShiftElement);
+    //        $(fakeBody.children()).insertAfter(oldEmptyRow);
+    //    }
+    //}
 };

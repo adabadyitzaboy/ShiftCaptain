@@ -1,0 +1,36 @@
+﻿@model ShiftCaptain.Models.EmailNPass
+
+@{
+    ViewBag.Title = "Log in";
+}
+
+<h2>Login</h2>
+
+<section id="loginForm">
+<h2>Use a local account to log in.</h2>
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Log in Form</legend>
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.EmailAddress)
+                @Html.TextBoxFor(m => m.EmailAddress)
+                @Html.ValidationMessageFor(m => m.EmailAddress)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Pass)
+                @Html.PasswordFor(m => m.Pass)
+                @Html.ValidationMessageFor(m => m.Pass)
+            </li>
+        </ol>
+        <input type="submit" value="Log in" />
+    </fieldset>
+}
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

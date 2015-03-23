@@ -1,0 +1,37 @@
+﻿@model ShiftCaptain.Models.VersionErrors
+
+@{
+    ViewBag.Title = "Request Approval";
+}
+    <div class="row">
+        <div class="small-12 large-12 columns left">
+            @if(Model.NumErrors > 0){
+                <p>Version has errors.  Cannot approve a schedule with errors.</p>
+            }else if (Model.IsReadyForApproval && !Model.IsApproved) {
+                using (Html.BeginForm("ApproveSchedule", "ManageSchedule")) {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => model.Id)
+                
+                <input type="submit" value='Approve Schedule' id="ApproveSchedule" />
+                }
+                using (Html.BeginForm("RejectSchedule", "ManageSchedule"))
+                {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+
+                <input type="submit" value='Reject Schedule' id="RejectSchedule"/>
+                }
+            } else if (Model.IsApproved) {
+                <p>Version has been approved.</p>
+            } else {
+                <p>Version isn't ready for Approval</p>
+            }
+        </div>
+    </div>
+    @Html.Partial("_ScheduleErrors")
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

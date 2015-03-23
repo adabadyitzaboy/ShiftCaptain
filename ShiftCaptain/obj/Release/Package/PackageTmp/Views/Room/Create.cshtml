@@ -8,11 +8,11 @@
 
 @using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
     <fieldset>
         <legend>RoomView</legend>
-        @Html.HiddenFor(model => model.BuildingName)
         <div class="editor-label">
             @Html.LabelFor(model => model.BuildingId, "Building")
         </div>

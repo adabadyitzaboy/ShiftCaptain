@@ -4,10 +4,12 @@
 }
 
 @section header {
-    <section id="Employees">
-        <div class="row">
-        </div>
-    </section>
+    @if(ShiftCaptain.Infrastructure.SessionManager.IsManager || ShiftCaptain.Infrastructure.SessionManager.IsShiftManager){
+        <section id="Employees">
+            <div class="row">
+            </div>
+        </section>
+    }
     <section id="Errors"></section>
     <section id="Dropdowns" class="row">
         <div class="small-12 large-4 columns">
@@ -19,27 +21,24 @@
             @Html.DropDownList("RoomID")
         </div>
         <div class="small-12 large-4 columns left">
-            <label for="ShiftDuration">Shift Length</label>
-            <select id="ShiftDuration">
-                <option value="2">2 hours</option>
-                <option value="2.5">2 1/2 hours</option>
-                <option value="3">3 hours</option>
-                <option value="3.5">3 1/2 hours</option>
-                <option value="4" selected="selected">4 hours</option>
-                <option value="4.5">4 1/2 hours</option>
-                <option value="5">5 hours</option>
-                <option value="5.5">5 1/2 hours</option>
-                <option value="6">6 hours</option>
-                <option value="6.5">6 1/2 hours</option>
-            </select>
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager || ShiftCaptain.Infrastructure.SessionManager.IsShiftManager){
+                <label for="ShiftDuration">Shift Length</label>
+                <select id="ShiftDuration">
+                    <option value="2">2 hours</option>
+                    <option value="2.5">2 1/2 hours</option>
+                    <option value="3">3 hours</option>
+                    <option value="3.5">3 1/2 hours</option>
+                    <option value="4" selected="selected">4 hours</option>
+                    <option value="4.5">4 1/2 hours</option>
+                    <option value="5">5 hours</option>
+                    <option value="5.5">5 1/2 hours</option>
+                    <option value="6">6 hours</option>
+                    <option value="6.5">6 1/2 hours</option>
+                </select>
+            }
         </div>
     </section>
 }
-<section id="Shifts">
-    <div class="row">
-        
-    </div>
-</section>
 <section id="shiftHolder" class="drop-section">
     <div class="row">
         <div class="small-12 large-12 columns">
@@ -48,6 +47,7 @@
         </div>
     </div>
 </section>
+@Html.Partial("Templates/_User")
 @Html.Partial("Tip/_User")
 @Html.Partial("Tip/_Shift")
 @section scripts {
@@ -57,5 +57,9 @@
     @Scripts.Render("~/Scripts/User/CRUD.js")
     @Scripts.Render("~/Scripts/DragNDrop/drag-n-drop.js")
     @Scripts.Render("~/Scripts/CommonShift.js")
-    @Scripts.Render("~/Scripts/Shift.js")
+    @if(ShiftCaptain.Infrastructure.SessionManager.IsManager || ShiftCaptain.Infrastructure.SessionManager.IsShiftManager){
+        @Scripts.Render("~/Scripts/Shift.js")
+    }else{
+        @Scripts.Render("~/Scripts/DisplayShift.js")
+    }
 }

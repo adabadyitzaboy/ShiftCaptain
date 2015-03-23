@@ -9,6 +9,8 @@ using ShiftCaptain.Models;
 using System.Net;
 using ShiftCaptain.Helpers;
 using System.Data.Objects.SqlClient;
+using ShiftCaptain.Filters;
+using ShiftCaptain.Infrastructure;
 
 namespace ShiftCaptain.Controllers
 {
@@ -17,8 +19,13 @@ namespace ShiftCaptain.Controllers
         private ShiftCaptainEntities db = new ShiftCaptainEntities();
         public ShiftPreferenceController()
         {
-            var VersionId = (int)((SelectList)ViewData["VersionId"]).SelectedValue;
-            ViewData["UserId"] = new SelectList(db.UserInstances.Where(ui=>ui.VersionId == VersionId), "Id", "User.NickName");
+            ClassName = "shiftpreference";
+            if (SessionManager.IsShiftManager || SessionManager.IsManager)
+            {
+                var versionId = GetVersionId();
+                ViewData["UserId"] = new SelectList(db.UserInstances.Where(ui => ui.VersionId == CurrentVersionId), "UserId", "User.NickName");
+            }
+            AddVersionDropDown();
         }
 
         private object IsValid(ShiftPreference shiftPreference)
@@ -43,6 +50,7 @@ namespace ShiftCaptain.Controllers
 
         //
         // GET: /ShiftPreference/Validate
+        [ShiftManagerAccess]
         public JsonResult Validate(int VersionId = 0, int ShiftPreferenceId = 0, int PreferenceId = 0, int UserId = 0, int Day = 0, string StartTime = "00:00", decimal Duration = 0)
         {
             var shift = new ShiftPreference
@@ -68,6 +76,8 @@ namespace ShiftCaptain.Controllers
         //
         // POST: /ShiftPreference/Create
         [HttpPost]
+        [ShiftManagerAccess]
+        [ValidateAntiForgeryToken]
         public JsonResult Create(int VersionId = 0, int UserId = 0, int Day = 0, string StartTime = "00:00", decimal Duration = 0, int PreferenceId = 0)
         {
             var shiftPreference = new ShiftPreference
@@ -96,6 +106,8 @@ namespace ShiftCaptain.Controllers
         // POST: /ShiftPreference/Update
 
         [HttpPost]
+        [ShiftManagerAccess]
+        [ValidateAntiForgeryToken]
         public JsonResult Update(int ShiftPreferenceId = 0, int Day = 0, string StartTime = "00:00", decimal Duration = 0, int PreferenceId = 0)
         {
             var shiftPreference = db.ShiftPreferences.Find(ShiftPreferenceId);
@@ -113,7 +125,6 @@ namespace ShiftCaptain.Controllers
 
         //
         // GET: /List/
-
         public JsonResult List(int VersionId = 0, int UserId = 0)
         {
             var shifts = db.ShiftPreferences.Where(s => s.VersionId == VersionId && (UserId == 0 || s.UserId == UserId));
@@ -124,6 +135,8 @@ namespace ShiftCaptain.Controllers
         // POST: /ShiftPreference/Delete/5
 
         [HttpPost, ActionName("Delete")]
+        [ShiftManagerAccess]
+        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             var shiftPreference = db.ShiftPreferences.Find(id);
@@ -138,8 +151,7 @@ namespace ShiftCaptain.Controllers
 
         public ActionResult Index()
         {
-            var shiftpreferences = db.ShiftPreferences.Include(s => s.Preference).Include(s => s.User).Include(s => s.Version);
-            return View(shiftpreferences.ToList());
+            return View();
         }
 
         protected override void Dispose(bool disposing)

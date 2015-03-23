@@ -12,6 +12,10 @@ namespace ShiftCaptain.Controllers
 {
     public class PreferenceController : BaseController
     {
+        public PreferenceController()
+        {
+            ClassName = "preference";
+        }
         private ShiftCaptainEntities db = new ShiftCaptainEntities();
 
         //

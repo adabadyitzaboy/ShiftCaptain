@@ -10,10 +10,14 @@
     </section>
     <section id="Errors"></section>
     <section id="Dropdowns" class="row">
-        <div class="small-12 large-4 columns">
-            <label for="UserID">User</label>
-            @Html.DropDownList("UserID")
-        </div>
+        @if(ShiftCaptain.Infrastructure.SessionManager.IsManager || ShiftCaptain.Infrastructure.SessionManager.IsShiftManager){
+            <div class="small-12 large-4 columns">
+                <label for="UserID">User</label>
+                @Html.DropDownList("UserID")
+            </div>
+        }else{
+            @Html.Hidden("UserID", ShiftCaptain.Infrastructure.SessionManager.UserId)
+        }
         <div class="small-12 large-4 columns left">
             <label for="ShiftDuration">Shift Length</label>
             <select id="ShiftDuration">

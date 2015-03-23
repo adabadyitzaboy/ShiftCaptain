@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ShiftCaptainModelStoreContainer" CdmEntityContainer="ShiftCaptainEntities">
+    <EntitySetMapping Name="Addresses">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.Address">
+        <MappingFragment StoreEntitySet="Address">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Line1" ColumnName="Line1" />
+          <ScalarProperty Name="Line2" ColumnName="Line2" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Buildings">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.Building">
+        <MappingFragment StoreEntitySet="Building">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="ManagerPhone" ColumnName="ManagerPhone" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EmailTemplates">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.EmailTemplate">
+        <MappingFragment StoreEntitySet="EmailTemplate">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="Subject" ColumnName="Subject" />
+          <ScalarProperty Name="Body" ColumnName="Body" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Preferences">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.Preference">
+        <MappingFragment StoreEntitySet="Preference">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Color" ColumnName="Color" />
+          <ScalarProperty Name="CanWork" ColumnName="CanWork" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Rooms">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.Room">
+        <MappingFragment StoreEntitySet="Room">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="RoomNumber" ColumnName="RoomNumber" />
+          <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RoomHours">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.RoomHour">
+        <MappingFragment StoreEntitySet="RoomHours">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RoomInstanceId" ColumnName="RoomInstanceId" />
+          <ScalarProperty Name="Day" ColumnName="Day" />
+          <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+          <ScalarProperty Name="Duration" ColumnName="Duration" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RoomInstances">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.RoomInstance">
+        <MappingFragment StoreEntitySet="RoomInstance">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+          <ScalarProperty Name="VersionId" ColumnName="VersionId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Shifts">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.Shift">
+        <MappingFragment StoreEntitySet="Shift">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+          <ScalarProperty Name="VersionId" ColumnName="VersionId" />
+          <ScalarProperty Name="Day" ColumnName="Day" />
+          <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+          <ScalarProperty Name="Duration" ColumnName="Duration" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ShiftPreferences">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.ShiftPreference">
+        <MappingFragment StoreEntitySet="ShiftPreference">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="VersionId" ColumnName="VersionId" />
+          <ScalarProperty Name="PreferenceId" ColumnName="PreferenceId" />
+          <ScalarProperty Name="Day" ColumnName="Day" />
+          <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+          <ScalarProperty Name="Duration" ColumnName="Duration" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.sysdiagram">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.User">
+        <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+          <ScalarProperty Name="Pass" ColumnName="Pass" />
+          <ScalarProperty Name="FName" ColumnName="FName" />
+          <ScalarProperty Name="MName" ColumnName="MName" />
+          <ScalarProperty Name="LName" ColumnName="LName" />
+          <ScalarProperty Name="NickName" ColumnName="NickName" />
+          <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="IsShiftManager" ColumnName="IsShiftManager" />
+          <ScalarProperty Name="IsManager" ColumnName="IsManager" />
+          <ScalarProperty Name="Locked" ColumnName="Locked" />
+          <ScalarProperty Name="NumTries" ColumnName="NumTries" />
+          <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="IsMale" ColumnName="IsMale" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserInstances">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.UserInstance">
+        <MappingFragment StoreEntitySet="UserInstance">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="VersionId" ColumnName="VersionId" />
+          <ScalarProperty Name="MinHours" ColumnName="MinHours" />
+          <ScalarProperty Name="MaxHours" ColumnName="MaxHours" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Versions">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.Version">
+        <MappingFragment StoreEntitySet="Version">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="IsVisible" ColumnName="IsVisible" />
+          <ScalarProperty Name="IsReadyForApproval" ColumnName="IsReadyForApproval" />
+          <ScalarProperty Name="IsApproved" ColumnName="IsApproved" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BuildingViews">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.BuildingView">
+        <MappingFragment StoreEntitySet="BuildingView">
+          <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="ManagerPhone" ColumnName="ManagerPhone" />
+          <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+          <ScalarProperty Name="Line1" ColumnName="Line1" />
+          <ScalarProperty Name="Line2" ColumnName="Line2" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RoomViews">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.RoomView">
+        <MappingFragment StoreEntitySet="RoomView">
+          <ScalarProperty Name="BuildingId" ColumnName="BuildingId" />
+          <ScalarProperty Name="BuildingName" ColumnName="BuildingName" />
+          <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="RoomNumber" ColumnName="RoomNumber" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="RoomInstanceId" ColumnName="RoomInstanceId" />
+          <ScalarProperty Name="VersionId" ColumnName="VersionId" />
+          <ScalarProperty Name="SundayId" ColumnName="SundayId" />
+          <ScalarProperty Name="SundayInstanceId" ColumnName="SundayInstanceId" />
+          <ScalarProperty Name="SundayStartTime" ColumnName="SundayStartTime" />
+          <ScalarProperty Name="SundayDuration" ColumnName="SundayDuration" />
+          <ScalarProperty Name="MondayId" ColumnName="MondayId" />
+          <ScalarProperty Name="MondayInstanceId" ColumnName="MondayInstanceId" />
+          <ScalarProperty Name="MondayStartTime" ColumnName="MondayStartTime" />
+          <ScalarProperty Name="MondayDuration" ColumnName="MondayDuration" />
+          <ScalarProperty Name="TuesdayId" ColumnName="TuesdayId" />
+          <ScalarProperty Name="TuesdayInstanceId" ColumnName="TuesdayInstanceId" />
+          <ScalarProperty Name="TuesdayStartTime" ColumnName="TuesdayStartTime" />
+          <ScalarProperty Name="TuesdayDuration" ColumnName="TuesdayDuration" />
+          <ScalarProperty Name="WednesdayId" ColumnName="WednesdayId" />
+          <ScalarProperty Name="WednesdayInstanceId" ColumnName="WednesdayInstanceId" />
+          <ScalarProperty Name="WednesdayStartTime" ColumnName="WednesdayStartTime" />
+          <ScalarProperty Name="WednesdayDuration" ColumnName="WednesdayDuration" />
+          <ScalarProperty Name="ThursdayId" ColumnName="ThursdayId" />
+          <ScalarProperty Name="ThursdayInstanceId" ColumnName="ThursdayInstanceId" />
+          <ScalarProperty Name="ThursdayStartTime" ColumnName="ThursdayStartTime" />
+          <ScalarProperty Name="ThursdayDuration" ColumnName="ThursdayDuration" />
+          <ScalarProperty Name="FridayId" ColumnName="FridayId" />
+          <ScalarProperty Name="FridayInstanceId" ColumnName="FridayInstanceId" />
+          <ScalarProperty Name="FridayStartTime" ColumnName="FridayStartTime" />
+          <ScalarProperty Name="FridayDuration" ColumnName="FridayDuration" />
+          <ScalarProperty Name="SaturdayId" ColumnName="SaturdayId" />
+          <ScalarProperty Name="SaturdayInstanceId" ColumnName="SaturdayInstanceId" />
+          <ScalarProperty Name="SaturdayStartTime" ColumnName="SaturdayStartTime" />
+          <ScalarProperty Name="SaturdayDuration" ColumnName="SaturdayDuration" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UserViews">
+      <EntityTypeMapping TypeName="ShiftCaptainModel.UserView">
+        <MappingFragment StoreEntitySet="UserView">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+          <ScalarProperty Name="Pass" ColumnName="Pass" />
+          <ScalarProperty Name="FName" ColumnName="FName" />
+          <ScalarProperty Name="MName" ColumnName="MName" />
+          <ScalarProperty Name="LName" ColumnName="LName" />
+          <ScalarProperty Name="NickName" ColumnName="NickName" />
+          <ScalarProperty Name="EmployeeId" ColumnName="EmployeeId" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="IsShiftManager" ColumnName="IsShiftManager" />
+          <ScalarProperty Name="IsManager" ColumnName="IsManager" />
+          <ScalarProperty Name="Locked" ColumnName="Locked" />
+          <ScalarProperty Name="LastLogin" ColumnName="LastLogin" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="IsMale" ColumnName="IsMale" />
+          <ScalarProperty Name="MinHours" ColumnName="MinHours" />
+          <ScalarProperty Name="MaxHours" ColumnName="MaxHours" />
+          <ScalarProperty Name="CurrentHours" ColumnName="CurrentHours" />
+          <ScalarProperty Name="VersionId" ColumnName="VersionId" />
+          <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+          <ScalarProperty Name="Line1" ColumnName="Line1" />
+          <ScalarProperty Name="Line2" ColumnName="Line2" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionName="ShiftCaptainModel.Store.CantWorkViolation" FunctionImportName="CantWorkViolation">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ShiftCaptainModel.CantWorkViolation_Result">
+          <ScalarProperty Name="PreferenceId" ColumnName="PreferenceId" />
+          <ScalarProperty Name="ShiftId" ColumnName="ShiftId" />
+          <ScalarProperty Name="NickName" ColumnName="NickName" />
+          <ScalarProperty Name="PreferenceDay" ColumnName="PreferenceDay" />
+          <ScalarProperty Name="PreferenceTime" ColumnName="PreferenceTime" />
+          <ScalarProperty Name="PreferenceDuration" ColumnName="PreferenceDuration" />
+          <ScalarProperty Name="ShiftRoom" ColumnName="ShiftRoom" />
+          <ScalarProperty Name="ShiftDay" ColumnName="ShiftDay" />
+          <ScalarProperty Name="ShiftTime" ColumnName="ShiftTime" />
+          <ScalarProperty Name="ShiftDuration" ColumnName="ShiftDuration" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionName="ShiftCaptainModel.Store.ConflictingShifts" FunctionImportName="ConflictingShifts">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ShiftCaptainModel.ConflictingShifts_Result">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="NickName" ColumnName="NickName" />
+          <ScalarProperty Name="Shift1Id" ColumnName="Shift1Id" />
+          <ScalarProperty Name="Shift1Room" ColumnName="Shift1Room" />
+          <ScalarProperty Name="Shift1Day" ColumnName="Shift1Day" />
+          <ScalarProperty Name="Shift1Time" ColumnName="Shift1Time" />
+          <ScalarProperty Name="Shift1Duration" ColumnName="Shift1Duration" />
+          <ScalarProperty Name="Shift2Id" ColumnName="Shift2Id" />
+          <ScalarProperty Name="Shift2Room" ColumnName="Shift2Room" />
+          <ScalarProperty Name="Shift2Day" ColumnName="Shift2Day" />
+          <ScalarProperty Name="Shift2Time" ColumnName="Shift2Time" />
+          <ScalarProperty Name="Shift2Duration" ColumnName="Shift2Duration" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionName="ShiftCaptainModel.Store.NoShiftCoverage" FunctionImportName="NoShiftCoverage">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ShiftCaptainModel.NoShiftCoverage_Result">
+          <ScalarProperty Name="RoomId" ColumnName="RoomId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Day" ColumnName="Day" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>

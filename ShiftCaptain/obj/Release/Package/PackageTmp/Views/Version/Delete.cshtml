@@ -25,6 +25,13 @@
     </div>
 
     <div class="display-label">
+         @Html.DisplayNameFor(model => model.IsVisible)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.IsVisible)
+    </div>
+
+    <div class="display-label">
          @Html.DisplayNameFor(model => model.IsReadyForApproval)
     </div>
     <div class="display-field">
@@ -39,6 +46,7 @@
     </div>
 </fieldset>
 @using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
     <p>
         <input type="submit" value="Delete" /> |
         @Html.ActionLink("Back to List", "Index")

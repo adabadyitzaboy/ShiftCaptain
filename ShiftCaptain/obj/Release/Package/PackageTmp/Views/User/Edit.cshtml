@@ -7,6 +7,7 @@
 <h2>Edit</h2>
 
 @using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
     <fieldset>
@@ -132,6 +133,13 @@
         <div class="editor-field">
             @Html.EditorFor(model => model.MinHours)
             @Html.ValidationMessageFor(model => model.MinHours)
+        </div>
+        
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CurrentHours)
+        </div>
+        <div class="editor-field">
+            @Html.DisplayFor(model => model.CurrentHours)
         </div>
         
         <div class="editor-label">

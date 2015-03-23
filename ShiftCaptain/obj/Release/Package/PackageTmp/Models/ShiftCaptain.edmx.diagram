@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="61f61e333958409d8a59af84f102bd25" Name="Diagram1">
+        <EntityTypeShape EntityType="ShiftCaptainModel.Address" Width="1.5" PointX="1.5" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.Building" Width="1.5" PointX="1.5" PointY="24.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.EmailTemplate" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.Preference" Width="1.5" PointX="0.75" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.Room" Width="1.5" PointX="0.75" PointY="20.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.RoomHour" Width="1.5" PointX="5.25" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.RoomInstance" Width="1.5" PointX="3" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.Shift" Width="1.5" PointX="6" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.ShiftPreference" Width="1.5" PointX="3" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.sysdiagram" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.User" Width="1.5" PointX="0.75" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.UserInstance" Width="1.5" PointX="3" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.Version" Width="1.5" PointX="0.75" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.BuildingView" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.RoomView" Width="1.5" PointX="8.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.UserView" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Building__Addres__6AA692EC" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__User__AddressId__770C69D1" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Room__BuildingId__6D82FF97" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__Prefe__064EAD61" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__RoomInsta__RoomI__705F6C42" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__RoomId__7EAD8B99" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__RoomHours__RoomI__742FFD26" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__RoomInsta__Versi__7153907B" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__UserId__7DB96760" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__VersionId__7FA1AFD2" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__UserI__046664EF" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__Versi__055A8928" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__UserInsta__UserI__79E8D67C" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__UserInsta__Versi__7ADCFAB5" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

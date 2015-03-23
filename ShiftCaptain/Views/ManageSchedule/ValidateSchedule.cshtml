@@ -1,0 +1,27 @@
+﻿@model ShiftCaptain.Models.VersionErrors
+
+@{
+    ViewBag.Title = "Request Approval";
+}
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.Id)
+    <div class="row">
+        <div class="small-12 large-12 columns left">
+            @if (Model.IsReadyForApproval) {
+                <p>Version is ready for approval.</p>
+            }
+            else if (Model.IsApproved)
+            {
+                <p>Version has been approved.</p>
+            }else{
+                <input type="submit" value='Request for Approval' />
+            }
+        </div>
+    </div>
+    @Html.Partial("_ScheduleErrors")
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

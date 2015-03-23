@@ -34,6 +34,7 @@ namespace ShiftCaptain.Models
         public bool IsShiftManager { get; set; }
         public bool IsManager { get; set; }
         public bool Locked { get; set; }
+        public int NumTries { get; set; }
         public Nullable<System.DateTime> LastLogin { get; set; }
         public bool IsActive { get; set; }
         public bool IsMale { get; set; }

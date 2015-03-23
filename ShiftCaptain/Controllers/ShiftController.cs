@@ -10,16 +10,24 @@ using System.Net;
 using System.Data.Objects.SqlClient;
 using System.Data.Objects;
 using ShiftCaptain.Helpers;
+using ShiftCaptain.Filters;
+using ShiftCaptain.Infrastructure;
 
 namespace ShiftCaptain.Controllers
 {
     public class ShiftController : BaseController
     {
+        public ShiftController()
+        {
+            ClassName = "shift";
+            AddVersionDropDown();
+        }
         private ShiftCaptainEntities db = new ShiftCaptainEntities();
         private Decimal GetCurrentHours(int VersionId, int UserId)
         {
             return db.Shifts.Where(s => s.VersionId == VersionId && s.UserId == UserId).ToList().Sum(r => r.Duration);
         }
+
         private object IsValid(Shift shift)
         {
             var userInstance = db.UserInstances.FirstOrDefault(uv => uv.UserId == shift.UserId && uv.VersionId == shift.VersionId);
@@ -69,6 +77,7 @@ namespace ShiftCaptain.Controllers
         }
         //
         // GET: /Shift/Validate
+        [ShiftManagerAccess]
         public JsonResult Validate(int VersionId = 0, int ShiftId = 0, int RoomId = 0, int UserId = 0, int Day = 0, string StartTime = "00:00", decimal Duration = 0)
         {
             var shift = new Shift
@@ -94,6 +103,7 @@ namespace ShiftCaptain.Controllers
         // POST: /Shift/Create
 
         [HttpPost]
+        [ShiftManagerAccess]
         public JsonResult Create(int VersionId = 0, int RoomId = 0, int UserId = 0, int Day = 0, string StartTime = "00:00", decimal Duration = 0)
         {
             var shift = new Shift
@@ -114,10 +124,6 @@ namespace ShiftCaptain.Controllers
             db.Shifts.Add(shift);
             db.SaveChanges();
 
-            var user = db.UserInstances.First(uv => uv.UserId == UserId && uv.VersionId == VersionId);
-            user.CurrentHours = GetCurrentHours(VersionId, UserId);
-            db.SaveChanges();
-
             var shifts = db.Shifts.Where(s => s.Id == shift.Id);
             return Json(EntitySelector.SelectShift(shifts), JsonRequestBehavior.AllowGet);
         }
@@ -126,6 +132,7 @@ namespace ShiftCaptain.Controllers
         // POST: /Shift/Update
 
         [HttpPost]
+        [ShiftManagerAccess]
         public JsonResult Update(int ShiftId = 0, int RoomId = 0, int Day = 0, string StartTime = "00:00", decimal Duration = 0)
         {
             var shift = db.Shifts.Find(ShiftId);
@@ -135,10 +142,6 @@ namespace ShiftCaptain.Controllers
             shift.Duration = Duration;
 
             db.Entry(shift).State = EntityState.Modified;
-            db.SaveChanges();
-
-            var user = db.UserInstances.First(uv => uv.UserId == shift.UserId && uv.VersionId == shift.VersionId);
-            user.CurrentHours = GetCurrentHours(shift.VersionId, shift.UserId);
             db.SaveChanges();
 
             var shifts = db.Shifts.Where(s => s.Id == shift.Id);
@@ -165,7 +168,6 @@ namespace ShiftCaptain.Controllers
 
         //
         // GET: /Shift/
-
         public ActionResult Index()
         {
             var buildings = db.Buildings.Where(b => b.Rooms.Count() > 0);
@@ -177,7 +179,11 @@ namespace ShiftCaptain.Controllers
                 ViewBag.RoomID = new SelectList(rooms, "Id", "Name", rooms.First().Id);
 
             }
-            
+            var version = db.Versions.FirstOrDefault(v => v.Id == SessionManager.VersionId);
+            if (version != null)
+            {
+                ViewBag.CurrentVersion = version;
+            }
             return View();
         }
 
@@ -185,13 +191,11 @@ namespace ShiftCaptain.Controllers
         // POST: /Shift/Delete/5
 
         [HttpPost, ActionName("Delete")]
+        [ShiftManagerAccess]
         public ActionResult DeleteConfirmed(int id)
         {
             Shift shift = db.Shifts.Find(id);
             db.Shifts.Remove(shift);
-            var user = db.UserInstances.First(uv => uv.UserId == shift.UserId && uv.VersionId == shift.VersionId);
-            user.CurrentHours = GetCurrentHours(shift.VersionId, shift.UserId);
-            db.Entry(user).State = EntityState.Modified;           
             db.SaveChanges();
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);

@@ -98,7 +98,7 @@ dnd.drag = (function () {
             ctx.dropSection.append(movingCtx.movingDiv);
             movingCtx.movingDiv.css('top', event.pageY);
             movingCtx.movingDiv.css('left', event.pageX - parseFloat($("body").css("margin-left")));
-            $(event.target).trigger("dragstart");
+            movingCtx.temp = $(event.target).trigger("dragstart");
         }
         return false;        
     };

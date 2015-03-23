@@ -3,6 +3,11 @@ tips.nextId = 0;
 var dragger = null;
 var origReplaceWith = $.fn.replaceWith;
 $.ajaxSetup({ global: false });
+$.extend({
+    template: function (selector, data) {
+        return $($('template-master[type="' + selector + '"]').html()).databind(data || {});
+    }
+});
 $.fn.extend({
     tooltip: function (selector, data) {
         if (!dragger && dnd) {
@@ -134,4 +139,7 @@ ShiftCaptain.app = {
 };
 $(document).ready(function () {
     ShiftCaptain.app.resizeHeader();
+    $("#VersionId").change(function () {
+        $("#ChangeVersion").click();
+    });
 });

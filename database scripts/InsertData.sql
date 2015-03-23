@@ -1,5 +1,5 @@
 insert into [Version]
-Values ('Spring 2014', 1, 0, 0)
+Values ('Spring 2014', 1, 1, 0, 0)
 
 Insert into Building
 Values ('ECS South', null, null, null)
@@ -47,7 +47,7 @@ cast('08:00' as time),--start time
 12--duration
 From RoomInstance RI
 JOIN Room R on R.Id = RI.RoomId
-Select RI.ID,
+UNION Select RI.ID,
 6,--day
 cast('08:00' as time),--start time
 12--duration
@@ -78,6 +78,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 1,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -93,6 +94,7 @@ null,--PhoneNumber
 1,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -108,6 +110,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -123,6 +126,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -139,6 +143,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -155,6 +160,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -172,6 +178,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -189,6 +196,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 0 --IsMale
@@ -206,6 +214,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -223,6 +232,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -240,6 +250,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -257,6 +268,7 @@ null,--PhoneNumber
 0,--IsShiftManager,
 0,--IsManager
 0,--Locked
+0,--NumTries
 null,--LastLogin
 1,--IsActive
 1 --IsMale
@@ -265,8 +277,7 @@ Insert into UserInstance
 Select U.Id,
 V.Id,
 20,--Min Hours
-20,--Max Hours
-0--Current Hours
+20--Max Hours
 From [User] U
 JOIN [Version] V on 1 = 1
 WHERE U.IsManager = 0
@@ -626,10 +637,41 @@ Values(
 )
 
 
-Update UserInstance 
-set CurrentHours =
-(Select Sum(Duration)
-from [Shift] s
-where S.VersionId = UserInstance.VersionId
-and S.UserId = UserInstance.UserId
+Insert into EmailTemplate
+Values 
+(
+	'ResetPassword',
+	1,
+	'ShiftCaptain Reset Password Request',
+	'You have requested to reset your password.  Please click here to reset your password.'
+),
+(
+	'ForgotPassword',
+	1,
+	'ShiftCaptain Forgot Password Request',
+	'You have requested to reset your password.  Please click here to reset your password.'
+),
+(
+	'ScheduleReadyForApproval',
+	1,
+	'ShiftCaptain schedule needs your approval',
+	'[VersionName] needs your approval. Please click here to approve the schedule.'
+),
+(
+	'ScheduleApproved',
+	1,
+	'[VersionName] approved',
+	'[VersionName] has been approved!'
+),
+(
+	'ScheduleRejected',
+	1,
+	'[VersionName] rejected',
+	'[VersionName] has not been approved!'
+),
+(
+	'NewActiveSchedule',
+	1,
+	'New Schedule activated',
+	'[VersionName] has been activated!'
 )

@@ -17,13 +17,12 @@ var createShiftElement = function (shift, s) {
     var cols = shift.Duration * 2;
     return addDraggerFunctions('shift', $("<td class='taken draggable' s='" + s + "' colSpan='" + cols + "' shiftid='" + shift.ShiftId + "' starttime='" + outputTime(shift.StartTime) + "' duration='" + shift.Duration + "' userid='" + shift.UserId + "'>" + shift.NickName + "</td>").tooltip('shift', shift));
 };
-
 $("#RoomID").change(function (val) {
     var roomId = $(this).val();
     sc.Room.getHours(roomId, function (roomHours) {
         sc.app.setCurrentHours(roomHours);
         sc.Shift.get(roomId, function (roomShifts) {
-            sc.app.createShiftTable(roomHours, roomShifts, createShiftElement);
+            sc.app.createShiftTable(roomHours, roomShifts, createShiftElement, shiftOptions);
         }, function (error) {
             sc.app.displayError(error);
         });
@@ -34,17 +33,19 @@ $("#RoomID").change(function (val) {
 $("#RoomID").trigger('change');
 
 var createUser = function (employee) {
-    var colorClass = "";
+    employee.colorClass = "";
     if (employee.CurrentHours > employee.MaxHours) {
-        colorClass = "over-max-hours";
+        employee.colorClass = "over-max-hours";
     } else if (employee.CurrentHours < employee.MinHours) {
-        colorClass = "under-min-hours";
+        employee.colorClass = "under-min-hours";
     }
-    return addDraggerFunctions('user', $("<div class='small-6 large-3 columns'><user class='draggable has-tip " + colorClass + "' minhours='" + employee.MinHours + "' maxhours='" + employee.MaxHours + "' currenthours='" + employee.CurrentHours + "' employeeid='" + employee.EmployeeId + "' userid='" + employee.UserId + "'>" + employee.NickName + "</user></div>").tooltip(
-        'user', employee
-        ));
+    return addDraggerFunctions('user', $.template("user", employee).tooltip('user', employee));
 };
-
+var shiftOptions = {};
+if ($("#Employees").length > 0) {
+} else {
+    shiftOptions.empty_row = false;
+}
 sc.User.get(null, function (employees) {
     var empHolder = $("#Employees .row");
     empHolder.empty();
@@ -52,6 +53,7 @@ sc.User.get(null, function (employees) {
         empHolder.append(createUser(employees[idx]));
     }
     sc.app.resizeHeader();
+    $("#shiftHolder table").trigger("page-ready");
 });
 
 var getShiftInfo= function($dragElement, $dropElement){    
@@ -87,23 +89,26 @@ var addDraggerFunctions = function (elementType, $element) {
     return orig;
 };
 var cancelDrag = function (event, temp) {
-    $(temp).replaceWith(this);
-    $(".temp").each(function (index) {
-        $(this).remove();
-    });
+    if (temp != this) {
+        $(temp).replaceWith(this);
+        $(".temp").each(function (index) {
+            $(this).remove();
+        });
+    }
     removePreferences();
 };
 var movedAround = function (event, data) {
 
     var $dragElement = $(this);
     var $dropElement = $(data.target);
+    var userid = $(this).attr('userid');
     sc.app.updateTemp();
     var shiftInfo = getShiftInfo($dragElement, $dropElement);
 
     var updateOrCreate = shiftInfo.ShiftId != null ? "update" : "create";
     var temp = data.temp;
     sc.Shift[updateOrCreate](shiftInfo, function (shift) {
-        dragComplete(sc.app.replaceDropElementWithNewShift(createShiftElement(shift[0], shiftInfo.s), $dropElement), $(temp));
+        dragComplete(sc.app.replaceDropElementWithNewShift(createShiftElement(shift[0], shiftInfo.s), $dropElement), $(temp), userid);
     });
 };
 var validateDrop = function (event, data) {
@@ -125,15 +130,16 @@ var validateDrop = function (event, data) {
     });
     return true;
 };
-var draggedout = function (temp) {
+var draggedout = function (event, temp) {
     sc.app.updateTemp();
     
     var shiftid = $(this).attr('shiftid');
+    var userid = $(this).attr('userid');
     $.cleanData(this.getElementsByTagName("*"));
     $.cleanData([this]);
     if (shiftid) {//Is a shift so remove it
         sc.Shift.remove(shiftid, function (success) {
-            dragComplete(null, $(temp));
+            dragComplete(null, $(temp), userid);
         });
     }
     removePreferences();    
@@ -145,7 +151,7 @@ var dragStart = function () {
         return replaceWithOpen($element, true);
     }
 };
-var dragComplete = function ($newShift, $temp) {
+var dragComplete = function ($newShift, $temp, userid) {
     //check old row to see if it's now empty
     var tr = $temp.closest('tr');
     var dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -154,7 +160,7 @@ var dragComplete = function ($newShift, $temp) {
         //row is empty.   AND not the only row for this day         
         tr.remove();
     }
-    if ($newShift) {
+    if ($newShift && shiftOptions.empty_row != false) {
         //check to see if day has an "empty-row"
         tr = $newShift.closest('tr');
         day = parseInt(tr.attr('day'));
@@ -166,17 +172,17 @@ var dragComplete = function ($newShift, $temp) {
             sc.app.makeRow(1/* just can't be zero*/, fakeBody, dayData, dayData.s, dayData.e, [], dayData.MinStart, dayData.MaxEnd, createShiftElement);
             $(fakeBody.children()).insertAfter(oldEmptyRow);
         }
-        //createUser
-        sc.User.get($newShift.attr('userid'), function (employees) {
-            for (var idx = 0; idx < employees.length ; idx++) {
-                var userId = employees[idx].UserId;
-                $("#Employees .row user[userid='" + userId + "'").parent().replaceWith(dragger.reinit(createUser(employees[idx])));
-            }
-
-        });
+        
     }
 
-    
+    //createUser
+    sc.User.get(userid, function (employees) {
+        for (var idx = 0; idx < employees.length ; idx++) {
+            var uId= employees[idx].UserId;//just in case
+            $("#Employees .row user[userid='" + uId + "'").parent().replaceWith(dragger.reinit(createUser(employees[idx])));
+        }
+
+    });
     removePreferences();
 };
 

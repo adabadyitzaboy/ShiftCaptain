@@ -90,7 +90,8 @@ var createShiftElement = function (shift, s) {
 };
 var currentRoomHours = [];
 var dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-var makeRow = function (rC, tbody, dayData, s, e, shifts, start, maxEnd, createShiftElement) {
+var makeRow = function (rC, tbody, dayData, s, e, shifts, start, maxEnd, createShiftElement, options) {
+    options = options || {};
     var emptyRow = true;
     var tr = $("<tr class='" + dayName[dayData.Day] + "' day='" + dayData.Day + "'><td>" + (rC == 0 ? dayName[dayData.Day] : "&nbsp;") + "</td></tr>");
     for (var notOpen = start; notOpen < s; notOpen += .5) {
@@ -120,15 +121,25 @@ var makeRow = function (rC, tbody, dayData, s, e, shifts, start, maxEnd, createS
             console.log("Unable to schedule the rest of the shifts");
             console.log(shifts);
         } else {
-            makeRow(++rC, tbody, dayData, s, e, shifts, start, maxEnd, createShiftElement);
+            makeRow(++rC, tbody, dayData, s, e, shifts, start, maxEnd, createShiftElement, options);
         }
     } else if (!emptyRow) {
-        makeRow(++rC, tbody, dayData, s, e, shifts, start, maxEnd, createShiftElement);
+        if (options.empty_row != false) {
+            makeRow(++rC, tbody, dayData, s, e, shifts, start, maxEnd, createShiftElement, options);
+        }
     } else {
         tr.addClass('empty-row');
     }
 };
-var createShiftTable = function (roomHours, shifts, createShiftElement) {
+$("#shiftHolder table").on("table-ready page-ready", function (event) {
+    this["-" + event.type] = true;
+    if (this["-table-ready"] && this["-page-ready"] && !this["-dragger-init"]) {
+        this["-dragger-init"] = true;
+        dragger.init();
+    }
+});
+var createShiftTable = function (roomHours, shifts, createShiftElement, options) {
+    options = options || {};
     var sh = $("#shiftHolder table");
     sh.empty();
     var minStart = null;
@@ -157,7 +168,7 @@ var createShiftTable = function (roomHours, shifts, createShiftElement) {
     //sh.append(thead.css("visibility", "hidden"));
     //sh.append(theadFixed.css("position", "fixed"));
     var tbody = $("<tbody></tbody>");
-    var borderRow;
+    var borderRow = null;
     for (var idx = 0; idx < roomHours.length; idx++) {
         var dayroomHours = roomHours[idx];
         var dayShifts = FilterShifts(shifts, dayroomHours.Day);
@@ -168,25 +179,27 @@ var createShiftTable = function (roomHours, shifts, createShiftElement) {
         dayroomHours.e = dayroomHours.s + dayroomHours.Duration;
         dayroomHours.MinStart = start;
         dayroomHours.MaxEnd = maxEnd;
-        makeRow(0, tbody, dayroomHours, dayroomHours.s, dayroomHours.e, dayShifts, start, maxEnd, createShiftElement);
+        makeRow(0, tbody, dayroomHours, dayroomHours.s, dayroomHours.e, dayShifts, start, maxEnd, createShiftElement, options);
 
 
         if (idx < roomHours.length - 1) {
             //add border row
-            if (!borderRow) {
+            if (options.border_row != false && !borderRow) {
                 borderRow = $("<tr class='row-border'><td>&nbsp;</td></tr>");
                 for (var notOpen = start; notOpen < maxEnd; notOpen += .5) {
                     borderRow.append("<td t='" + notOpen + "'>&nbsp;</td>");
                 }
             }
-            tbody.append(borderRow.clone(true));
+            if (borderRow) {
+                tbody.append(borderRow.clone(true));
+            }
         }
     }
     sh.append(tbody);
     //theadFixed.css('top', thead.offset().top);
     //theadFixed.find("th:first").width(tbody.find("tr:first-child td:first-child").width()).css('display', 'block');
     sh.append(theadBottom);
-    dragger.init();
+    sh.trigger("table-ready");
 };
 
 var replaceWithOpen = function ($element, temp) {

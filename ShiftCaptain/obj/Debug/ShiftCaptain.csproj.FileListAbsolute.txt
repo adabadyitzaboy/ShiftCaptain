@@ -30,4 +30,10 @@ D:\GitHub\ShiftCaptain\ShiftCaptain\bin\System.Web.Optimization.dll
 D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebGrease.dll
 D:\GitHub\ShiftCaptain\ShiftCaptain\bin\Antlr3.Runtime.pdb
 D:\GitHub\ShiftCaptain\ShiftCaptain\bin\System.Web.Optimization.xml
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\OmidID.Web.Security.EFMembershipProvider.dll
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.Data.dll
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.WebData.dll
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\OmidID.Web.Security.EFMembershipProvider.pdb
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.Data.xml
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.WebData.xml
 D:\GitHub\ShiftCaptain\ShiftCaptain\obj\Debug\ShiftCaptain.csprojResolveAssemblyReference.cache

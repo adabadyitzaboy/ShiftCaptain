@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="8293e887aab149e9b2f15bc11bea5d9a" Name="Diagram1">
+        <EntityTypeShape EntityType="ShiftCaptainModel.Address" Width="1.5" PointX="1.5" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.Building" Width="1.5" PointX="1.5" PointY="24.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.EmailTemplate" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.Preference" Width="1.5" PointX="0.75" PointY="2.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.Room" Width="1.5" PointX="0.75" PointY="20.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.RoomHour" Width="1.5" PointX="5.25" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.RoomInstance" Width="1.5" PointX="3" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.Shift" Width="1.5" PointX="6" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.ShiftPreference" Width="1.5" PointX="3" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.User" Width="1.5" PointX="0.75" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.UserInstance" Width="1.5" PointX="3" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.Version" Width="1.5" PointX="0.75" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.BuildingView" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.RoomView" Width="1.5" PointX="8.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ShiftCaptainModel.UserView" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Building__Addres__5106BC7A" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__User__AddressId__5D6C935F" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Room__BuildingId__53E32925" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__Prefe__6CAED6EF" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__RoomInsta__RoomI__56BF95D0" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__RoomId__650DB527" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__RoomHours__RoomI__5A9026B4" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__RoomInsta__Versi__57B3BA09" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__UserId__641990EE" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__VersionId__6601D960" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__UserI__6AC68E7D" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__Versi__6BBAB2B6" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__UserInsta__UserI__6049000A" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__UserInsta__Versi__613D2443" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

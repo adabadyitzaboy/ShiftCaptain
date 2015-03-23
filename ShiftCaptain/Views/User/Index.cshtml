@@ -9,19 +9,13 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table>
+<table class="sortable">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.EmailAddress)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.MName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LName)
+            Name
         </th>
         <th>
             @Html.DisplayNameFor(model => model.NickName)
@@ -42,37 +36,19 @@
             @Html.DisplayNameFor(model => model.Locked)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.LastLogin)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.IsActive)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsMale)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.MinHours)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.CurrentHours)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.MaxHours)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Line1)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Line2)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.City)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.State)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ZipCode)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Country)
+            Address
         </th>
         <th></th>
     </tr>
@@ -83,12 +59,8 @@
             @Html.DisplayFor(modelItem => item.EmailAddress)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.MName)
-        </td>
-        <td>
+            @Html.DisplayFor(modelItem => item.FName)&nbsp;        
+            @Html.DisplayFor(modelItem => item.MName)&nbsp;
             @Html.DisplayFor(modelItem => item.LName)
         </td>
         <td>
@@ -110,44 +82,45 @@
             @Html.DisplayFor(modelItem => item.Locked)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.LastLogin)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.IsActive)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsMale)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.MinHours)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.CurrentHours)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.MaxHours)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Line1)
+        <td class="has-expansion">
+            @if (String.IsNullOrEmpty(item.Line1))
+            {
+                <p>N/A</p>
+            }else{
+                @Html.DisplayFor(modelItem => item.Line1)
+                <div class="expansion">
+                    @Html.Partial("Templates/_UserAddress", item)
+                </div>
+            }
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Line2)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.City)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.State)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ZipCode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Country)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.UserId/* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Details", "Details", new { id = item.UserId/* id=item.PrimaryKey */ }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.UserId/* id=item.PrimaryKey */ })
+            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && item.UserId != ShiftCaptain.Infrastructure.SessionManager.UserId){
+                @Html.ActionLink("Edit", "Edit", new { id=item.UserId }) @Html.Raw(" | ") 
+            } 
+                @Html.ActionLink("Details", "Details", new { id=item.UserId }) 
+            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && item.UserId != ShiftCaptain.Infrastructure.SessionManager.UserId)
+            {
+                 @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.UserId }) 
+            }
+            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && item.UserId != ShiftCaptain.Infrastructure.SessionManager.UserId){
+                 @Html.Raw(" | ")  @Html.ActionLink("Reset Pass", "ResetPassword", "EmailTemplate",new { id=item.UserId }, null)
+            }
         </td>
     </tr>
 }
 
 </table>
+@section scripts {
+    @Scripts.Render("~/Scripts/sort.js")
+}

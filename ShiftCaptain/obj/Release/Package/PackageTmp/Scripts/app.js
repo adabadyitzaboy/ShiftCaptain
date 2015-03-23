@@ -3,6 +3,11 @@ tips.nextId = 0;
 var dragger = null;
 var origReplaceWith = $.fn.replaceWith;
 $.ajaxSetup({ global: false });
+$.extend({
+    template: function (selector, data) {
+        return $($('template-master[type="' + selector + '"]').html()).databind(data || {});
+    }
+});
 $.fn.extend({
     tooltip: function (selector, data) {
         if (!dragger && dnd) {
@@ -118,4 +123,20 @@ $.fn.extend({
         this.remove(null, true);
         return this;
     }
+});
+
+
+var height = null;
+var ShiftCaptain = ShiftCaptain || {};
+ShiftCaptain.app = {
+    resizeHeader: function () {
+        var newHeight = $("body > header > .content-wrapper").height();
+        if (height != newHeight) {
+            height = newHeight;
+            $("body > header").height(newHeight);
+        }
+    }
+};
+$(document).ready(function () {
+    ShiftCaptain.app.resizeHeader();
 });

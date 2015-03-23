@@ -1,0 +1,132 @@
+﻿@model ShiftCaptain.Models.VersionErrors
+
+<div class="row version-errors">
+    <div class="small-12 large-12 columns num-errors">
+        <h2>@Model.NumErrors Errors</h2>
+    </div> 
+    <div class="small-12 large-12 columns">
+        <h3>User Min/Max Hour Violations</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nick Name</th>
+                    <th>Min Hours</th>
+                    <th>Current Hours</th>
+                    <th>Max Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @foreach (var item in Model.UserConstraintViolations)
+                    {
+                        <td>@item.NickName</td>
+                        <td>@item.MinHours</td>
+                        <td>@item.CurrentHours</td>
+                        <td>@item.MaxHours</td>
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+@*    <div class="small-12 large-12 columns">
+        <h3>User Min/Max Hour Violations</h3>
+        <ul>
+            @foreach (var item in Model.UserConstraintViolations)
+            {
+                <li>@item</li>
+            }
+        </ul>
+    </div>*@
+    
+@*    <div class="small-12 large-12 columns">
+        <ul>
+            @foreach (var item in Model.NoShiftCoverages)
+            {
+                <li>No shift coverage for room @item.Name day @item.Day time @((int) item.Time):@(item.Time % 60)</li>
+            }
+        </ul>
+    </div>*@
+    <div class="small-12 large-12 columns">
+        <h3>No Shift Coverages</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Day</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.NoShiftCoverages)
+                {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Day</td>
+                    <td>@((int)item.Time / 60):@(item.Time % 60)</td>
+                </tr>
+                }            
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="small-12 large-12 columns">
+        <h3>Work Preference Violations</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nick Name</th>
+                    <th>Preference<br />Day</th>
+                    <th>Time</th>
+                    <th>Duration</th>
+                    
+                    <th>Shift<br />Room</th>
+                    <th>Day</th>
+                    <th>Time</th> 
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CantWorkViolations)
+                {
+                <tr>
+                    <td>@item.NickName</td>
+                    <td>@(Enum.GetName(typeof(DayOfWeek),item.PreferenceDay))</td><td>@item.PreferenceTime.Value.Hours:@(item.PreferenceTime.Value.Minutes == 0? "00": "30")</td><td>@item.PreferenceDuration.Value</td>
+                    <td>@item.ShiftRoom</td><td>@(Enum.GetName(typeof(DayOfWeek),item.ShiftDay))</td><td>@item.ShiftTime.Value.Hours:@(item.ShiftTime.Value.Minutes == 0? "00": "30")</td><td>@item.ShiftDuration.Value</td>
+                </tr>
+                }            
+            </tbody>
+        </table>
+    </div>
+
+    <div class="small-12 large-12 columns">
+        <h3>Conflicting Shifts</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nick Name</th>
+                    <th>Shift<br />Room</th>
+                    <th>Day</th>
+                    <th>Time</th> 
+                    <th>Duration</th>
+
+                    <th>Shift<br />Room</th>
+                    <th>Day</th>
+                    <th>Time</th> 
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ConflictingShifts)
+                {
+                <tr>
+                    <td>@item.NickName</td>
+                    <td>@item.Shift1Room</td><td>@(Enum.GetName(typeof(DayOfWeek),item.Shift1Day))</td><td>@item.Shift1Time.Value.Hours:@(item.Shift1Time.Value.Minutes == 0? "00": "30")</td><td>@item.Shift1Duration.Value</td>
+                    <td>@item.Shift2Room</td><td>@(Enum.GetName(typeof(DayOfWeek),item.Shift2Day))</td><td>@item.Shift2Time.Value.Hours:@(item.Shift2Time.Value.Minutes == 0? "00": "30")</td><td>@item.Shift2Duration.Value</td>
+                </tr>
+                }            
+            </tbody>
+        </table>
+    </div>
+        
+</div>

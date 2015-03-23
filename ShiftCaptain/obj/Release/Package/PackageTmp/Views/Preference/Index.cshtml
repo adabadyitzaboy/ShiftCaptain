@@ -9,7 +9,7 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table>
+<table class="sortable">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Name)
@@ -49,3 +49,6 @@
 }
 
 </table>
+@section scripts {
+    @Scripts.Render("~/Scripts/sort.js")
+}

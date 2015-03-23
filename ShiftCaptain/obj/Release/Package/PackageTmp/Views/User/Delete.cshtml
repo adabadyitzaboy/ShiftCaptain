@@ -105,49 +105,17 @@
         @Html.DisplayFor(model => model.IsMale)
     </div>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Line1)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Line1)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Line2)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Line2)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.City)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.City)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.State)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.State)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.ZipCode)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.ZipCode)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Country)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Country)
+    <div class="small-12 large-2 columns address-holder">
+        <h3>Address</h3>
+        @if (String.IsNullOrEmpty(Model.Line1)){
+            <p>N/A</p>
+        }else{
+            @Html.Partial("Templates/_UserAddress", Model)
+        }
     </div>
 </fieldset>
 @using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
     <p>
         <input type="submit" value="Delete" /> |
         @Html.ActionLink("Back to List", "Index")
