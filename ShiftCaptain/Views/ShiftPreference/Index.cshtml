@@ -4,10 +4,12 @@
 }
 
 @section header {
-    <section id="Preferences">
-        <div class="row">
-        </div>
-    </section>
+    @if(!ViewBag.CurrentVersion.IsApproved){
+        <section id="Preferences">
+            <div class="row">
+            </div>
+        </section>
+    }
     <section id="Errors"></section>
     <section id="Dropdowns" class="row">
         @if(ShiftCaptain.Infrastructure.SessionManager.IsManager || ShiftCaptain.Infrastructure.SessionManager.IsShiftManager){
@@ -19,19 +21,21 @@
             @Html.Hidden("UserID", ShiftCaptain.Infrastructure.SessionManager.UserId)
         }
         <div class="small-12 large-4 columns left">
-            <label for="ShiftDuration">Shift Length</label>
-            <select id="ShiftDuration">
-                <option value="2">2 hours</option>
-                <option value="2.5">2 1/2 hours</option>
-                <option value="3">3 hours</option>
-                <option value="3.5">3 1/2 hours</option>
-                <option value="4" selected="selected">4 hours</option>
-                <option value="4.5">4 1/2 hours</option>
-                <option value="5">5 hours</option>
-                <option value="5.5">5 1/2 hours</option>
-                <option value="6">6 hours</option>
-                <option value="6.5">6 1/2 hours</option>
-            </select>
+            @if(!ViewBag.CurrentVersion.IsApproved){
+                <label for="ShiftDuration">Shift Length</label>
+                <select id="ShiftDuration">
+                    <option value="2">2 hours</option>
+                    <option value="2.5">2 1/2 hours</option>
+                    <option value="3">3 hours</option>
+                    <option value="3.5">3 1/2 hours</option>
+                    <option value="4" selected="selected">4 hours</option>
+                    <option value="4.5">4 1/2 hours</option>
+                    <option value="5">5 hours</option>
+                    <option value="5.5">5 1/2 hours</option>
+                    <option value="6">6 hours</option>
+                    <option value="6.5">6 1/2 hours</option>
+                </select>
+            }
         </div>
     </section>
 }
@@ -55,5 +59,9 @@
     @Scripts.Render("~/Scripts/User/CRUD.js")
     @Scripts.Render("~/Scripts/DragNDrop/drag-n-drop.js")
     @Scripts.Render("~/Scripts/CommonShift.js")
-    @Scripts.Render("~/Scripts/ShiftPreference.js")
+    @if(!ViewBag.CurrentVersion.IsApproved){
+        @Scripts.Render("~/Scripts/ShiftPreference.js")
+    }else{
+        @Scripts.Render("~/Scripts/DisplayShiftPreference.js")
+    }
 }

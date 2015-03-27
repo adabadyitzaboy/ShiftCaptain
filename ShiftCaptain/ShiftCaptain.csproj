@@ -138,6 +138,7 @@
     <Compile Include="Controllers\BuildingController.cs" />
     <Compile Include="Controllers\EmailTemplateController.cs" />
     <Compile Include="Controllers\EntitySelector.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageScheduleController.cs" />
     <Compile Include="Controllers\PreferenceController.cs" />
@@ -309,6 +310,7 @@
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\Clone.js" />
     <Content Include="Scripts\CommonShift.js" />
+    <Content Include="Scripts\DisplayShiftPreference.js" />
     <Content Include="Scripts\sort.js" />
     <Content Include="Scripts\DisplayShift.js" />
     <Content Include="Scripts\Preference\CRUD.js" />
@@ -393,6 +395,10 @@
     <Content Include="Views\ManageSchedule\CloneSchedule.cshtml" />
     <Content Include="Views\ManageSchedule\_CloneUser.cshtml" />
     <Content Include="Views\ManageSchedule\_CloneRoom.cshtml" />
+    <Content Include="Views\ManageSchedule\DisapproveSchedule.cshtml" />
+    <Content Include="Views\Error\NotAuthorized.cshtml" />
+    <Content Include="Views\Error\PageNotFound.cshtml" />
+    <Content Include="Views\Error\InternalError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

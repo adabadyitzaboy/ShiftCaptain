@@ -50,7 +50,11 @@
                         </div>
                         <div class="small-6 large-2 columns">
                             @if(@ViewBag.VersionId != null){
-                                @Html.DropDownList("VersionId")
+                                using (Html.BeginForm("ChangeVersion", "Version"))
+                                {
+                                    @Html.DropDownList("VersionId")
+                                    <input type="submit" id="ChangeVersion" style="display: none;" />
+                                }
                             }
                         </div>
                     }

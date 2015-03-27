@@ -7,7 +7,9 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @if(!ViewBag.CurrentVersion.IsApproved){
+        @Html.ActionLink("Create New", "Create")
+    }
 </p>
 <table class="sortable">
     <tr>
@@ -105,7 +107,8 @@
             }
         </td>
         <td>
-            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && item.UserId != ShiftCaptain.Infrastructure.SessionManager.UserId){
+            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && item.UserId != ShiftCaptain.Infrastructure.SessionManager.UserId)
+            {
                 @Html.ActionLink("Edit", "Edit", new { id=item.UserId }) @Html.Raw(" | ") 
             } 
                 @Html.ActionLink("Details", "Details", new { id=item.UserId }) 

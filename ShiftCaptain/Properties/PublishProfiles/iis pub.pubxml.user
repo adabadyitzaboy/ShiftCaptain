@@ -26,7 +26,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/10/2015 18:27:37</publishTime>
     </File>
     <File Include="bin/ShiftCaptain.dll">
-      <publishTime>03/18/2015 11:52:22</publishTime>
+      <publishTime>03/23/2015 17:42:58</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
       <publishTime>02/10/2015 19:57:55</publishTime>
@@ -74,7 +74,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/06/2015 08:46:17</publishTime>
     </File>
     <File Include="Content/scss/app.scss">
-      <publishTime>03/13/2015 09:22:28</publishTime>
+      <publishTime>03/18/2015 15:45:02</publishTime>
     </File>
     <File Include="Content/scss/DragNDrop/_dragNdrop.scss">
       <publishTime>02/23/2015 12:12:38</publishTime>
@@ -211,17 +211,20 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Content/scss/Pages/_header.scss">
       <publishTime>03/12/2015 14:21:30</publishTime>
     </File>
+    <File Include="Content/scss/Pages/_manageSchedules.scss">
+      <publishTime>03/19/2015 16:36:59</publishTime>
+    </File>
     <File Include="Content/scss/Pages/_room.scss">
       <publishTime>03/12/2015 15:59:47</publishTime>
     </File>
     <File Include="Content/scss/Pages/_shifts.scss">
-      <publishTime>02/24/2015 13:15:11</publishTime>
+      <publishTime>03/18/2015 15:45:46</publishTime>
     </File>
     <File Include="Content/scss/_settings.scss">
       <publishTime>02/13/2015 13:45:13</publishTime>
     </File>
     <File Include="Content/stylesheets/app.css">
-      <publishTime>03/13/2015 14:32:36</publishTime>
+      <publishTime>03/19/2015 16:37:00</publishTime>
     </File>
     <File Include="Content/stylesheets/normalize.css">
       <publishTime>02/16/2015 15:34:47</publishTime>
@@ -230,13 +233,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/10/2015 19:57:37</publishTime>
     </File>
     <File Include="Models/ShiftCaptain.Context.tt">
-      <publishTime>03/18/2015 10:25:25</publishTime>
+      <publishTime>03/23/2015 11:32:49</publishTime>
     </File>
     <File Include="Models/ShiftCaptain.edmx.diagram">
-      <publishTime>03/18/2015 10:25:27</publishTime>
+      <publishTime>03/23/2015 11:32:54</publishTime>
     </File>
     <File Include="Models/ShiftCaptain.tt">
-      <publishTime>03/18/2015 10:25:25</publishTime>
+      <publishTime>03/23/2015 11:32:49</publishTime>
     </File>
     <File Include="Models/ShiftCaptainModel.Context.tt">
       <publishTime>02/19/2015 14:13:55</publishTime>
@@ -251,7 +254,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/10/2015 18:27:40</publishTime>
     </File>
     <File Include="Scripts/app.js">
-      <publishTime>03/12/2015 11:28:52</publishTime>
+      <publishTime>03/23/2015 11:13:19</publishTime>
+    </File>
+    <File Include="Scripts/Clone.js">
+      <publishTime>03/23/2015 11:30:36</publishTime>
     </File>
     <File Include="Scripts/CommonShift.js">
       <publishTime>03/12/2015 08:57:04</publishTime>
@@ -361,11 +367,23 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Login/Index.cshtml">
       <publishTime>03/13/2015 15:01:12</publishTime>
     </File>
+    <File Include="Views/ManageSchedule/ApproveSchedule.cshtml">
+      <publishTime>03/18/2015 16:20:15</publishTime>
+    </File>
+    <File Include="Views/ManageSchedule/CloneSchedule.cshtml">
+      <publishTime>03/23/2015 11:27:37</publishTime>
+    </File>
     <File Include="Views/ManageSchedule/ValidateSchedule.cshtml">
-      <publishTime>03/18/2015 11:04:50</publishTime>
+      <publishTime>03/18/2015 14:10:59</publishTime>
+    </File>
+    <File Include="Views/ManageSchedule/_CloneRoom.cshtml">
+      <publishTime>03/23/2015 09:15:46</publishTime>
+    </File>
+    <File Include="Views/ManageSchedule/_CloneUser.cshtml">
+      <publishTime>03/23/2015 09:15:40</publishTime>
     </File>
     <File Include="Views/ManageSchedule/_ScheduleErrors.cshtml">
-      <publishTime>03/18/2015 11:49:27</publishTime>
+      <publishTime>03/18/2015 13:35:50</publishTime>
     </File>
     <File Include="Views/Preference/Create.cshtml">
       <publishTime>03/12/2015 12:34:00</publishTime>
@@ -395,7 +413,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/12/2015 12:35:14</publishTime>
     </File>
     <File Include="Views/Room/Index.cshtml">
-      <publishTime>03/12/2015 15:55:53</publishTime>
+      <publishTime>03/23/2015 15:08:12</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>02/11/2015 09:50:16</publishTime>
@@ -425,10 +443,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/20/2015 16:18:38</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>03/13/2015 13:10:39</publishTime>
+      <publishTime>03/23/2015 11:14:47</publishTime>
     </File>
     <File Include="Views/Shift/Index.cshtml">
-      <publishTime>03/11/2015 16:37:22</publishTime>
+      <publishTime>03/18/2015 16:26:32</publishTime>
     </File>
     <File Include="Views/ShiftPreference/Index.cshtml">
       <publishTime>03/12/2015 08:37:07</publishTime>
@@ -464,7 +482,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/13/2015 12:57:20</publishTime>
     </File>
     <File Include="Views/Version/Index.cshtml">
-      <publishTime>03/18/2015 08:45:17</publishTime>
+      <publishTime>03/23/2015 11:09:34</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>02/11/2015 09:58:29</publishTime>
@@ -473,7 +491,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/11/2015 09:50:16</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>03/18/2015 11:52:23</publishTime>
+      <publishTime>03/23/2015 17:42:59</publishTime>
     </File>
   </ItemGroup>
 </Project>

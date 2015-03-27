@@ -66,6 +66,13 @@ header {
 		z-index: 1;
 		background: #fff;
 	}
+	.links {
+		margin-bottom: 10px;
+		a{
+			padding: 0 10px;
+			padding-left: 0;
+		}
+	}
 }
 #Employees {
 	max-height: 300px;

@@ -1,0 +1,23 @@
+﻿@model ShiftCaptain.Models.Version
+
+@{
+    ViewBag.Title = "Disapprove Schedule";
+}
+<div class="row">
+    <div class="small-12 large-12 columns left">
+        @if (Model.IsApproved) {
+            using (Html.BeginForm("DisapproveSchedule", "ManageSchedule")) {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.Id)
+                
+                <input type="submit" value='Disapprove Schedule' id="DisapproveSchedule" />
+            }
+        } else if (!Model.IsApproved) {
+            <p>Version is not approved.</p>
+        }
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

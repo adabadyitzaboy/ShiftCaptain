@@ -139,4 +139,7 @@ ShiftCaptain.app = {
 };
 $(document).ready(function () {
     ShiftCaptain.app.resizeHeader();
+    $("#VersionId").change(function () {
+        $("#ChangeVersion").click();
+    });
 });

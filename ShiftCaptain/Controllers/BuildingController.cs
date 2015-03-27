@@ -163,6 +163,15 @@ namespace ShiftCaptain.Controllers
             {
                 return HttpNotFound();
             }
+            var canDelete = true;
+            var roomCount = db.Rooms.Count(r=>r.BuildingId == buildingview.BuildingId && r.Shifts.Count(s=>s.Version.IsApproved) > 0);
+            if (roomCount > 0)
+            {
+                canDelete = false;
+                ViewBag.CantDeleteReason = "Cannot delete a building that contains room with shifts in an approved version.";
+            }
+            ViewBag.CanDelete = canDelete;
+
             return View(buildingview);
         }
 

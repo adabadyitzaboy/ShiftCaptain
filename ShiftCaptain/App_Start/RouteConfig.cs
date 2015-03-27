@@ -14,6 +14,24 @@ namespace ShiftCaptain
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                "InternalError",                                           // Route name
+                "InternalError",                            // URL with parameters
+                new { controller = "Error", action = "InternalError" }  // Parameter defaults
+            );
+
+            routes.MapRoute(
+                "NotAuthorized",                                           // Route name
+                "NotAuthorized",                            // URL with parameters
+                new { controller = "Error", action = "NotAuthorized" }  // Parameter defaults
+            );
+
+            routes.MapRoute(
+                "PageNotFound",                                           // Route name
+                "PageNotFound",                            // URL with parameters
+                new { controller = "Error", action = "PageNotFound" }  // Parameter defaults
+            );
+
+            routes.MapRoute(
                 "ValidateSchedule",                                           // Route name
                 "ValidateSchedule/{id}",                            // URL with parameters
                 new { controller = "ManageSchedule", action = "ValidateSchedule" }  // Parameter defaults
@@ -23,6 +41,12 @@ namespace ShiftCaptain
                 "ApproveSchedule",                                           // Route name
                 "ApproveSchedule/{id}",                            // URL with parameters
                 new { controller = "ManageSchedule", action = "ApproveSchedule" }  // Parameter defaults
+            );
+
+            routes.MapRoute(
+                "DisapproveSchedule",                                           // Route name
+                "DisapproveSchedule/{id}",                            // URL with parameters
+                new { controller = "ManageSchedule", action = "DisapproveSchedule" }  // Parameter defaults
             );
 
             routes.MapRoute(

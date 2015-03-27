@@ -6,9 +6,12 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if(!ViewBag.CurrentVersion.IsApproved){
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+
 <table class="sortable">
     <tr><th>
             @Html.DisplayNameFor(model => model.BuildingName)
@@ -89,51 +92,85 @@
             @Html.DisplayFor(modelItem => item.PhoneNumber)
         </td>
         <td>
-            <ul>
-                <li>@Html.DisplayFor(modelItem => item.SundayStartTime)</li>        
-                <li>@Html.DisplayFor(modelItem => item.SundayDuration)</li>
-            </ul>
+            @if(item.SundayInstanceId.HasValue){
+                <ul>
+                    <li>@Html.DisplayFor(modelItem => item.SundayStartTime)</li>        
+                    <li>@Html.DisplayFor(modelItem => item.SundayDuration)</li>
+                </ul>
+            }else{
+                <p>N/A</p>
+            }
         </td>
         <td>
-            <ul>
-                <li>@Html.DisplayFor(modelItem => item.MondayStartTime)</li>        
-                <li>@Html.DisplayFor(modelItem => item.MondayDuration)</li>
-            </ul>
+            @if(item.MondayInstanceId.HasValue){
+                <ul>
+                    <li>@Html.DisplayFor(modelItem => item.MondayStartTime)</li>        
+                    <li>@Html.DisplayFor(modelItem => item.MondayDuration)</li>
+                </ul>
+            }else{
+                <p>N/A</p>
+            }
         </td>
         <td>
-            <ul>
-                <li>@Html.DisplayFor(modelItem => item.TuesdayStartTime)</li>        
-                <li>@Html.DisplayFor(modelItem => item.TuesdayDuration)</li>
-            </ul>
+            @if(item.TuesdayInstanceId.HasValue){
+                <ul>
+                    <li>@Html.DisplayFor(modelItem => item.TuesdayStartTime)</li>        
+                    <li>@Html.DisplayFor(modelItem => item.TuesdayDuration)</li>
+                </ul>
+            }else{
+                <p>N/A</p>
+            }
         </td>
         <td>
-            <ul>
-                <li>@Html.DisplayFor(modelItem => item.WednesdayStartTime)</li>        
-                <li>@Html.DisplayFor(modelItem => item.WednesdayDuration)</li>
-            </ul>
+            @if(item.WednesdayInstanceId.HasValue){
+                <ul>
+                    <li>@Html.DisplayFor(modelItem => item.WednesdayStartTime)</li>        
+                    <li>@Html.DisplayFor(modelItem => item.WednesdayDuration)</li>
+                </ul>
+            }else{
+                <p>N/A</p>
+            }
         </td>
         <td>
-            <ul>
-                <li>@Html.DisplayFor(modelItem => item.ThursdayStartTime)</li>        
-                <li>@Html.DisplayFor(modelItem => item.ThursdayDuration)</li>
-            </ul>
+            @if(item.ThursdayInstanceId.HasValue){
+                <ul>
+                    <li>@Html.DisplayFor(modelItem => item.ThursdayStartTime)</li>        
+                    <li>@Html.DisplayFor(modelItem => item.ThursdayDuration)</li>
+                </ul>
+            }else{
+                <p>N/A</p>
+            }
         </td>
         <td>
-            <ul>
-                <li>@Html.DisplayFor(modelItem => item.FridayStartTime)</li>        
-                <li>@Html.DisplayFor(modelItem => item.FridayDuration)</li>
-            </ul>
+            @if(item.FridayInstanceId.HasValue){
+                <ul>
+                    <li>@Html.DisplayFor(modelItem => item.FridayStartTime)</li>        
+                    <li>@Html.DisplayFor(modelItem => item.FridayDuration)</li>
+                </ul>
+            }else{
+                <p>N/A</p>
+            }
         </td>
         <td>
-            <ul>
-                <li>@Html.DisplayFor(modelItem => item.SaturdayStartTime)</li>        
-                <li>@Html.DisplayFor(modelItem => item.SaturdayDuration)</li>
-            </ul>
+            @if(item.SaturdayInstanceId.HasValue){
+                <ul>
+                    <li>@Html.DisplayFor(modelItem => item.SaturdayStartTime)</li>        
+                    <li>@Html.DisplayFor(modelItem => item.SaturdayDuration)</li>
+                </ul>
+            }else{
+                <p>N/A</p>
+            }
         </td>
         <td>
-            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.ActionLink("Edit", "Edit", new { id = item.RoomInstanceId }) @Html.Raw(" | ") } 
-                                                                       @Html.ActionLink("Details", "Details", new { id=item.RoomInstanceId }) 
-            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.RoomInstanceId }) }
+            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && !ViewBag.CurrentVersion.IsApproved)
+            { 
+                @Html.ActionLink("Edit", "Edit", new { id = item.RoomId }) @Html.Raw(" | ") 
+            } 
+            @Html.ActionLink("Details", "Details", new { id=item.RoomId}) 
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager && (!item.RoomInstanceId.HasValue || !ViewBag.CurrentVersion.IsApproved))
+            { 
+                @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.RoomId }) 
+            }
         </td>
     </tr>
 }

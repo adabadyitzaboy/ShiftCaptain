@@ -9,16 +9,109 @@ namespace ShiftCaptain.Models
 {
     public class MinValueAttribute : ValidationAttribute
     {
-        private readonly int _minValue;
+        private readonly decimal _minValue;
 
         public MinValueAttribute(int minValue)
+        {
+            _minValue = (decimal) minValue;
+        }
+
+        public MinValueAttribute(decimal minValue)
         {
             _minValue = minValue;
         }
 
         public override bool IsValid(object value)
         {
-            return (int)value >= _minValue;
+
+            if (value == null)
+            {
+                return true;
+            }
+            else if (value.GetType() == typeof(int))
+            {
+                return (int)value >= _minValue;
+            }
+            else if (value.GetType() == typeof(double))
+            {
+                return (double)value >= (double) _minValue;
+            }
+            else if (value.GetType() == typeof(decimal))
+            {
+                return (decimal)value >= _minValue;
+            }
+            else if (value.GetType() == typeof(TimeSpan?))
+            {
+                return ((TimeSpan?)value).HasValue ? ((TimeSpan?)value).Value.Hours >= _minValue : true;
+            }
+            else if (value.GetType() == typeof(TimeSpan))
+            {
+                return ((TimeSpan)value).Hours >= _minValue;
+            }
+            throw new Exception("Attribute type not allowed");
+
+        }
+    }
+
+    public class MaxValueAttribute : ValidationAttribute
+    {
+        private readonly decimal _maxValue;
+
+        public MaxValueAttribute(int maxValue)
+        {
+            _maxValue = (decimal) maxValue;
+        }
+
+        public MaxValueAttribute(decimal maxValue)
+        {
+            _maxValue = maxValue;
+        }
+
+        public override bool IsValid(object value)
+        {
+            if (value == null)
+            {
+                return true;
+            }else if (value.GetType() == typeof(int))
+            {
+                return (int)value < _maxValue;
+            }
+            else if (value.GetType() == typeof(double))
+            {
+                return (double)value < (double)_maxValue;
+            }
+            else if (value.GetType() == typeof(decimal))
+            {
+                return (decimal)value < _maxValue;
+            }
+            else if (value.GetType() == typeof(TimeSpan?))
+            {
+                return ((TimeSpan?)value).HasValue ? ((TimeSpan?)value).Value.TotalHours < (double)_maxValue : true;
+            }
+            else if (value.GetType() == typeof(TimeSpan))
+            {
+                return  ((TimeSpan)value).TotalHours < (double)_maxValue ;
+            }
+
+            throw new Exception("Attribute type not allowed");
+        }
+    }
+    public class UsesHalfHourIncrementsAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object value)
+        {
+            if (value == null)
+            {
+                return true;
+            }else if (value.GetType() == typeof(TimeSpan))
+            {
+                var ending = ((TimeSpan)value).TotalMinutes % 30;
+                return ending == 0;
+            }
+            else
+            {//decimal
+                return ((decimal)value) % (decimal).5 == 0;
+            }
         }
     }
 
@@ -88,10 +181,12 @@ namespace ShiftCaptain.Models
 
         [Display(Name = "Max Hours")]
         [DisplayFormat(DataFormatString = "{0:0.0}", ApplyFormatInEditMode = true)]
+        [UsesHalfHourIncrements(ErrorMessage="{0} must use 30 minute increments")]
         public Decimal? MaxHours { get; set; }
 
         [Display(Name = "Current Hours")]
         [DisplayFormat(DataFormatString = "{0:0.0}", ApplyFormatInEditMode = true)]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public Decimal? CurrentHours { get; set; }
     }
 
@@ -190,58 +285,92 @@ namespace ShiftCaptain.Models
 
         [Display(Name = "Sunday Start Time")]
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} cannot be greater than 23:59:59")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public TimeSpan SundayStartTime { get; set; }
 
         [Display(Name = "Monday Start Time")]
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} cannot be greater than 23:59:59")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public TimeSpan MondayStartTime { get; set; }
 
         [Display(Name = "Tuesday Start Time")]
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} cannot be greater than 23:59:59")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public TimeSpan TuesdayStartTime { get; set; }
 
         [Display(Name = "Wednesday Start Time")]
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} cannot be greater than 23:59:59")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public TimeSpan WednesdayStartTime { get; set; }
 
         [Display(Name = "Thursday Start Time")]
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} cannot be greater than 23:59:59")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public TimeSpan ThursdayStartTime { get; set; }
 
         [Display(Name = "Friday Start Time")]
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} cannot be greater than 23:59:59")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public TimeSpan FridayStartTime { get; set; }
 
         [Display(Name = "Saturday Start Time")]
         [DisplayFormat(DataFormatString = "{0:hh\\:mm}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} cannot be greater than 23:59:59")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public TimeSpan SaturdayStartTime { get; set; }
 
         [Display(Name = "Sunday Duration (Hours)")]
         [DisplayFormat(DataFormatString = "{0:0.0}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} must be less than 24")]
+        [MinValue(0, ErrorMessage = "{0} must be greater than 0")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public Decimal SundayDuration { get; set; }
 
         [Display(Name = "Monday Duration (Hours)")]
         [DisplayFormat(DataFormatString = "{0:0.0}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} must be less than 24")]
+        [MinValue(0, ErrorMessage = "{0} must be greater than 0")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public Decimal MondayDuration { get; set; }
 
         [Display(Name = "Tuesday Duration (Hours)")]
         [DisplayFormat(DataFormatString = "{0:0.0}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} must be less than 24")]
+        [MinValue(0, ErrorMessage = "{0} must be greater than 0")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public Decimal TuesdayDuration { get; set; }
 
         [Display(Name = "Wednesday Duration (Hours)")]
         [DisplayFormat(DataFormatString = "{0:0.0}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} must be less than 24")]
+        [MinValue(0, ErrorMessage = "{0} must be greater than 0")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public Decimal WednesdayDuration { get; set; }
 
         [Display(Name = "Thursday Duration (Hours)")]
         [DisplayFormat(DataFormatString = "{0:0.0}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} must be less than 24")]
+        [MinValue(0, ErrorMessage = "{0} must be greater than 0")]
         public Decimal ThursdayDuration { get; set; }
 
         [Display(Name = "Friday Duration (Hours)")]
         [DisplayFormat(DataFormatString = "{0:0.0}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} must be less than 24")]
+        [MinValue(0, ErrorMessage = "{0} must be greater than 0")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public Decimal FridayDuration { get; set; }
 
         [Display(Name = "Saturday Duration (Hours)")]
         [DisplayFormat(DataFormatString = "{0:0.0}", ApplyFormatInEditMode = true)]
+        [MaxValue(24, ErrorMessage = "{0} must be less than 24")]
+        [MinValue(0, ErrorMessage = "{0} must be greater than 0")]
+        [UsesHalfHourIncrements(ErrorMessage = "{0} must use 30 minute increments")]
         public Decimal SaturdayDuration { get; set; }
 
     }

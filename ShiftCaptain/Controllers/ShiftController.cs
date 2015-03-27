@@ -179,11 +179,7 @@ namespace ShiftCaptain.Controllers
                 ViewBag.RoomID = new SelectList(rooms, "Id", "Name", rooms.First().Id);
 
             }
-            var version = db.Versions.FirstOrDefault(v => v.Id == SessionManager.VersionId);
-            if (version != null)
-            {
-                ViewBag.CurrentVersion = version;
-            }
+            
             return View();
         }
 

@@ -47,25 +47,33 @@
             @Html.DisplayFor(modelItem => item.IsApproved)
         </td>
         <td>
-            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.ActionLink("Edit", "Edit", new { id=item.Id }) @Html.Raw(" | ") } 
-                                                                       @Html.ActionLink("Details", "Details", new { id=item.Id}) 
-            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.Id }) }
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager && !item.IsApproved)
+            { 
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) @Html.Raw(" | ") 
+            } 
+                @Html.ActionLink("Details", "Details", new { id=item.Id}) 
+            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && !item.IsApproved)
+            { 
+                @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.Id }) 
+            }
             @if (ShiftCaptain.Infrastructure.SessionManager.IsManager || ShiftCaptain.Infrastructure.SessionManager.IsShiftManager)
             { 
                 if(!item.IsApproved && !item.IsReadyForApproval){
                     @Html.Raw(" | ") @Html.ActionLink("Validate Schedule", "ValidateSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
                 }
-            }
-            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager)
-            { 
-                if(!item.IsApproved && item.IsReadyForApproval){
-                    @Html.Raw(" | ") @Html.ActionLink("Approve Schedule", "ApproveSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
-                }
-            }
             
-            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager)
-            { 
-                @Html.Raw(" | ") @Html.ActionLink("Clone Schedule", "CloneSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
+                if (ShiftCaptain.Infrastructure.SessionManager.IsManager)
+                { 
+                    if(!item.IsApproved && item.IsReadyForApproval){
+                        @Html.Raw(" | ") @Html.ActionLink("Approve Schedule", "ApproveSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
+                    }
+                    else if (item.IsApproved)
+                    {
+                        @Html.Raw(" | ") @Html.ActionLink("Disapprove Schedule", "DisapproveSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
+                    }
+                 
+                    @Html.Raw(" | ") @Html.ActionLink("Clone Schedule", "CloneSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
+                }
             }
         </td>
     </tr>

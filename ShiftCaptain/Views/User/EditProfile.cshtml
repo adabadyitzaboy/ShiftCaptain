@@ -64,7 +64,7 @@
         </div>
         <div class="editor-field">
             
-            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager && !ViewBag.CurrentVersion.IsApproved){
                 @Html.EditorFor(model => model.EmployeeId)
                 @Html.ValidationMessageFor(model => model.EmployeeId)
             }else{

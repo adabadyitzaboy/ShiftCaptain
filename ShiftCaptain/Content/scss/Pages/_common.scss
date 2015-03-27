@@ -43,6 +43,7 @@ tip-master {
 	position: relative;
 	.expansion {
 		display: none;
+		z-index: 1;
 	}
 	&:hover .expansion, &.open .expansion {
 		display: block;

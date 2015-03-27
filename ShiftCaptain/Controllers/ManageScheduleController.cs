@@ -137,6 +137,44 @@ namespace ShiftCaptain.Controllers
         }
 
         //
+        // GET: /DisapproveSchedule/5
+        [ManagerAccess]
+        public ActionResult DisapproveSchedule(int Id)
+        {
+            var version = db.Versions.FirstOrDefault(v => v.Id == Id);
+            if (version == null)
+            {
+                return HttpNotFound();
+            }
+            return View(version);
+        }
+
+
+        //
+        // POST: /DisapproveSchedule/5
+
+        [HttpPost]
+        [ManagerAccess]
+        [ValidateAntiForgeryToken]
+        public ActionResult DisapproveSchedule(ShiftCaptain.Models.Version versionId)
+        {
+            var version = db.Versions.FirstOrDefault(v => v.Id == versionId.Id);
+            if (version == null)
+            {
+                return HttpNotFound();
+            }
+            if (version.IsApproved)
+            {
+                version.IsApproved = false;
+                db.Entry(version).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Version");
+            }
+
+            return View(version);
+        }
+
+        //
         // POST: /RejectSchedule/5
 
         [HttpPost]
@@ -173,9 +211,16 @@ namespace ShiftCaptain.Controllers
                 return HttpNotFound();
             }
             version.Name = version.Name + " - clone";
+            
+            return View(GetClone(version));
+        }
+
+        private Clone GetClone(ShiftCaptain.Models.Version version)
+        {
             var userItems = new List<SelectListItem>();
             var roomItems = new List<SelectListItem>();
-            var clone = new Clone { 
+            var clone = new Clone
+            {
                 Version = version,
                 Room = roomItems,
                 User = userItems,
@@ -184,16 +229,16 @@ namespace ShiftCaptain.Controllers
             };
             foreach (var user in db.UserViews.Where(uv => uv.VersionId == version.Id))
             {
-                userItems.Add(new SelectListItem{ Value = user.UserId.ToString(), Text = user.NickName});
+                userItems.Add(new SelectListItem { Value = user.UserId.ToString(), Text = user.NickName });
             }
 
             foreach (var room in db.RoomViews.Where(rv => rv.VersionId == version.Id))
             {
-                roomItems.Add(new SelectListItem { Value = room.RoomId.ToString(), Text = room.Name});
+                roomItems.Add(new SelectListItem { Value = room.RoomId.ToString(), Text = room.Name });
             }
-            return View(clone);
-        }
 
+            return clone;
+        }
 
         //
         // POST: /CloneSchedule/5
@@ -203,24 +248,31 @@ namespace ShiftCaptain.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CloneSchedule(ShiftCaptain.Models.Clone clone)
         {
-            var oldVersionId = clone.Version.Id;
-            String users = string.Empty;
-            String rooms = string.Empty;
-            if (clone.CloneUser != null)
+            if (ModelState.IsValid)
             {
-                users = String.Join(",", clone.CloneUser);
-            }
+                var oldVersionId = clone.Version.Id;
+                String users = string.Empty;
+                String rooms = string.Empty;
+                if (clone.CloneUser != null)
+                {
+                    users = String.Join(",", clone.CloneUser);
+                }
 
-            if (clone.CloneRoom!= null)
-            {
-                rooms = String.Join(",", clone.CloneRoom);
+                if (clone.CloneRoom != null)
+                {
+                    rooms = String.Join(",", clone.CloneRoom);
+                }
+                var result = db.sp_clone_schedule(clone.Version.Id, clone.Version.Name, users, rooms).FirstOrDefault();
+                if (result != null && result.HasValue)
+                {
+                    SessionManager.VersionId = result.Value;
+                }
+                return RedirectToAction("Index", "Version");
             }
-            var result = db.sp_clone_schedule(clone.Version.Id, clone.Version.Name, users, rooms).FirstOrDefault();
-            if (result != null && result.HasValue)
-            {
-                SessionManager.VersionId = result.Value;
-            }
-            return RedirectToAction("Index", "Version");
+            var rtnClone = GetClone(clone.Version);
+            rtnClone.CloneRoom = clone.CloneRoom;
+            rtnClone.CloneUser = clone.CloneUser;
+            return View(rtnClone);
         }
 
         protected override void Dispose(bool disposing)

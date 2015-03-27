@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftCaptain", "ShiftCaptain\ShiftCaptain.csproj", "{52985499-431C-479F-9185-501798CDB5CC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShiftCaptainTest", "ShiftCaptainTest\ShiftCaptainTest.csproj", "{EDC99BCC-AB91-4A54-AF82-469C79D59DE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{52985499-431C-479F-9185-501798CDB5CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52985499-431C-479F-9185-501798CDB5CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52985499-431C-479F-9185-501798CDB5CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDC99BCC-AB91-4A54-AF82-469C79D59DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDC99BCC-AB91-4A54-AF82-469C79D59DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDC99BCC-AB91-4A54-AF82-469C79D59DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDC99BCC-AB91-4A54-AF82-469C79D59DE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

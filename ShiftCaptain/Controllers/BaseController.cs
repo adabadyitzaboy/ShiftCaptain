@@ -26,6 +26,14 @@ namespace ShiftCaptain.Controllers
                 SessionManager.NickName = currentUser.NickName;
 
                 CurrentVersionId = SessionManager.VersionId;
+                if (CurrentVersionId != 0)
+                {
+                    var version = db.Versions.FirstOrDefault(v => v.Id == CurrentVersionId);
+                    if (version != null)
+                    {
+                        ViewBag.CurrentVersion = version;
+                    }
+                }
             }
         }
         public void AddVersionDropDown(){
@@ -51,7 +59,10 @@ namespace ShiftCaptain.Controllers
             {
                 return (int)((SelectList)ViewBag.VersionId).SelectedValue;
             }
-            return 0;
+            else
+            {
+                return CurrentVersionId;
+            }
         }
     }
 }

@@ -9271,60 +9271,69 @@ header .content-wrapper {
   z-index: 1;
   background: #fff;
 }
+/* line 69, ../scss/Pages/_shifts.scss */
+header .links {
+  margin-bottom: 10px;
+}
+/* line 71, ../scss/Pages/_shifts.scss */
+header .links a {
+  padding: 0 10px;
+  padding-left: 0;
+}
 
-/* line 70, ../scss/Pages/_shifts.scss */
+/* line 77, ../scss/Pages/_shifts.scss */
 #Employees {
   max-height: 300px;
   overflow-y: scroll;
 }
-/* line 73, ../scss/Pages/_shifts.scss */
+/* line 80, ../scss/Pages/_shifts.scss */
 #Employees div {
   padding: 10px;
   text-align: center;
 }
-/* line 77, ../scss/Pages/_shifts.scss */
+/* line 84, ../scss/Pages/_shifts.scss */
 #Employees user {
   display: block;
   padding: 5px;
 }
-/* line 81, ../scss/Pages/_shifts.scss */
+/* line 88, ../scss/Pages/_shifts.scss */
 #Employees .draggable {
   background-color: green;
 }
-/* line 84, ../scss/Pages/_shifts.scss */
+/* line 91, ../scss/Pages/_shifts.scss */
 #Employees .over-max-hours {
   background-color: #cc0000;
 }
-/* line 87, ../scss/Pages/_shifts.scss */
+/* line 94, ../scss/Pages/_shifts.scss */
 #Employees .under-min-hours {
   background-color: yellow;
 }
-/* line 90, ../scss/Pages/_shifts.scss */
+/* line 97, ../scss/Pages/_shifts.scss */
 #Employees [class*="column"] + [class*="column"]:last-child {
   float: left;
 }
 
-/* line 95, ../scss/Pages/_shifts.scss */
+/* line 102, ../scss/Pages/_shifts.scss */
 #Preferences {
   max-height: 300px;
   overflow-y: scroll;
 }
-/* line 98, ../scss/Pages/_shifts.scss */
+/* line 105, ../scss/Pages/_shifts.scss */
 #Preferences div {
   padding: 10px;
   text-align: center;
 }
-/* line 102, ../scss/Pages/_shifts.scss */
+/* line 109, ../scss/Pages/_shifts.scss */
 #Preferences preference {
   display: block;
   padding: 5px;
 }
-/* line 106, ../scss/Pages/_shifts.scss */
+/* line 113, ../scss/Pages/_shifts.scss */
 #Preferences [class*="column"] + [class*="column"]:last-child {
   float: left;
 }
 
-/* line 110, ../scss/Pages/_shifts.scss */
+/* line 117, ../scss/Pages/_shifts.scss */
 .dnd-moving-div preference {
   background-color: #fff !important;
 }
@@ -9351,6 +9360,16 @@ body.room table ul li {
 body.room table ul li + li {
   border-left: 1px solid #000;
   color: #c00;
+}
+
+/* line 2, ../scss/Pages/_manageSchedules.scss */
+.ManageSchedule form {
+  display: inline-block;
+  margin-right: 10px;
+}
+/* line 5, ../scss/Pages/_manageSchedules.scss */
+.ManageSchedule form + input {
+  margin-left: 0px;
 }
 
 /* line 1, ../scss/DragNDrop/_dragNdrop.scss */

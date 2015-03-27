@@ -78,6 +78,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /Version/Edit/5
         [ManagerAccess]
+        [VersionNotApproved]
         public ActionResult Edit(int id = 0)
         {
             var version = db.Versions.Find(id);
@@ -94,6 +95,7 @@ namespace ShiftCaptain.Controllers
         [HttpPost]
         [ManagerAccess]
         [ValidateAntiForgeryToken]
+        [VersionNotApproved]
         public ActionResult Edit(ShiftCaptain.Models.Version version)
         {
             if (ModelState.IsValid)
@@ -117,6 +119,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /Version/Delete/5
         [ManagerAccess]
+        [VersionNotApproved]
         public ActionResult Delete(int id = 0)
         {
             var version = db.Versions.Find(id);
@@ -132,6 +135,7 @@ namespace ShiftCaptain.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ManagerAccess]
+        [VersionNotApproved]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {

@@ -33,7 +33,25 @@ namespace ShiftCaptain.Controllers
 
         private RoomView GetRoomView(int id = 0)
         {
-            return db.RoomViews.Where(rv => rv.RoomInstanceId == id).FirstOrDefault();
+            var versionId = GetVersionId();
+            var view = db.RoomViews.Where(rv => rv.RoomId == id && rv.VersionId == versionId).FirstOrDefault();
+            if (view == null)
+            {
+                var room = db.Rooms.Where(r => r.Id == id).FirstOrDefault();
+                if (room != null)
+                {
+                    return new RoomView
+                    {
+                        BuildingId = room.BuildingId,
+                        BuildingName = room.Building.Name,
+                        Name = room.Name,
+                        PhoneNumber = room.PhoneNumber,
+                        RoomId = id,
+                        RoomNumber = room.RoomNumber
+                    };
+                }
+            }
+            return view;
         }
 
         //
@@ -42,7 +60,15 @@ namespace ShiftCaptain.Controllers
         public ActionResult Index()
         {
             AddVersionDropDown();
-            return View(db.RoomViews.Where(rv => rv.VersionId == CurrentVersionId).ToList());
+            var rooms = db.RoomViews.Where(rv => rv.VersionId == CurrentVersionId).OrderBy(o => o.Name);
+            if (currentUser.IsManager)
+            {
+                return View(rooms.Union(db.RoomViews.Where(rv => rv.VersionId == null).OrderBy(o => o.Name)));
+            }
+            else
+            {
+                return View(rooms);
+            }
         }
 
         //
@@ -61,6 +87,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /Room/Create
         [ManagerAccess]
+        [VersionNotApproved]
         public ActionResult Create()
         {
             ViewBag.BuildingID = new SelectList(db.Buildings, "Id", "Name");
@@ -107,7 +134,7 @@ namespace ShiftCaptain.Controllers
                     var instance = new RoomInstance
                     {
                         RoomId = (int)roomview.RoomId,
-                        VersionId = (int)CurrentVersionId
+                        VersionId = (int)roomview.VersionId
                     };
                     db.RoomInstances.Add(instance);
                     roomview.RoomInstanceId = instance.Id;
@@ -263,6 +290,7 @@ namespace ShiftCaptain.Controllers
 
         [HttpPost]
         [ManagerAccess]
+        [VersionNotApproved]
         [ValidateAntiForgeryToken]
         public ActionResult Create(RoomView roomview)
         {
@@ -289,6 +317,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /Room/Edit/5
         [ManagerAccess]
+        [VersionNotApproved]
         public ActionResult Edit(int id = 0)
         {
             RoomView roomview = GetRoomView(id);
@@ -306,6 +335,7 @@ namespace ShiftCaptain.Controllers
         [HttpPost]
         [ManagerAccess]
         [ValidateAntiForgeryToken]
+        [VersionNotApproved]
         public ActionResult Edit(RoomView roomview)
         {
             if (ModelState.IsValid)
@@ -315,7 +345,10 @@ namespace ShiftCaptain.Controllers
                 room.BuildingId = roomview.BuildingId;
                 room.RoomNumber = roomview.RoomNumber;
                 room.PhoneNumber = roomview.PhoneNumber;
-
+                if (!roomview.VersionId.HasValue)
+                {
+                    roomview.VersionId = GetVersionId();
+                }
                 CreateOrUpdateRoomHours(roomview);
                 db.Entry(room).State = EntityState.Modified;
                 db.SaveChanges();
@@ -335,6 +368,23 @@ namespace ShiftCaptain.Controllers
             {
                 return HttpNotFound();
             }
+            var canDelete = true;
+            var version = db.Versions.FirstOrDefault(v => v.Id == roomview.VersionId);
+            if (roomview.VersionId.HasValue && version != null && version.IsApproved)
+            {
+                canDelete = false;
+                ViewBag.CantDeleteReason = "Cannot delete a room in an approved version.";
+            }
+            else
+            {
+                var shifts = db.Shifts.Count(s => s.RoomId== roomview.RoomId);
+                if (shifts != 0)
+                {
+                    canDelete = false;
+                    ViewBag.CantDeleteReason = "Cannot delete a room that contains shifts";
+                }
+            }
+            ViewBag.CanDelete = canDelete;
             return View(roomview);
         }
 
@@ -347,16 +397,22 @@ namespace ShiftCaptain.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             RoomView roomview = GetRoomView(id);
-            var roomHours = db.RoomHours.Where(rh => rh.RoomInstanceId == roomview.RoomInstanceId);
-            foreach (var roomhour in roomHours)
+            if (roomview.RoomInstanceId.HasValue)
             {
-                db.RoomHours.Remove(roomhour);
+                foreach (var roomhour in db.RoomHours.Where(rh => rh.RoomInstanceId == roomview.RoomInstanceId))
+                {
+                    db.RoomHours.Remove(roomhour);
+                }
+                var roominstance = db.RoomInstances.Find(roomview.RoomInstanceId);
+                db.RoomInstances.Remove(roominstance);
+                db.SaveChanges();
             }
-            var roominstance = db.RoomInstances.Find(roomview.RoomInstanceId);
-            db.RoomInstances.Remove(roominstance);
-            var room = db.Rooms.Find(roomview.RoomId);
-            db.Rooms.Remove(room);
-            db.SaveChanges();
+            if (db.RoomInstances.Count(ri => ri.RoomId == roomview.RoomId) == 0)
+            {
+                var room = db.Rooms.Find(roomview.RoomId);
+                db.Rooms.Remove(room);
+                db.SaveChanges();
+            }
             return RedirectToAction("Index");
         }
 

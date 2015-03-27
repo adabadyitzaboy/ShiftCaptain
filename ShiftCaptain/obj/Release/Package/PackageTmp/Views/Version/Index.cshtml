@@ -56,6 +56,17 @@
                     @Html.Raw(" | ") @Html.ActionLink("Validate Schedule", "ValidateSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
                 }
             }
+            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager)
+            { 
+                if(!item.IsApproved && item.IsReadyForApproval){
+                    @Html.Raw(" | ") @Html.ActionLink("Approve Schedule", "ApproveSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
+                }
+            }
+            
+            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager)
+            { 
+                @Html.Raw(" | ") @Html.ActionLink("Clone Schedule", "CloneSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
+            }
         </td>
     </tr>
 }

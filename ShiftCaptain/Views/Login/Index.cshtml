@@ -26,7 +26,8 @@
                 @Html.ValidationMessageFor(m => m.Pass)
             </li>
         </ol>
-        <input type="submit" value="Log in" />
+        <input type="submit" value="Log in" /><br /><br />
+        <p>Forgot your password?  Click @Html.ActionLink("HERE", "ForgotPassword", "EmailTemplate", new {}, new { target = "_blank"}) to reset it.</p>
     </fieldset>
 }
 </section>

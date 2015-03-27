@@ -37,6 +37,45 @@ namespace ShiftCaptain.Filters
 
         }
     }
+    public class VersionNotApprovedAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            var name = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName;
+            var action = filterContext.ActionDescriptor.ActionName;
+            var id = SessionManager.VersionId;
+            if(name == "Version" && (action == "Edit" || action == "Delete")  && filterContext.ActionParameters.Count() > 0){
+                if (filterContext.ActionParameters.Keys.Contains("version"))
+                {
+                    var version = (ShiftCaptain.Models.Version)filterContext.ActionParameters["version"];
+                    if(version != null && version.Id != 0){
+                        id = version.Id;
+                    }                    
+                }
+                else if (filterContext.ActionParameters.Keys.Contains("id"))
+                {
+                    id = (int)filterContext.ActionParameters["id"];
+                }
+                
+            }
+            if (id != 0)
+            {
+                var db = new ShiftCaptainEntities();
+                var version = db.Versions.FirstOrDefault(v => v.Id == id);
+                if (version != null && !version.IsApproved)
+                {
+                    return;
+                }
+            }
+            filterContext.Result = new RedirectToRouteResult(
+                  new RouteValueDictionary 
+                                   {
+                                       { "action", "NotAuthorized" },
+                                       { "controller", "Error" }
+                                   });
+        }        
+    }
+
 
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class AuthorizedAttribute : FilterAttribute, IAuthorizationFilter
@@ -46,11 +85,21 @@ namespace ShiftCaptain.Filters
             filterContext.Result = new RedirectToRouteResult(
                   new RouteValueDictionary 
                                    {
-                                       { "action", "Index" },
-                                       { "controller", "Login" }
+                                       { "action", "NotAuthorized" },
+                                       { "controller", "Error" }
                                    });
         }
-
+        private void NotLoggedIn(AuthorizationContext filterContext)
+        {
+            filterContext.Result = new RedirectToRouteResult(
+                  new RouteValueDictionary 
+                                   {
+                                       { "action", "Index" },
+                                       { "controller", "Login" },
+                                       { "returnUrl",filterContext.RequestContext.HttpContext.Request.Url.PathAndQuery}
+                                   });
+            
+        }
         public virtual void OnAuthorization(AuthorizationContext filterContext)
         {
             /*
@@ -98,8 +147,9 @@ namespace ShiftCaptain.Filters
                         }
                     }
                 }
+                NotAuthorized(filterContext);
             }
-            NotAuthorized(filterContext);
+            NotLoggedIn(filterContext);
         }
     }
 }

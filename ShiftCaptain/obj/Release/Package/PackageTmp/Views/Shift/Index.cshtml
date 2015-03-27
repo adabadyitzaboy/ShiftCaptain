@@ -20,7 +20,7 @@
             <label for="RoomID">Room</label>
             @Html.DropDownList("RoomID")
         </div>
-        <div class="small-12 large-4 columns left">
+        <div class="small-12 large-4 columns">
             @if(ShiftCaptain.Infrastructure.SessionManager.IsManager || ShiftCaptain.Infrastructure.SessionManager.IsShiftManager){
                 <label for="ShiftDuration">Shift Length</label>
                 <select id="ShiftDuration">
@@ -35,6 +35,17 @@
                     <option value="6">6 hours</option>
                     <option value="6.5">6 1/2 hours</option>
                 </select>
+            }
+        </div>
+        <div class="small-12 large-12 columns left links">
+            @if(!ViewBag.CurrentVersion.IsReadyForApproval){
+                @Html.ActionLink("Validate Schedule", "ValidateSchedule", "ManageSchedule", new { id = ViewBag.CurrentVersion.Id }, new { target = "_blank"})
+            }
+            else if (ViewBag.CurrentVersion.IsReadyForApproval && !ViewBag.CurrentVersion.IsApproved)
+            {
+                @Html.ActionLink("Approve Schedule", "ApproveSchedule", "ManageSchedule", new { id = ViewBag.CurrentVersion.Id }, new { target = "_blank"})
+            }else if(ViewBag.CurrentVersion.IsApproved){
+                <p>Version is approved.</p>
             }
         </div>
     </section>

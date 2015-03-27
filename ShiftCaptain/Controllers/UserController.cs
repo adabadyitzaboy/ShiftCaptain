@@ -28,7 +28,13 @@ namespace ShiftCaptain.Controllers
 
         private UserView GetUserView(int id = 0)
         {
-            return db.UserViews.Where(uv => uv.UserId == id).FirstOrDefault();
+            int VersionId = GetVersionId();
+            var userview = db.UserViews.Where(uv => uv.VersionId == VersionId && uv.UserId == id).FirstOrDefault();
+            if (userview == null)
+            {
+                return db.UserViews.Where(uv => uv.UserId == id).FirstOrDefault();
+            }
+            return userview;
         }
         //
         // GET: /User/
@@ -56,6 +62,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /User/Create
         [ManagerAccess]
+        [VersionNotApproved]
         public ActionResult Create()
         {
             return View();
@@ -67,6 +74,7 @@ namespace ShiftCaptain.Controllers
         [HttpPost]
         [ManagerAccess]
         [ValidateAntiForgeryToken]
+        [VersionNotApproved]
         public ActionResult Create(UserView userview)
         {
             if (ModelState.IsValid)
@@ -96,6 +104,7 @@ namespace ShiftCaptain.Controllers
                         Line2 = userview.Line2,
                         City = userview.City,
                         State = userview.State,
+                        ZipCode = userview.ZipCode,
                         Country = userview.Country
                     };
                     db.Addresses.Add(address);
@@ -123,6 +132,7 @@ namespace ShiftCaptain.Controllers
 
             return View(userview);
         }
+
         private bool SendNewUserEmail(User user)
         {
             var email = db.EmailTemplates.FirstOrDefault(t => t.Name == "NewUserEmail");
@@ -220,22 +230,26 @@ namespace ShiftCaptain.Controllers
                 }
                 db.Entry(user).State = EntityState.Modified;
                 db.SaveChanges();
-                int versionId = GetVersionId();
-                var userI = db.UserInstances.FirstOrDefault(ui => ui.UserId == user.Id && ui.VersionId == versionId);
-                if (userI != null)
+                var versionId = GetVersionId();
+                var version = db.Versions.FirstOrDefault(v => v.Id == versionId);
+                if (!version.IsApproved)
                 {
-                    if (userview.MinHours.HasValue)
+                    var userI = db.UserInstances.FirstOrDefault(ui => ui.UserId == user.Id && ui.VersionId == versionId);
+                    if (userI != null)
                     {
-                        userI.MinHours = userview.MinHours.HasValue ? (decimal)userview.MinHours : 0;
-                        userI.MaxHours = userview.MaxHours.HasValue ? (decimal)userview.MaxHours : 0;
+                        if (userview.MinHours.HasValue)
+                        {
+                            userI.MinHours = userview.MinHours.HasValue ? (decimal)userview.MinHours : 0;
+                            userI.MaxHours = userview.MaxHours.HasValue ? (decimal)userview.MaxHours : 0;
 
-                        db.Entry(userI).State = EntityState.Modified;
+                            db.Entry(userI).State = EntityState.Modified;
+                        }
+                        else
+                        {
+                            db.UserInstances.Remove(userI);
+                        }
+                        db.SaveChanges();
                     }
-                    else
-                    {
-                        db.UserInstances.Remove(userI);
-                    }
-                    db.SaveChanges();
                 }
                 return RedirectToAction("Index");
             }
@@ -317,11 +331,22 @@ namespace ShiftCaptain.Controllers
                     if (user.IsManager)
                     {//only a manager can update the hours on the profile page
                         var versionId = GetVersionId();
-                        var userI = db.UserInstances.FirstOrDefault(ui => ui.UserId == user.Id && ui.VersionId == versionId);
-                        if (userI != null)
+                        var version = db.Versions.FirstOrDefault(v => v.Id == versionId);
+                        if (!version.IsApproved)
                         {
-                            userI.MinHours = userview.MinHours.HasValue ? (decimal)userview.MinHours : 0;
-                            userI.MaxHours = userview.MaxHours.HasValue ? (decimal)userview.MaxHours : 0;
+                            var userI = db.UserInstances.FirstOrDefault(ui => ui.UserId == user.Id && ui.VersionId == versionId);
+                            if (userview.MinHours.HasValue)
+                            {
+                                userI.MinHours = userview.MinHours.HasValue ? (decimal)userview.MinHours : 0;
+                                userI.MaxHours = userview.MaxHours.HasValue ? (decimal)userview.MaxHours : 0;
+
+                                db.Entry(userI).State = EntityState.Modified;
+                            }
+                            else
+                            {
+                                db.UserInstances.Remove(userI);
+                            }
+                            db.SaveChanges();
                         }
                     }
                     return RedirectToAction("Index", "Shift");
@@ -345,6 +370,24 @@ namespace ShiftCaptain.Controllers
             {
                 return HttpNotFound();
             }
+            var canDelete = true;
+            var version = db.Versions.FirstOrDefault(v => v.Id == userview.VersionId);
+            if (userview.VersionId.HasValue && version != null && version.IsApproved)
+            {
+                
+                canDelete = false;
+                ViewBag.CantDeleteReason = "Cannot delete a user in an approved version.";
+            }
+            else
+            {
+                var shifts = db.Shifts.Count(s => s.UserId == userview.UserId);
+                if (shifts != 0)
+                {
+                    canDelete = false;
+                    ViewBag.CantDeleteReason = "Cannot delete a user who has shifts";
+                }
+            }
+            ViewBag.CanDelete = canDelete;
             return View(userview);
         }
 

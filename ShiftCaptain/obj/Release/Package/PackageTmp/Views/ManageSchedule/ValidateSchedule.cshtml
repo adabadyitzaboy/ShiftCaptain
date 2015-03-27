@@ -19,12 +19,6 @@
                 <input type="submit" value='Request for Approval' />
             }
         </div>
-        @if(Model.NumErrors > 0){
-            <div class="small-12 large-12 columns error-message">
-                <p>@Html.Raw(ViewBag.NumErrors) Errors</p>
-                <ul>@Html.Raw(ViewBag.Errors)</ul>
-            </div>
-        }
     </div>
     @Html.Partial("_ScheduleErrors")
 }
