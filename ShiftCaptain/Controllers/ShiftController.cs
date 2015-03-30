@@ -168,16 +168,17 @@ namespace ShiftCaptain.Controllers
 
         //
         // GET: /Shift/
+        [VersionRequired]
         public ActionResult Index()
         {
-            var buildings = db.Buildings.Where(b => b.Rooms.Count() > 0);
+            int VersionId = GetVersionId();
+            var buildings = db.Buildings.Where(b => b.Rooms.Count(r=>r.RoomInstances.Count(ri=>ri.VersionId == VersionId) > 0) > 0);
             if (buildings.Count() > 0)
             {
                 var first = buildings.First();
-                ViewBag.BuildingID = new SelectList(buildings, "Id", "Name", first.Id);
-                var rooms = db.Rooms.Where(r => r.BuildingId == first.Id);
+                ViewBag.BuildingId = new SelectList(buildings, "Id", "Name", first.Id);
+                var rooms = db.Rooms.Where(r => r.BuildingId == first.Id && r.RoomInstances.Count(ri => ri.VersionId == VersionId) > 0);
                 ViewBag.RoomID = new SelectList(rooms, "Id", "Name", rooms.First().Id);
-
             }
             
             return View();

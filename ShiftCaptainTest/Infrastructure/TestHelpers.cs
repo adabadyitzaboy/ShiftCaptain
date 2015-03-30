@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System.Configuration;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace ShiftCaptainTest.Infrastructure
 {
@@ -27,28 +29,26 @@ namespace ShiftCaptainTest.Infrastructure
                 Logger.InfoFormat("{0}\t{1}\t{2}\t{3}\t{4}", DateTime.Now.ToString("MM/dd/yy H:mm:ss"), nextPage, ellapsed, DriverType, IsLoggedIn());
             }
         }
-        public void ClickAndWaitForEitherElement(IWebElement element, By by1, By by2, bool element1Exists = true, bool element2Exists = true)
+        public void WaitForElement(List<ByExists> byExists, TimeSpan? timeout = null)
         {
-            element.Click();
-            _WaitTill().Until(d=>
-                (element1Exists && ElementExists(by1)) || 
-                (element2Exists && ElementExists(by2)) || 
-                (!element1Exists && !ElementExists(by1)) ||
-                (!element2Exists && !ElementExists(by2))  
+            _WaitTill(timeout).Until(d=>
+                byExists.Count(b=> 
+                    ElementExists(b.by) == b.exists
+                ) > 0
             );
         }
-        public void ClickAndWaitForElements(IWebElement element, By by1, By by2, By by3, bool element1Exists = true, bool element2Exists = true, bool element3Exists = true)
+        public void ClickAndWaitForElements(IWebElement element, List<ByExists> byExists)
         {
             element.Click();
-            _WaitTill().Until(d =>
-                (element1Exists && ElementExists(by1)) ||
-                (element2Exists && ElementExists(by2)) ||
-                (element3Exists && ElementExists(by3)) ||
-                (!element1Exists && !ElementExists(by1)) ||
-                (!element2Exists && !ElementExists(by2)) ||
-                (!element3Exists && !ElementExists(by3))
-            );
+            WaitForElement(byExists);
+            //_WaitTill().Until(d=>
+            //    (element1Exists && ElementExists(by1)) || 
+            //    (element2Exists && ElementExists(by2)) || 
+            //    (!element1Exists && !ElementExists(by1)) ||
+            //    (!element2Exists && !ElementExists(by2))  
+            //);
         }
+
         public bool ElementExists(By by)
         {
             try
@@ -64,6 +64,10 @@ namespace ShiftCaptainTest.Infrastructure
         public IWebElement WaitTillAvailable(By by, TimeSpan? timeout = null)
         {
             return _WaitTill(timeout).Until(ExpectedConditions.ElementExists(by));
+        }
+        public void WaitTillNotAvailable(By by, TimeSpan? timeout = null)
+        {
+            _WaitTill(timeout).Until(e=>!ElementExists(by));
         }
         public void WaitForNextPage(String currentUrl)
         {
@@ -89,5 +93,28 @@ namespace ShiftCaptainTest.Infrastructure
             element.Clear();
             element.SendKeys(value);
         }
+        public bool SetDropDownValue(IWebElement element, String value)
+        {
+            var option = element.FindElement(By.CssSelector("option[value='" + value + "']"));
+            bool selected;
+            if (bool.TryParse(option.GetAttribute("selected"), out selected) && selected)
+            {
+                return false;
+            }
+            element.Click();
+            
+            //var action = new OpenQA.Selenium.Interactions.Actions(Driver);
+            //action.Click(element)
+            //    .Click(option);
+            //action.Perform();
+            option.Click();
+            return true;
+        }
+
+    }
+    public class ByExists
+    {
+        public By by {get; set;}
+        public bool exists { get; set; }
     }
 }

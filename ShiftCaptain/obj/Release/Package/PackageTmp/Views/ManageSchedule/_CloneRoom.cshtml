@@ -1,17 +1,19 @@
 ﻿@model ShiftCaptain.Models.Clone
 
-@using (Html.BeginForm())
-{
-    <div class="row">
-        <div class="small-12 large-5 columns">
-            @Html.ListBox("rooms", Model.Room)
-        </div>
-        <div class="small-12 large-2 columns">
-            <input type="button" id="btnCloneRoom" value=">" />
-            <input type="button" id="btnRemoveRoom" value="<" />
-        </div>           
-        <div class="small-12 large-5 columns">
-            @Html.ListBoxFor(model => model.CloneRoom, new List<SelectListItem>(), new { });
-        </div>
+<div class="row">
+    <div class="small-12 large-12 columns">
+        <h3>Rooms</h3>
     </div>
-}
+    <div class="small-12 large-5 columns">
+        @Html.ListBox("rooms", Model.Room)
+    </div>
+    <div class="small-12 large-2 columns">
+        <input type="button" id="btnCloneAllRooms" value=">>" />
+        <input type="button" id="btnCloneRoom" value=">" />
+        <input type="button" id="btnRemoveRoom" value="<" />
+        <input type="button" id="btnRemoveAllRooms" value="<<" />
+    </div>           
+    <div class="small-12 large-5 columns">
+        @Html.ListBoxFor(model => model.CloneRoom, Model.CloneRoom, new { });
+    </div>
+</div>

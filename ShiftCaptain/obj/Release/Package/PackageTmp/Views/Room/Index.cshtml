@@ -6,9 +6,12 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if(!ViewBag.CurrentVersion.IsApproved){
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+
 <table class="sortable">
     <tr><th>
             @Html.DisplayNameFor(model => model.BuildingName)
@@ -159,9 +162,15 @@
             }
         </td>
         <td>
-            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.ActionLink("Edit", "Edit", new { id = item.RoomId }) @Html.Raw(" | ") } 
-                                                                       @Html.ActionLink("Details", "Details", new { id=item.RoomId}) 
-            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.RoomId }) }
+            @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && !ViewBag.CurrentVersion.IsApproved)
+            { 
+                @Html.ActionLink("Edit", "Edit", new { id = item.RoomId }) @Html.Raw(" | ") 
+            } 
+            @Html.ActionLink("Details", "Details", new { id=item.RoomId}) 
+            @if(ShiftCaptain.Infrastructure.SessionManager.IsManager && (!item.RoomInstanceId.HasValue || !ViewBag.CurrentVersion.IsApproved))
+            { 
+                @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.RoomId }) 
+            }
         </td>
     </tr>
 }

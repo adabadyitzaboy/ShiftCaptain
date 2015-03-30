@@ -9092,8 +9092,9 @@ tip-master {
 /* line 44, ../scss/Pages/_common.scss */
 .has-expansion .expansion {
   display: none;
+  z-index: 1;
 }
-/* line 47, ../scss/Pages/_common.scss */
+/* line 48, ../scss/Pages/_common.scss */
 .has-expansion:hover .expansion, .has-expansion.open .expansion {
   display: block;
   position: absolute;
@@ -9105,21 +9106,21 @@ tip-master {
   padding: 10px;
 }
 
-/* line 58, ../scss/Pages/_common.scss */
+/* line 59, ../scss/Pages/_common.scss */
 .error-message, .validation-summary-errors {
   color: red;
   margin-bottom: 10px;
 }
 
 @media (min-width: 1000px) {
-  /* line 63, ../scss/Pages/_common.scss */
+  /* line 64, ../scss/Pages/_common.scss */
   body {
     max-width: 95%;
     margin-left: auto;
     margin-right: auto;
   }
 
-  /* line 68, ../scss/Pages/_common.scss */
+  /* line 69, ../scss/Pages/_common.scss */
   body > header > .content-wrapper {
     left: 0;
     padding-left: 2.5%;

@@ -1,0 +1,14 @@
+//Provides list of versions
+
+@@ "Create"
+"NAME","DESCRIPTION","CAN_WORK","COLOR","VALID"
+"Test_Preference","Desc","0","green","1"
+"Test_Preference","","0","green","0"
+"Test_Preference","Desc","0","","0"
+"","Desc","0","green","0"
+
+
+@@ "DefaultPreference"
+"NAME","DESCRIPTION","CAN_WORK","COLOR","VALID"
+"Test Preference Can Work","Test Preference Can Work","1","green","1"
+"Test Preference Can't Work","Test Preference Can't Work","0","red","1"

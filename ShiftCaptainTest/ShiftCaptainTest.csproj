@@ -69,16 +69,37 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Version.cs" />
+    <Compile Include="CRUDOps\Building.cs" />
+    <Compile Include="CRUDOps\Shift.cs" />
+    <Compile Include="Infrastructure\ModelConverter.cs" />
+    <Compile Include="CRUDOps\ShiftPreference.cs" />
+    <Compile Include="CRUDOps\Preference.cs" />
+    <Compile Include="CRUDOps\Room.cs" />
+    <Compile Include="CRUDOps\Version.cs" />
     <Compile Include="Infrastructure\Base.cs" />
     <Compile Include="Infrastructure\DataParser.cs" />
     <Compile Include="Infrastructure\TestHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\CommonActions.cs" />
-    <Compile Include="User.cs" />
+    <Compile Include="CRUDOps\User.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="DataSources\Buildings.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="DataSources\Shifts.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="DataSources\ShiftPreferences.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="DataSources\Preferences.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="DataSources\Rooms.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="DataSources\Versions.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

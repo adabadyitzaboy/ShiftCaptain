@@ -32,7 +32,9 @@ var compactDays = function (hours) {
                 maxEnd = end;
             }
         }
-        compacted.push({ Day: day, Duration: maxEnd - (minStart.Hours + minStart.Minutes /60), StartTime: minStart });
+        if (minStart != null) {
+            compacted.push({ Day: day, Duration: maxEnd - (minStart.Hours + minStart.Minutes / 60), StartTime: minStart });
+        }
     }
     console.log("hours", compacted);
     return compacted;
@@ -176,7 +178,7 @@ var dragComplete = function ($newShift, $temp) {
     //    day = parseInt(tr.attr('day'));
     //    var oldEmptyRow = $(".drop-section ." + dayName[day] + ".empty-row");
     //    if (oldEmptyRow.find(".taken").length > 0) {
-    //        oldEmptyRow.removeClass(".empty-row");
+    //        oldEmptyRow.removeClass("empty-row");
     //        var fakeBody = $("<fake></fake>");
     //        var dayData = currentRoomHours[day];
     //        sc.app.makeRow(1/* just can't be zero*/, fakeBody, dayData, dayData.s, dayData.e, [], dayData.MinStart, dayData.MaxEnd, createShiftElement);

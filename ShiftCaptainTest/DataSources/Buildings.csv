@@ -1,0 +1,19 @@
+//Provides list of Buildings
+
+@@ "Create"
+"NAME","MANAGER_PHONE","PHONE_NUMBER","LINE_1","LINE_2","CITY","STATE","ZIP_CODE","COUNTRY","VALID"
+"","","","","","","","","","1"
+"","1234567890","1234567890","123 street","door 2","plano","texas","75075","usa","1"
+"","","1234567890","123 street","door 2","plano","texas","75075","usa","1"
+"","","","123 street","door 2","plano","texas","75075","usa","1"
+"","1234567890","","123 street","door 2","plano","texas","75075","usa","1"
+"","","","123 street","door 2","plano","texas","75075","","0"
+"","","","123 street","door 2","plano","texas","","usa","0"
+"","","","123 street","door 2","plano","","75075","usa","0"
+"","","","123 street","door 2","","texas","75075","usa","0"
+"","","","123 street","","plano","texas","75075","usa","1"
+"","","","","door 2","plano","texas","75075","usa","1"
+
+@@ "DefaultBuilding"
+"NAME","MANAGER_PHONE","PHONE_NUMBER","LINE_1","LINE_2","CITY","STATE","ZIP_CODE","COUNTRY"
+"Test_Building","1234567890","1234567890","123 street","door 2","plano","texas","75075","usa"

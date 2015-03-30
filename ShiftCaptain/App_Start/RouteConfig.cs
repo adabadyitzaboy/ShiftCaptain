@@ -14,6 +14,18 @@ namespace ShiftCaptain
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                "ScheduleNotReady",                                           // Route name
+                "ScheduleNotReady",                            // URL with parameters
+                new { controller = "Error", action = "ScheduleNotReady" }  // Parameter defaults
+            );
+
+            routes.MapRoute(
+                "NoVersions",                                           // Route name
+                "NoVersion",                            // URL with parameters
+                new { controller = "Error", action = "NoVersions" }  // Parameter defaults
+            );
+
+            routes.MapRoute(
                 "InternalError",                                           // Route name
                 "InternalError",                            // URL with parameters
                 new { controller = "Error", action = "InternalError" }  // Parameter defaults

@@ -58,9 +58,9 @@ var openTD = function (s, classname, extra) {
 var displayError = function (response) {
     var errorHolder = $("#Errors");
     errorHolder.empty();
-    var li = $("<ul><li></li></ul>");
+    var li = $("<li>");
     li.text(JSON.parse(response).error);
-    errorHolder.append(li);
+    errorHolder.append($("<ul>").html(li));
     sc.app.resizeHeader();
 };
 var FilterShifts = function (shifts, dayId) {
@@ -112,11 +112,11 @@ var makeRow = function (rC, tbody, dayData, s, e, shifts, start, maxEnd, createS
         tr.append("<td class='closed' s='" + (notOpen % 24) + "'>&nbsp;</td>");
     }
     tbody.append(tr);
+    if (rC == 0) {
+        tr.addClass('first-row');
+    }
     if (shifts.length > 0) {
         //recursive call
-        if (rC == 0) {
-            tr.addClass('first-row');
-        }
         if (emptyRow) {
             console.log("Unable to schedule the rest of the shifts");
             console.log(shifts);
@@ -214,6 +214,7 @@ var replaceWithOpen = function ($element, temp) {
     var $replacement = $(replacement);
     var next = $element.nextSibling;
     $element.replaceWith($replacement, true);
+    console.log($replacement);
     return $replacement;
 };
 var replaceDropElementWithNewShift = function ($newShift, $dropElement) {

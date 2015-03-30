@@ -15,7 +15,6 @@ ShiftCaptain.Shift = (function(){
             url: "/Shift/Validate",
             data: { VersionId: versionId, ShiftId: shiftInfo.ShiftId, RoomId: shiftInfo.roomId, UserId: shiftInfo.userId, Day: shiftInfo.day, StartTime: shiftInfo.startTime, Duration: shiftInfo.duration },
             success: function (data, success) {
-                console.log(data);
                 callback(data);
             },
             dataType: 'json',
@@ -28,7 +27,6 @@ ShiftCaptain.Shift = (function(){
     create = function (shiftInfo, callback, fail) {
         var versionId = $("#VersionId").val();
         $.post("/Shift/Create", { VersionId: versionId, RoomId: shiftInfo.roomId, UserId: shiftInfo.userId, Day: shiftInfo.day, StartTime: shiftInfo.startTime, Duration: shiftInfo.duration }, function (data, success) {
-            console.log(data);
             callback(data);
         }, 'json').fail(fail);
     };
@@ -36,7 +34,6 @@ ShiftCaptain.Shift = (function(){
     update = function (shiftInfo, callback, fail) {
         var versionId = $("#VersionId").val();
         $.post("/Shift/Update", { ShiftId: shiftInfo.ShiftId, RoomId: shiftInfo.roomId, Day: shiftInfo.day, StartTime: shiftInfo.startTime, Duration: shiftInfo.duration }, function (data, success) {
-            console.log(data);
             callback(data);
         }, 'json').fail(fail);
     };
@@ -48,14 +45,12 @@ ShiftCaptain.Shift = (function(){
     get = function (roomId, callback, fail) {
         var versionId = $("#VersionId").val();
         $.get("/Shift/List", { VersionId: versionId, RoomId: roomId }, function (data, success) {
-            console.log(data);
             callback(data);
         }, 'json').fail(fail);
     };
     getPreferences = function (userId, callback, fail) {
         var versionId = $("#VersionId").val();
         $.get("/Shift/ListPreferences", { VersionId: versionId, UserId: userId}, function (data, success) {
-            console.log(data);
             callback(data);
         }, 'json').fail(fail);
     };

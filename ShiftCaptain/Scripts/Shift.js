@@ -1,11 +1,17 @@
 ﻿var dragger = dnd.drag;
 var sc = ShiftCaptain;
-
+var createOptionsForRoom = function (data) {
+    var rtn = [];
+    for (var idx = 0; idx < data.length; idx++) {
+        rtn.push($("<option>", { value: data[idx].RoomId}).html(data[idx].Name)[0]);
+    }
+    return rtn;
+};
 $("#BuildingID").change(function (val) {
     var buildingId = $(this).val();
     sc.Room.get(buildingId, function (data) {
         $("#RoomID").empty();
-        $("#RoomID").append(data);
+        $("#RoomID").append(createOptionsForRoom(data));
         //$("#RoomID").trigger('change');
     });
 });
@@ -148,7 +154,9 @@ var dragStart = function () {
     var $element = $(this);
     updatePreferences($element.attr('userid'));
     if ($element.hasClass("taken")) {
-        return replaceWithOpen($element, true);
+        $element.trigger("dragstart-complete", sc.app.replaceWithOpen($element, true));
+    } else {
+        $element.trigger("dragstart-complete", null);
     }
 };
 var dragComplete = function ($newShift, $temp, userid) {
@@ -156,8 +164,14 @@ var dragComplete = function ($newShift, $temp, userid) {
     var tr = $temp.closest('tr');
     var dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     var day = parseInt(tr.attr('day'));
-    if (!tr.hasClass('first-row') && tr.find(".taken").length == 0 && $(".drop-section ." + dayName[day]).length > 1) {
-        //row is empty.   AND not the only row for this day         
+    if (tr.find(".taken").length == 0 && $(".drop-section ." + dayName[day]).length > 1) {
+        //row is empty.   
+        if (tr.hasClass('first-row')) {
+            var nextRow = tr.next();
+            nextRow.find("td:first-child").replaceWith(tr.find("td:first-child"));
+            nextRow.addClass("first-row");
+        }
+
         tr.remove();
     }
     if ($newShift && shiftOptions.empty_row != false) {
@@ -166,7 +180,7 @@ var dragComplete = function ($newShift, $temp, userid) {
         day = parseInt(tr.attr('day'));
         var oldEmptyRow = $(".drop-section ." + dayName[day] + ".empty-row");
         if (oldEmptyRow.find(".taken").length > 0) {
-            oldEmptyRow.removeClass(".empty-row");
+            oldEmptyRow.removeClass("empty-row");
             var fakeBody = $("<fake></fake>");
             var dayData = currentRoomHours[day];
             sc.app.makeRow(1/* just can't be zero*/, fakeBody, dayData, dayData.s, dayData.e, [], dayData.MinStart, dayData.MaxEnd, createShiftElement);

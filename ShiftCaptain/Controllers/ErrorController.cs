@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ShiftCaptain.Models;
+using ShiftCaptain.Filters;
 
 namespace ShiftCaptain.Controllers
 {
@@ -19,7 +20,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /InternalError/
         [AllowAnonymous]
-        public ActionResult InternalError(string returnUrl)
+        public ActionResult InternalError(string page)
         {
             return View();
         }
@@ -27,7 +28,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /NotAuthorized/
         [AllowAnonymous]
-        public ActionResult NotAuthorized(string returnUrl)
+        public ActionResult NotAuthorized(string page)
         {
             return View();
         }
@@ -35,7 +36,24 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /PageNotFound/
         [AllowAnonymous]
-        public ActionResult PageNotFound(string returnUrl)
+        public ActionResult PageNotFound(string page)
+        {
+            return View();
+        }
+
+        //
+        // GET: /ScheduleNotReady/
+        [AllowAnonymous]
+        public ActionResult ScheduleNotReady()
+        {
+            return View();
+        }
+
+        //
+        // GET: /NoVersions/
+        [ManagerAccess]
+        [ShiftManagerAccess]
+        public ActionResult NoVersions()
         {
             return View();
         }

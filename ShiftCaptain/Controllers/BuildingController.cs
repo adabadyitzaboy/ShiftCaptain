@@ -73,7 +73,8 @@ namespace ShiftCaptain.Controllers
                         Line2 = buildingview.Line2,
                         City = buildingview.City,
                         State = buildingview.State,
-                        Country = buildingview.Country
+                        Country = buildingview.Country,
+                        ZipCode = buildingview.ZipCode
                     };
                     db.Addresses.Add(address);
                     db.SaveChanges();

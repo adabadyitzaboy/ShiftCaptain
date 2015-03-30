@@ -127,9 +127,37 @@ namespace ShiftCaptain.Controllers
             {
                 return HttpNotFound();
             }
+
+            String ErrorMessage;
+            ViewBag.CanDelete = CanDeleteVersion(version.Id, out ErrorMessage);
+            if (!ViewBag.CanDelete)
+            {
+                ViewBag.CantDeleteReason = ErrorMessage;
+            }
             return View(version);
         }
+        private bool CanDeleteVersion(int id, out String ErrorMessage)
+        {
+            ErrorMessage = String.Empty;
+            if (db.Shifts.Count(s => s.VersionId == id) > 0)
+            {
+                ErrorMessage = "Cannot delete a version that contains shifts";
+                return false;
+            }
+            else if (db.UserInstances.Count(ui => ui.VersionId == id) > 0)
+            {
+                ErrorMessage = "Cannot delete a version that contains users.";
+                return false;
+            }
+            else if (db.RoomInstances.Count(ri => ri.VersionId == id) > 0)
+            {
+                ErrorMessage = "Cannot delete a version that contains rooms.";
+                return false;
 
+            }
+
+            return true;
+        }
         //
         // POST: /Version/Delete/5
 
@@ -139,9 +167,27 @@ namespace ShiftCaptain.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            String ErrorMessage;
+            if (!CanDeleteVersion(id, out ErrorMessage))
+            {
+                return RedirectToAction("Delete", new { id = id });
+            }
+
             var version = db.Versions.Find(id);
             db.Versions.Remove(version);
             db.SaveChanges();
+            if (SessionManager.VersionId == id)
+            {
+                var currentVersion = db.Versions.OrderByDescending(v=>v.Id).OrderBy(v => v.IsActive).FirstOrDefault();
+                if (currentVersion != null)
+                {
+                    SessionManager.VersionId = currentVersion.Id;
+                }
+                else
+                {
+                    SessionManager.VersionId = 0;
+                }
+            }
             return RedirectToAction("Index");
         }
 

@@ -6,7 +6,12 @@
 
 <h2>Delete</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+
+@if(ViewBag.CanDelete){
+    <h3>Are you sure you want to delete this?</h3>
+}else{
+    <p>@ViewBag.CantDeleteReason</p>
+}
 <fieldset>
     <legend>Version</legend>
 
@@ -45,10 +50,14 @@
         @Html.DisplayFor(model => model.IsApproved)
     </div>
 </fieldset>
-@using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
-    <p>
-        <input type="submit" value="Delete" /> |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
+@if(ViewBag.CanDelete){
+    using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+        <p>
+            <input type="submit" value="Delete" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    }
+}else{
+    <p>@ViewBag.CantDeleteReason</p>
 }

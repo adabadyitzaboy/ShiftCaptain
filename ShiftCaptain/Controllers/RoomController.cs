@@ -21,13 +21,13 @@ namespace ShiftCaptain.Controllers
 
         public JsonResult List(int VersionId = 0, int BuildingId = 0)
         {
-            var result = db.RoomViews.Where(rv => rv.VersionId == VersionId && rv.BuildingId == BuildingId);
-            return Json(EntitySelector.SelectRoomInstance(result), JsonRequestBehavior.AllowGet);
+            var result = db.Rooms.Where(r => r.BuildingId == BuildingId && r.RoomInstances.Count(ri=>ri.VersionId == VersionId) > 0);
+            return Json(EntitySelector.SelectRoom(result), JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult ListHours(int VersionId = 0, int RoomInstanceId = 0)
+        public JsonResult ListHours(int VersionId = 0, int RoomId = 0)
         {
-            var result = db.RoomHours.Where(rh => rh.RoomInstanceId == RoomInstanceId || (RoomInstanceId == 0 && rh.RoomInstance.VersionId == VersionId));
+            var result = db.RoomHours.Where(rh => (rh.RoomInstance.RoomId == RoomId  || RoomId == 0) && rh.RoomInstance.VersionId == VersionId);
             return Json(EntitySelector.SelectRoomHours(result), JsonRequestBehavior.AllowGet);
         }
 
@@ -57,6 +57,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /Room/
         [ShiftManagerAccess]
+        [VersionRequired]
         public ActionResult Index()
         {
             AddVersionDropDown();
@@ -74,6 +75,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /Room/Details/5
         [ShiftManagerAccess]
+        [VersionRequired]
         public ActionResult Details(int id = 0)
         {
             RoomView roomview = GetRoomView(id);
@@ -87,10 +89,11 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /Room/Create
         [ManagerAccess]
+        [VersionRequired]
         [VersionNotApproved]
         public ActionResult Create()
         {
-            ViewBag.BuildingID = new SelectList(db.Buildings, "Id", "Name");
+            ViewBag.BuildingId = new SelectList(db.Buildings, "Id", "Name");
             return View();
         }
 
@@ -290,6 +293,7 @@ namespace ShiftCaptain.Controllers
 
         [HttpPost]
         [ManagerAccess]
+        [VersionRequired]
         [VersionNotApproved]
         [ValidateAntiForgeryToken]
         public ActionResult Create(RoomView roomview)
@@ -309,7 +313,7 @@ namespace ShiftCaptain.Controllers
                 
                 return RedirectToAction("Index");
             }
-            ViewBag.BuildingID = new SelectList(db.Buildings, "Id", "Name", roomview.BuildingId);
+            ViewBag.BuildingId = new SelectList(db.Buildings, "Id", "Name", roomview.BuildingId);
 
             return View(roomview);
         }
@@ -317,6 +321,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /Room/Edit/5
         [ManagerAccess]
+        [VersionRequired]
         [VersionNotApproved]
         public ActionResult Edit(int id = 0)
         {
@@ -325,7 +330,7 @@ namespace ShiftCaptain.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.BuildingID = new SelectList(db.Buildings, "Id", "Name", roomview.BuildingId);
+            ViewBag.BuildingId = new SelectList(db.Buildings, "Id", "Name", roomview.BuildingId);
             return View(roomview);
         }
 
@@ -334,6 +339,7 @@ namespace ShiftCaptain.Controllers
 
         [HttpPost]
         [ManagerAccess]
+        [VersionRequired]
         [ValidateAntiForgeryToken]
         [VersionNotApproved]
         public ActionResult Edit(RoomView roomview)
@@ -354,49 +360,65 @@ namespace ShiftCaptain.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.BuildingID = new SelectList(db.Buildings, "Id", "Name", roomview.BuildingId);
+            ViewBag.BuildingId = new SelectList(db.Buildings, "Id", "Name", roomview.BuildingId);
             return View(roomview);
         }
 
         //
         // GET: /Room/Delete/5
         [ManagerAccess]
+        [VersionRequired]
         public ActionResult Delete(int id = 0)
         {
-            RoomView roomview = GetRoomView(id);
+            var roomview = GetRoomView(id);
             if (roomview == null)
             {
                 return HttpNotFound();
             }
-            var canDelete = true;
-            var version = db.Versions.FirstOrDefault(v => v.Id == roomview.VersionId);
-            if (roomview.VersionId.HasValue && version != null && version.IsApproved)
+            String ErrorMessage;
+            ViewBag.CanDelete = CanDeleteRoom(roomview.VersionId, roomview.RoomId, out ErrorMessage);
+            if (!ViewBag.CanDelete)
             {
-                canDelete = false;
-                ViewBag.CantDeleteReason = "Cannot delete a room in an approved version.";
+                ViewBag.CantDeleteReason = ErrorMessage;
             }
-            else
-            {
-                var shifts = db.Shifts.Count(s => s.RoomId== roomview.RoomId);
-                if (shifts != 0)
-                {
-                    canDelete = false;
-                    ViewBag.CantDeleteReason = "Cannot delete a room that contains shifts";
-                }
-            }
-            ViewBag.CanDelete = canDelete;
             return View(roomview);
         }
-
+        private bool CanDeleteRoom(int? versionId, int roomId, out String ErrorMessage)
+        {
+            ErrorMessage = String.Empty;
+            var version = db.Versions.FirstOrDefault(v => v.Id == versionId);
+            if (versionId.HasValue && version != null && version.IsApproved)
+            {
+                ErrorMessage = "Cannot delete a room in an approved version.";
+                return false;
+            }
+            var shifts = db.Shifts.Count(s => s.RoomId == roomId && (!versionId.HasValue || s.VersionId == versionId));
+            if (shifts != 0)
+            {
+                ErrorMessage = "Cannot delete a room that contains shifts";
+                return false;
+            }
+            return true;
+        }
         //
         // POST: /Room/Delete/5
 
         [HttpPost, ActionName("Delete")]
         [ManagerAccess]
+        [VersionRequired]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            RoomView roomview = GetRoomView(id);
+            String ErrorMessage;
+            var roomview = GetRoomView(id);
+            if (roomview == null)
+            {
+                return HttpNotFound();
+            } else if (!CanDeleteRoom(roomview.VersionId, roomview.RoomId, out ErrorMessage))
+            {
+                return RedirectToAction("Delete", new { id = id });
+            }
+        
             if (roomview.RoomInstanceId.HasValue)
             {
                 foreach (var roomhour in db.RoomHours.Where(rh => rh.RoomInstanceId == roomview.RoomInstanceId))

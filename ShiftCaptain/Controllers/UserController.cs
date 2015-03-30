@@ -79,34 +79,14 @@ namespace ShiftCaptain.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User
-                {
-                    EmailAddress = userview.EmailAddress,
-                    FName = userview.FName,
-                    MName = userview.MName,
-                    LName = userview.LName,
-                    NickName = userview.NickName,
-                    EmployeeId = userview.EmployeeId,
-                    PhoneNumber = userview.PhoneNumber,
-                    IsShiftManager = userview.IsShiftManager,
-                    IsManager = userview.IsManager,
-                    Locked = false,
-                    IsActive = true,
-                    IsMale = userview.IsMale,
-                    Pass = "12345"
-                };
+                var user = ModelConverter.GetUser(userview);
+                user.Locked = false;
+                user.IsActive = true;
+                user.Pass = "12345";
 
                 if (userview.Line1 != null)
                 {
-                    var address = new Address
-                    {
-                        Line1 = userview.Line1,
-                        Line2 = userview.Line2,
-                        City = userview.City,
-                        State = userview.State,
-                        ZipCode = userview.ZipCode,
-                        Country = userview.Country
-                    };
+                    var address = ModelConverter.GetAddress(userview, db);
                     db.Addresses.Add(address);
                     db.SaveChanges();
                     user.AddressId = address.Id;
@@ -179,34 +159,19 @@ namespace ShiftCaptain.Controllers
         {
             if (ModelState.IsValid)
             {
+                
                 var user = db.Users.Find(userview.UserId);
-                user.EmailAddress = userview.EmailAddress;
-                user.FName = userview.FName;
-                user.MName = userview.MName;
-                user.LName = userview.LName;
-                user.NickName = userview.NickName;
-                user.EmployeeId = userview.EmployeeId;
-                user.PhoneNumber = userview.PhoneNumber;
-                user.IsShiftManager = userview.IsShiftManager;
-                user.IsManager = userview.IsManager;
+                ModelConverter.UpdateUser(user, userview);
+                
                 if (user.Locked && !userview.Locked)
                 {
                     user.NumTries = 0;
                 }
-                user.Locked = userview.Locked;
-                user.IsActive = userview.IsActive;
-                user.IsMale = userview.IsMale;
 
                 
                 if (userview.Line1 != null)
                 {
-                    Address address = userview.AddressId != null ? db.Addresses.Find(userview.AddressId) : new Address();
-                    address.Line1 = userview.Line1;
-                    address.Line2 = userview.Line2;
-                    address.City = userview.City;
-                    address.State = userview.State;
-                    address.Country = userview.Country;
-                    address.ZipCode = userview.ZipCode;
+                    var address = ModelConverter.GetAddress(userview, db);
 
                     if (userview.AddressId == null)
                     {
@@ -234,20 +199,23 @@ namespace ShiftCaptain.Controllers
                 var version = db.Versions.FirstOrDefault(v => v.Id == versionId);
                 if (!version.IsApproved)
                 {
-                    var userI = db.UserInstances.FirstOrDefault(ui => ui.UserId == user.Id && ui.VersionId == versionId);
+                    var userI = ModelConverter.GetUserInstance(userview, db);
                     if (userI != null)
                     {
                         if (userview.MinHours.HasValue)
                         {
-                            userI.MinHours = userview.MinHours.HasValue ? (decimal)userview.MinHours : 0;
-                            userI.MaxHours = userview.MaxHours.HasValue ? (decimal)userview.MaxHours : 0;
-
                             db.Entry(userI).State = EntityState.Modified;
+                            db.SaveChanges();
                         }
                         else
                         {
                             db.UserInstances.Remove(userI);
+                            db.SaveChanges();
                         }
+                    }
+                    else if (userview.MinHours.HasValue)
+                    {
+                        db.UserInstances.Add(userI);
                         db.SaveChanges();
                     }
                 }
@@ -282,29 +250,18 @@ namespace ShiftCaptain.Controllers
             {
                 if (SessionManager.UserId == userview.UserId)
                 {
-                    var user = db.Users.Find(userview.UserId);
-                    
-                    user.FName = userview.FName;
-                    user.MName = userview.MName;
-                    user.LName = userview.LName;
-                    user.NickName = userview.NickName;
-                    if (user.IsManager)
+                    var dbUser = db.Users.Find(userview.UserId);
+                    var user = ModelConverter.GetUser(dbUser, userview);
+                    user.Pass = dbUser.Pass;
+                    if (!user.IsManager)
                     {
-                        user.EmailAddress = userview.EmailAddress;
-                        user.EmployeeId = userview.EmployeeId;
+                        user.EmailAddress = dbUser.EmailAddress;
+                        user.EmployeeId = dbUser.EmployeeId;
                     }
-                    user.PhoneNumber = userview.PhoneNumber;
-                    user.IsMale = userview.IsMale;
-
 
                     if (userview.Line1 != null)
                     {
-                        Address address = userview.AddressId != null ? db.Addresses.Find(userview.AddressId) : new Address();
-                        address.Line1 = userview.Line1;
-                        address.Line2 = userview.Line2;
-                        address.City = userview.City;
-                        address.State = userview.State;
-                        address.Country = userview.Country;
+                        var address = ModelConverter.GetAddress(userview, db);
 
                         if (userview.AddressId != null)
                         {
@@ -334,19 +291,17 @@ namespace ShiftCaptain.Controllers
                         var version = db.Versions.FirstOrDefault(v => v.Id == versionId);
                         if (!version.IsApproved)
                         {
-                            var userI = db.UserInstances.FirstOrDefault(ui => ui.UserId == user.Id && ui.VersionId == versionId);
+                            var userI = ModelConverter.GetUserInstance(userview, db);
                             if (userview.MinHours.HasValue)
                             {
-                                userI.MinHours = userview.MinHours.HasValue ? (decimal)userview.MinHours : 0;
-                                userI.MaxHours = userview.MaxHours.HasValue ? (decimal)userview.MaxHours : 0;
-
                                 db.Entry(userI).State = EntityState.Modified;
+                                db.SaveChanges();
                             }
-                            else
+                            else if(userI != null)
                             {
                                 db.UserInstances.Remove(userI);
+                                db.SaveChanges();
                             }
-                            db.SaveChanges();
                         }
                     }
                     return RedirectToAction("Index", "Shift");
@@ -370,27 +325,36 @@ namespace ShiftCaptain.Controllers
             {
                 return HttpNotFound();
             }
-            var canDelete = true;
-            var version = db.Versions.FirstOrDefault(v => v.Id == userview.VersionId);
-            if (userview.VersionId.HasValue && version != null && version.IsApproved)
+
+            String ErrorMessage;
+            ViewBag.CanDelete = CanDeleteUser(userview.UserId, userview.VersionId, out ErrorMessage);
+            if (!ViewBag.CanDelete)
             {
-                
-                canDelete = false;
-                ViewBag.CantDeleteReason = "Cannot delete a user in an approved version.";
+                ViewBag.CantDeleteReason = ErrorMessage;
             }
-            else
-            {
-                var shifts = db.Shifts.Count(s => s.UserId == userview.UserId);
-                if (shifts != 0)
-                {
-                    canDelete = false;
-                    ViewBag.CantDeleteReason = "Cannot delete a user who has shifts";
-                }
-            }
-            ViewBag.CanDelete = canDelete;
             return View(userview);
         }
+        private bool CanDeleteUser(int userId, int? versionId, out String ErrorMessage)
+        {
+            ErrorMessage = String.Empty;
+            if (versionId.HasValue)
+            {
+                var version = db.Versions.FirstOrDefault(v => v.Id == versionId);
+                if (version != null && version.IsApproved)
+                {
+                    ErrorMessage = "Cannot delete a user in an approved version.";
+                    return false;
+                }
+            }
+            var shifts = db.Shifts.Count(s => s.UserId == userId);
+            if (shifts != 0)
+            {
+                ErrorMessage = "Cannot delete a user who has shifts";
+                return false;
+            }
 
+            return true;
+        }
         //
         // POST: /User/Delete/5
 
@@ -399,6 +363,17 @@ namespace ShiftCaptain.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            UserView userview = GetUserView(id);
+            String ErrorMessage;
+            if (userview == null)
+            {
+                return HttpNotFound();
+            }
+            else if (!CanDeleteUser(userview.UserId, userview.VersionId, out ErrorMessage))
+            {
+                return RedirectToAction("Delete", new { id = id });
+            }
+        
             var user = db.Users.Find(id);
             if (user.AddressId != null)
             {
@@ -406,6 +381,11 @@ namespace ShiftCaptain.Controllers
                 db.Addresses.Remove(address);
                 db.SaveChanges();
             }
+            foreach (var shiftPreference in db.ShiftPreferences.Where(sp => sp.UserId == user.Id))
+            {
+                db.ShiftPreferences.Remove(shiftPreference);
+            }
+            db.SaveChanges();
             db.Users.Remove(user);
             db.SaveChanges();
             return RedirectToAction("Index");

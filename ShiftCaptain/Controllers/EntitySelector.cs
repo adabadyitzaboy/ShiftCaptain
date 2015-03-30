@@ -18,9 +18,9 @@ namespace ShiftCaptain.Helpers
             return preference.Select(p => new { PreferenceId = p.Id, p.CanWork, p.Name, p.Description, p.Color });
         }
 
-        public static IQueryable<object> SelectRoomInstance(IQueryable<RoomView> roomInstance)
+        public static IQueryable<object> SelectRoom(IQueryable<Room> room)
         {
-            return roomInstance.Select(rv => new { rv.RoomInstanceId, rv.Name });
+            return room.Select(r => new { r.Id, r.Name });
         }
 
         public static IQueryable<object> SelectRoomHours(IQueryable<RoomHour> roomHours)

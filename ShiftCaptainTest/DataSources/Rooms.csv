@@ -1,0 +1,18 @@
+//Provides list of Rooms
+
+@@ "Create"
+"NAME","BUILDING_NAME","ROOM_NUMBER","PHONE_NUMBER","SUNDAY_START_TIME","SUNDAY_DURATION","MONDAY_START_TIME","MONDAY_DURATION","TUESDAY_START_TIME","TUESDAY_DURATION","WEDNESDAY_START_TIME","WEDNESDAY_DURATION","THURSDAY_START_TIME","THURSDAY_DURATION","FRIDAY_START_TIME","FRIDAY_DURATION","SATURDAY_START_TIME","SATURDAY_DURATION","VERSION_NAME","VALID"
+"Test_Room","Test_Building","101","","","","","","","","","","","","","","","","Test_Version","1"
+"Test_Room","Test_Building","101","1234567890","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","Test_Version","1"
+"Test_Room","Test_Building","101","1234567890","","","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","Test_Version","1"
+"Test_Room","Test_Building","101","1234567890","08:00","2","","","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","Test_Version","1"
+"Test_Room","Test_Building","101","1234567890","08:00","2","08:00","2","","","08:00","2","08:00","2","08:00","2","08:00","2","Test_Version","1"
+"Test_Room","Test_Building","101","1234567890","08:00","2","08:00","2","08:00","2","","","08:00","2","08:00","2","08:00","2","Test_Version","1"
+"Test_Room","Test_Building","101","1234567890","08:00","2","08:00","2","08:00","2","08:00","2","","","08:00","2","08:00","2","Test_Version","1"
+"Test_Room","Test_Building","101","1234567890","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","","","08:00","2","Test_Version","1"
+"Test_Room","Test_Building","101","1234567890","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","","","Test_Version","1"
+
+
+@@ "DefaultRoom"
+"NAME","BUILDING_NAME","ROOM_NUMBER","PHONE_NUMBER","SUNDAY_START_TIME","SUNDAY_DURATION","MONDAY_START_TIME","MONDAY_DURATION","TUESDAY_START_TIME","TUESDAY_DURATION","WEDNESDAY_START_TIME","WEDNESDAY_DURATION","THURSDAY_START_TIME","THURSDAY_DURATION","FRIDAY_START_TIME","FRIDAY_DURATION","SATURDAY_START_TIME","SATURDAY_DURATION","VERSION_NAME"
+"Default_Room","Test_Building","101","1234567890","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","Test_Version"

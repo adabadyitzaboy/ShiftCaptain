@@ -37,6 +37,25 @@ namespace ShiftCaptain.Filters
 
         }
     }
+
+    public class VersionRequiredAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            
+            var db = new ShiftCaptainEntities();
+            if (db.Versions.Count() > 0)
+            {
+                return;
+            }
+            filterContext.Result = new RedirectToRouteResult(
+                  new RouteValueDictionary 
+                                   {
+                                       { "action", "NoVersions" },
+                                       { "controller", "Error" }
+                                   });
+        }
+    }
     public class VersionNotApprovedAttribute : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
@@ -71,11 +90,37 @@ namespace ShiftCaptain.Filters
                   new RouteValueDictionary 
                                    {
                                        { "action", "NotAuthorized" },
-                                       { "controller", "Error" }
+                                       { "controller", "Error" },
+                                       { "page", filterContext.RequestContext.HttpContext.Request.Url.PathAndQuery}
                                    });
         }        
     }
 
+    public class VersionVisibleAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (SessionManager.IsManager || SessionManager.IsShiftManager)
+            {
+                return;
+            }
+            
+            var db = new ShiftCaptainEntities();
+            var versionCount = db.Versions.Count(v => v.IsVisible);
+            if (versionCount > 0)
+            {
+                return;
+            }
+            
+            filterContext.Result = new RedirectToRouteResult(
+                  new RouteValueDictionary 
+                                   {
+                                       { "action", "NotAuthorized" },
+                                       { "controller", "Error" },
+                                       { "page", filterContext.RequestContext.HttpContext.Request.Url.PathAndQuery}
+                                   });
+        }
+    }
 
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     public class AuthorizedAttribute : FilterAttribute, IAuthorizationFilter
@@ -86,7 +131,8 @@ namespace ShiftCaptain.Filters
                   new RouteValueDictionary 
                                    {
                                        { "action", "NotAuthorized" },
-                                       { "controller", "Error" }
+                                       { "controller", "Error" },
+                                       { "page", filterContext.RequestContext.HttpContext.Request.Url.PathAndQuery}
                                    });
         }
         private void NotLoggedIn(AuthorizationContext filterContext)

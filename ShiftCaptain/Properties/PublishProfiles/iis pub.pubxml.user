@@ -26,7 +26,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/10/2015 18:27:37</publishTime>
     </File>
     <File Include="bin/ShiftCaptain.dll">
-      <publishTime>03/23/2015 17:42:58</publishTime>
+      <publishTime>03/27/2015 11:08:46</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
       <publishTime>02/10/2015 19:57:55</publishTime>
@@ -206,7 +206,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/13/2015 13:06:07</publishTime>
     </File>
     <File Include="Content/scss/Pages/_common.scss">
-      <publishTime>03/13/2015 14:32:35</publishTime>
+      <publishTime>03/25/2015 17:55:38</publishTime>
     </File>
     <File Include="Content/scss/Pages/_header.scss">
       <publishTime>03/12/2015 14:21:30</publishTime>
@@ -224,7 +224,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/13/2015 13:45:13</publishTime>
     </File>
     <File Include="Content/stylesheets/app.css">
-      <publishTime>03/19/2015 16:37:00</publishTime>
+      <publishTime>03/25/2015 17:55:46</publishTime>
     </File>
     <File Include="Content/stylesheets/normalize.css">
       <publishTime>02/16/2015 15:34:47</publishTime>
@@ -260,10 +260,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/23/2015 11:30:36</publishTime>
     </File>
     <File Include="Scripts/CommonShift.js">
-      <publishTime>03/12/2015 08:57:04</publishTime>
+      <publishTime>03/26/2015 22:38:12</publishTime>
     </File>
     <File Include="Scripts/DisplayShift.js">
       <publishTime>03/12/2015 09:06:02</publishTime>
+    </File>
+    <File Include="Scripts/DisplayShiftPreference.js">
+      <publishTime>03/26/2015 22:44:29</publishTime>
     </File>
     <File Include="Scripts/DragNDrop/drag-n-drop.js">
       <publishTime>03/11/2015 17:09:22</publishTime>
@@ -338,7 +341,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/12/2015 12:33:35</publishTime>
     </File>
     <File Include="Views/Building/Delete.cshtml">
-      <publishTime>03/13/2015 12:58:49</publishTime>
+      <publishTime>03/26/2015 22:21:56</publishTime>
     </File>
     <File Include="Views/Building/Details.cshtml">
       <publishTime>03/13/2015 12:51:33</publishTime>
@@ -364,14 +367,26 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/EmailTemplate/ResetPassword.cshtml">
       <publishTime>03/13/2015 17:56:42</publishTime>
     </File>
+    <File Include="Views/Error/InternalError.cshtml">
+      <publishTime>03/26/2015 19:20:51</publishTime>
+    </File>
+    <File Include="Views/Error/NotAuthorized.cshtml">
+      <publishTime>03/26/2015 19:12:13</publishTime>
+    </File>
+    <File Include="Views/Error/PageNotFound.cshtml">
+      <publishTime>03/26/2015 19:12:57</publishTime>
+    </File>
     <File Include="Views/Login/Index.cshtml">
-      <publishTime>03/13/2015 15:01:12</publishTime>
+      <publishTime>03/26/2015 19:24:40</publishTime>
     </File>
     <File Include="Views/ManageSchedule/ApproveSchedule.cshtml">
-      <publishTime>03/18/2015 16:20:15</publishTime>
+      <publishTime>03/23/2015 19:22:32</publishTime>
     </File>
     <File Include="Views/ManageSchedule/CloneSchedule.cshtml">
-      <publishTime>03/23/2015 11:27:37</publishTime>
+      <publishTime>03/23/2015 21:34:08</publishTime>
+    </File>
+    <File Include="Views/ManageSchedule/DisapproveSchedule.cshtml">
+      <publishTime>03/26/2015 18:55:12</publishTime>
     </File>
     <File Include="Views/ManageSchedule/ValidateSchedule.cshtml">
       <publishTime>03/18/2015 14:10:59</publishTime>
@@ -380,7 +395,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/23/2015 09:15:46</publishTime>
     </File>
     <File Include="Views/ManageSchedule/_CloneUser.cshtml">
-      <publishTime>03/23/2015 09:15:40</publishTime>
+      <publishTime>03/23/2015 21:34:35</publishTime>
     </File>
     <File Include="Views/ManageSchedule/_ScheduleErrors.cshtml">
       <publishTime>03/18/2015 13:35:50</publishTime>
@@ -404,7 +419,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/12/2015 14:47:33</publishTime>
     </File>
     <File Include="Views/Room/Delete.cshtml">
-      <publishTime>03/12/2015 12:35:08</publishTime>
+      <publishTime>03/26/2015 21:35:38</publishTime>
     </File>
     <File Include="Views/Room/Details.cshtml">
       <publishTime>03/12/2015 09:56:38</publishTime>
@@ -413,7 +428,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/12/2015 12:35:14</publishTime>
     </File>
     <File Include="Views/Room/Index.cshtml">
-      <publishTime>03/23/2015 15:08:12</publishTime>
+      <publishTime>03/26/2015 21:34:24</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>02/11/2015 09:50:16</publishTime>
@@ -446,28 +461,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/23/2015 11:14:47</publishTime>
     </File>
     <File Include="Views/Shift/Index.cshtml">
-      <publishTime>03/18/2015 16:26:32</publishTime>
+      <publishTime>03/26/2015 22:40:53</publishTime>
     </File>
     <File Include="Views/ShiftPreference/Index.cshtml">
-      <publishTime>03/12/2015 08:37:07</publishTime>
+      <publishTime>03/26/2015 22:42:34</publishTime>
     </File>
     <File Include="Views/User/Create.cshtml">
-      <publishTime>03/13/2015 17:53:49</publishTime>
+      <publishTime>03/26/2015 20:19:26</publishTime>
     </File>
     <File Include="Views/User/Delete.cshtml">
-      <publishTime>03/13/2015 12:58:27</publishTime>
+      <publishTime>03/26/2015 21:01:09</publishTime>
     </File>
     <File Include="Views/User/Details.cshtml">
       <publishTime>03/13/2015 12:52:00</publishTime>
     </File>
     <File Include="Views/User/Edit.cshtml">
-      <publishTime>03/13/2015 12:12:41</publishTime>
+      <publishTime>03/26/2015 20:18:51</publishTime>
     </File>
     <File Include="Views/User/EditProfile.cshtml">
-      <publishTime>03/13/2015 17:39:56</publishTime>
+      <publishTime>03/26/2015 20:08:54</publishTime>
     </File>
     <File Include="Views/User/Index.cshtml">
-      <publishTime>03/13/2015 18:11:11</publishTime>
+      <publishTime>03/26/2015 20:17:43</publishTime>
     </File>
     <File Include="Views/Version/Create.cshtml">
       <publishTime>03/13/2015 12:57:59</publishTime>
@@ -482,7 +497,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/13/2015 12:57:20</publishTime>
     </File>
     <File Include="Views/Version/Index.cshtml">
-      <publishTime>03/23/2015 11:09:34</publishTime>
+      <publishTime>03/26/2015 21:45:27</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>02/11/2015 09:58:29</publishTime>
@@ -491,7 +506,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/11/2015 09:50:16</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>03/23/2015 17:42:59</publishTime>
+      <publishTime>03/27/2015 11:08:47</publishTime>
     </File>
   </ItemGroup>
 </Project>

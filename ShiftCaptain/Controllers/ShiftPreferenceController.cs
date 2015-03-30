@@ -77,7 +77,6 @@ namespace ShiftCaptain.Controllers
         // POST: /ShiftPreference/Create
         [HttpPost]
         [ShiftManagerAccess]
-        [ValidateAntiForgeryToken]
         public JsonResult Create(int VersionId = 0, int UserId = 0, int Day = 0, string StartTime = "00:00", decimal Duration = 0, int PreferenceId = 0)
         {
             var shiftPreference = new ShiftPreference
@@ -107,14 +106,12 @@ namespace ShiftCaptain.Controllers
 
         [HttpPost]
         [ShiftManagerAccess]
-        [ValidateAntiForgeryToken]
         public JsonResult Update(int ShiftPreferenceId = 0, int Day = 0, string StartTime = "00:00", decimal Duration = 0, int PreferenceId = 0)
         {
             var shiftPreference = db.ShiftPreferences.Find(ShiftPreferenceId);
             shiftPreference.Day = Day;
             shiftPreference.StartTime = TimeSpan.Parse(StartTime);
             shiftPreference.Duration = Duration;
-            shiftPreference.PreferenceId = PreferenceId;
 
             db.Entry(shiftPreference).State = EntityState.Modified;
             db.SaveChanges();
@@ -136,7 +133,6 @@ namespace ShiftCaptain.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ShiftManagerAccess]
-        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             var shiftPreference = db.ShiftPreferences.Find(id);
@@ -149,6 +145,7 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /ShiftPreference/
 
+        [VersionRequired]
         public ActionResult Index()
         {
             return View();

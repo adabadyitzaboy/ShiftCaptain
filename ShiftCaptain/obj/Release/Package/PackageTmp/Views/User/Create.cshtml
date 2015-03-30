@@ -97,16 +97,26 @@
             @Html.LabelFor(model => model.MinHours)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.MinHours)
-            @Html.ValidationMessageFor(model => model.MinHours)
+            @if(!ViewBag.CurrentVersion.IsApproved){
+                @Html.EditorFor(model => model.MinHours)
+                @Html.ValidationMessageFor(model => model.MinHours)
+            }else{
+                @Html.HiddenFor(model => model.MinHours)
+                @Html.DisplayFor(model => model.MinHours)
+            }
         </div>
         
         <div class="editor-label">
             @Html.LabelFor(model => model.MaxHours)
         </div>
         <div class="editor-field">
-            @Html.EditorFor(model => model.MaxHours)
-            @Html.ValidationMessageFor(model => model.MaxHours)
+            @if(!ViewBag.CurrentVersion.IsApproved){
+                @Html.EditorFor(model => model.MaxHours)
+                @Html.ValidationMessageFor(model => model.MaxHours)
+            }else{
+                @Html.HiddenFor(model => model.MaxHours)
+                @Html.DisplayFor(model => model.MaxHours)
+            }
         </div>
 
         <div class="editor-label">

@@ -1,0 +1,12 @@
+//Provides list of Shift Preferences
+
+@@ "Create"
+"NICK_NAME","DAY","START_TIME","DURATION","ROOM_NAME","VERSION_NAME","ADD_HOURS","ADD_DAYS","VALID"
+"Emp#1","0","08:00","2","Default_Room","Test_Version","0","1","1"
+"Emp#1","1","08:00","2","Default_Room","Test_Version","0","-1","1"
+"Emp#1","2","08:00","2","Default_Room","Test_Version","0","-1","1"
+"Emp#1","3","08:00","2","Default_Room","Test_Version","0","-1","1"
+"Emp#1","4","08:00","2","Default_Room","Test_Version","0","-1","1"
+"Emp#1","5","08:00","2","Default_Room","Test_Version","0","-1","1"
+"Emp#1","6","08:00","2","Default_Room","Test_Version","0","-1","1"
+"Emp#1","7","08:00","2","Default_Room","Test_Version","0","-1","0"

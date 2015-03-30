@@ -9,6 +9,7 @@ dnd.drag = (function () {
         dragging = false,
         processingDrop = false,
         overridableFunctions,
+        counter = 0,
         ctx = {},
         movingCtx = {},
         settings = {
@@ -89,6 +90,7 @@ dnd.drag = (function () {
     };
     onMouseDown = function (event) {
         if (event.which == 1 && !dragging && !processingDrop) {
+            var i_counter = ++counter;
             console.log("dragging");
             dragging = true;
             $(".drop-section").addClass("dragging");
@@ -98,7 +100,12 @@ dnd.drag = (function () {
             ctx.dropSection.append(movingCtx.movingDiv);
             movingCtx.movingDiv.css('top', event.pageY);
             movingCtx.movingDiv.css('left', event.pageX - parseFloat($("body").css("margin-left")));
-            movingCtx.temp = $(event.target).trigger("dragstart");
+            movingCtx.temp = movingCtx.target;
+            $(event.target).on('dragstart-complete', function (event, temp) {
+                if (i_counter == counter) {
+                    movingCtx.temp = temp;
+                }
+            }).trigger("dragstart");
         }
         return false;        
     };

@@ -21,6 +21,7 @@ namespace ShiftCaptainTest.Infrastructure
     [DeploymentItem("chromedriver.exe", "")]
     public class Base
     {
+        
         public IWebDriver Driver;
         public string BaseUrl = ConfigurationManager.AppSettings["BASE_URL"];
         public string DriverType = ConfigurationManager.AppSettings["DriverType"];
@@ -28,10 +29,28 @@ namespace ShiftCaptainTest.Infrastructure
         public ILog Logger = LogManager.GetLogger(typeof(Base));
         public ICollection<IDictionary<string, string>> UserTable;
         public ShiftCaptainEntities db = new ShiftCaptainEntities();
+        private TestContext testContextInstance;
+
+        /// <summary>
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///</summary>
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+ 
 
         public Base()
         {
-            UserTable = new DataParser("Users.csv").Tables["Users"];
+            UserTable = new DataParser("Users.csv").Tables["DefaultUser"];
         }
     
         [TestInitialize]
