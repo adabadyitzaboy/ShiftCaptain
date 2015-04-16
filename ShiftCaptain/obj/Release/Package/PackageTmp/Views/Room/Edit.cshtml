@@ -1,10 +1,10 @@
 ﻿@model ShiftCaptain.Models.RoomView
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Room";
 }
 
-<h2>Edit</h2>
+<h2>Edit Room</h2>
 
 @using (Html.BeginForm())
 {
@@ -35,7 +35,7 @@
             @Html.LabelFor(model => model.BuildingId, "Building")
         </div>
         <div class="editor-field">
-            @Html.DropDownList("BuildingID", String.Empty)
+            @Html.DropDownList("BuildingId", String.Empty)
             @Html.ValidationMessageFor(model => model.BuildingId)
         </div>
 
@@ -182,7 +182,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", new { VersionName = ViewBag.CurrentVersionName })
 </div>
 
 @section Scripts {

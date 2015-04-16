@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="8293e887aab149e9b2f15bc11bea5d9a" Name="Diagram1">
+      <Diagram DiagramId="cb8a30591cc14d7a900222ff0581aec0" Name="Diagram1">
         <EntityTypeShape EntityType="ShiftCaptainModel.Address" Width="1.5" PointX="1.5" PointY="16.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ShiftCaptainModel.Building" Width="1.5" PointX="1.5" PointY="24.625" IsExpanded="true" />
         <EntityTypeShape EntityType="ShiftCaptainModel.EmailTemplate" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
@@ -20,20 +20,20 @@
         <EntityTypeShape EntityType="ShiftCaptainModel.BuildingView" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ShiftCaptainModel.RoomView" Width="1.5" PointX="8.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="ShiftCaptainModel.UserView" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__Building__Addres__5106BC7A" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__User__AddressId__5D6C935F" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__Room__BuildingId__53E32925" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__Prefe__6CAED6EF" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__RoomInsta__RoomI__56BF95D0" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__RoomId__650DB527" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__RoomHours__RoomI__5A9026B4" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__RoomInsta__Versi__57B3BA09" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__UserId__641990EE" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__VersionId__6601D960" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__UserI__6AC68E7D" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__Versi__6BBAB2B6" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__UserInsta__UserI__6049000A" ManuallyRouted="false" />
-        <AssociationConnector Association="ShiftCaptainModel.FK__UserInsta__Versi__613D2443" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Building__Addres__5C443053" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__User__AddressId__68AA0738" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Room__BuildingId__5F209CFE" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__Prefe__77EC4AC8" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__RoomInsta__RoomI__61FD09A9" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__RoomId__704B2900" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__RoomHours__RoomI__65CD9A8D" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__RoomInsta__Versi__62F12DE2" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__UserId__6F5704C7" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__Shift__VersionId__713F4D39" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__UserI__76040256" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__ShiftPref__Versi__76F8268F" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__UserInsta__UserI__6B8673E3" ManuallyRouted="false" />
+        <AssociationConnector Association="ShiftCaptainModel.FK__UserInsta__Versi__6C7A981C" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

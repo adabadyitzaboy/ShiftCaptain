@@ -74,6 +74,74 @@ namespace ShiftCaptain.Models
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<NoShiftCoverage_Result>("[ShiftCaptainEntities].[NoShiftCoverage](@versionId)", versionIdParameter);
         }
     
+        [EdmFunction("ShiftCaptainEntities", "ValidateShift")]
+        public virtual IQueryable<ValidateShift_Result> ValidateShift(Nullable<int> id, Nullable<int> userId, Nullable<int> versionId, Nullable<int> roomId, Nullable<int> day, Nullable<System.TimeSpan> startTime, Nullable<decimal> duration)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            var versionIdParameter = versionId.HasValue ?
+                new ObjectParameter("VersionId", versionId) :
+                new ObjectParameter("VersionId", typeof(int));
+    
+            var roomIdParameter = roomId.HasValue ?
+                new ObjectParameter("RoomId", roomId) :
+                new ObjectParameter("RoomId", typeof(int));
+    
+            var dayParameter = day.HasValue ?
+                new ObjectParameter("Day", day) :
+                new ObjectParameter("Day", typeof(int));
+    
+            var startTimeParameter = startTime.HasValue ?
+                new ObjectParameter("StartTime", startTime) :
+                new ObjectParameter("StartTime", typeof(System.TimeSpan));
+    
+            var durationParameter = duration.HasValue ?
+                new ObjectParameter("Duration", duration) :
+                new ObjectParameter("Duration", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<ValidateShift_Result>("[ShiftCaptainEntities].[ValidateShift](@Id, @UserId, @VersionId, @RoomId, @Day, @StartTime, @Duration)", idParameter, userIdParameter, versionIdParameter, roomIdParameter, dayParameter, startTimeParameter, durationParameter);
+        }
+    
+        [EdmFunction("ShiftCaptainEntities", "ValidateShiftPreference")]
+        public virtual IQueryable<ValidateShiftPreference_Result> ValidateShiftPreference(Nullable<int> id, Nullable<int> userId, Nullable<int> versionId, Nullable<int> preferenceId, Nullable<int> day, Nullable<System.TimeSpan> startTime, Nullable<decimal> duration)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("Id", id) :
+                new ObjectParameter("Id", typeof(int));
+    
+            var userIdParameter = userId.HasValue ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(int));
+    
+            var versionIdParameter = versionId.HasValue ?
+                new ObjectParameter("VersionId", versionId) :
+                new ObjectParameter("VersionId", typeof(int));
+    
+            var preferenceIdParameter = preferenceId.HasValue ?
+                new ObjectParameter("PreferenceId", preferenceId) :
+                new ObjectParameter("PreferenceId", typeof(int));
+    
+            var dayParameter = day.HasValue ?
+                new ObjectParameter("Day", day) :
+                new ObjectParameter("Day", typeof(int));
+    
+            var startTimeParameter = startTime.HasValue ?
+                new ObjectParameter("StartTime", startTime) :
+                new ObjectParameter("StartTime", typeof(System.TimeSpan));
+    
+            var durationParameter = duration.HasValue ?
+                new ObjectParameter("Duration", duration) :
+                new ObjectParameter("Duration", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<ValidateShiftPreference_Result>("[ShiftCaptainEntities].[ValidateShiftPreference](@Id, @UserId, @VersionId, @PreferenceId, @Day, @StartTime, @Duration)", idParameter, userIdParameter, versionIdParameter, preferenceIdParameter, dayParameter, startTimeParameter, durationParameter);
+        }
+    
         public virtual ObjectResult<Nullable<int>> sp_clone_schedule(Nullable<int> versionId, string versionName, string users, string rooms)
         {
             var versionIdParameter = versionId.HasValue ?

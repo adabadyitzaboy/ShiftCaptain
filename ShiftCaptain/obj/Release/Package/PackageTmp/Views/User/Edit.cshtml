@@ -1,10 +1,10 @@
 ﻿@model ShiftCaptain.Models.UserView
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit User";
 }
 
-<h2>Edit</h2>
+<h2>Edit User</h2>
 
 @using (Html.BeginForm()) {
     @Html.AntiForgeryToken()
@@ -216,7 +216,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", new { VersionName = ViewBag.CurrentVersionName })
 </div>
 
 @section Scripts {

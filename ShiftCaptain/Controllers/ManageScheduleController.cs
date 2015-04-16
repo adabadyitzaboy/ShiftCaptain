@@ -19,21 +19,32 @@ namespace ShiftCaptain.Controllers
         {
             ClassName = "ManageSchedule";
         }
-
-        private ShiftCaptainEntities db = new ShiftCaptainEntities();
-
-        //
-        // GET: /ValidateSchedule/5
-        [ManagerAccess]
-        [ShiftManagerAccess]
-        public ActionResult ValidateSchedule(int Id)
+        #region Helpers
+        private Clone GetClone(ShiftCaptain.Models.Version version)
         {
-            var version = db.Versions.FirstOrDefault(v => v.Id == Id);
-            if (version == null)
+            var userItems = new List<SelectListItem>();
+            var roomItems = new List<SelectListItem>();
+            var clone = new Clone
             {
-                return HttpNotFound();
+                Version = version,
+                Room = roomItems,
+                User = userItems,
+                CloneUser = new List<string>(),
+                CloneRoom = new List<string>(),
+                SelectedUsers = new List<SelectListItem>(),
+                SelectedRooms = new List<SelectListItem>()
+            };
+            foreach (var user in db.UserViews.Where(uv => uv.VersionId == version.Id))
+            {
+                userItems.Add(new SelectListItem { Value = user.UserId.ToString(), Text = user.NickName });
             }
-            return View(GetErrors(version));
+
+            foreach (var room in db.RoomViews.Where(rv => rv.VersionId == version.Id))
+            {
+                roomItems.Add(new SelectListItem { Value = room.RoomId.ToString(), Text = room.Name });
+            }
+
+            return clone;
         }
 
         private VersionErrors GetErrors(ShiftCaptain.Models.Version version)
@@ -51,7 +62,7 @@ namespace ShiftCaptain.Controllers
             };
 
             //go through all of the users and ensure that the hours are within specs
-            foreach (var user in db.UserViews.Where(uv => uv.VersionId == version.Id))
+            foreach (var user in db.UserViews.AsNoTracking().Where(uv => uv.VersionId == version.Id).AsNoTracking())
             {
                 if (user.CurrentHours < user.MinHours || user.CurrentHours > user.MaxHours)
                 {
@@ -59,9 +70,9 @@ namespace ShiftCaptain.Controllers
                     errors.UserConstraintViolations.Add(user);
                 }
             };
-            errors.CantWorkViolations = db.CantWorkViolation(version.Id);
-            errors.ConflictingShifts = db.ConflictingShifts(version.Id);
-            errors.NoShiftCoverages = db.NoShiftCoverage(version.Id);
+            errors.CantWorkViolations = db.CantWorkViolation(version.Id).AsNoTracking();
+            errors.ConflictingShifts = db.ConflictingShifts(version.Id).AsNoTracking();
+            errors.NoShiftCoverages = db.NoShiftCoverage(version.Id).AsNoTracking();
 
             errors.NumErrors += errors.CantWorkViolations.Count();
             errors.NumErrors += errors.ConflictingShifts.Count();
@@ -70,6 +81,23 @@ namespace ShiftCaptain.Controllers
             return errors;
         }
 
+        #endregion
+
+        //
+        // GET: /ValidateSchedule/5
+        [ManagerAccess]
+        [ShiftManagerAccess]
+        public ActionResult ValidateSchedule(String VersionName)
+        {
+            var version = GetVersion(VersionName);
+            if (version == null)
+            {
+                return HttpNotFound();
+            }
+            return View(GetErrors(version));
+        }
+        
+       
         //
         // POST: /ValidateSchedule/5
 
@@ -77,10 +105,10 @@ namespace ShiftCaptain.Controllers
         [ManagerAccess]
         [ShiftManagerAccess]
         [ValidateAntiForgeryToken]
-        public ActionResult ValidateSchedule(ShiftCaptain.Models.VersionErrors versionId)
+        public ActionResult ValidateSchedule(String VersionName, ShiftCaptain.Models.VersionErrors versionId)
         {
-            var version = db.Versions.FirstOrDefault(v => v.Id == versionId.Id);
-            if (version == null)
+            var version = GetVersion(VersionName);
+            if (version == null || version.Id != versionId.Id)
             {
                 return HttpNotFound();
             }
@@ -89,7 +117,7 @@ namespace ShiftCaptain.Controllers
             {
                 version.IsReadyForApproval = true;
                 db.Entry(version).State = EntityState.Modified;
-                db.SaveChanges();
+                SaveChange();
                 return RedirectToAction("Index", "Shift");
             }
 
@@ -100,9 +128,9 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /ApproveSchedule/5
         [ManagerAccess]
-        public ActionResult ApproveSchedule(int Id)
+        public ActionResult ApproveSchedule(String VersionName)
         {
-            var version = db.Versions.FirstOrDefault(v => v.Id == Id);
+            var version = GetVersion(VersionName);
             if (version == null)
             {
                 return HttpNotFound();
@@ -117,10 +145,10 @@ namespace ShiftCaptain.Controllers
         [HttpPost]
         [ManagerAccess]
         [ValidateAntiForgeryToken]
-        public ActionResult ApproveSchedule(ShiftCaptain.Models.VersionErrors versionId)
+        public ActionResult ApproveSchedule(String VersionName, ShiftCaptain.Models.VersionErrors versionId)
         {
-            var version = db.Versions.FirstOrDefault(v => v.Id == versionId.Id);
-            if (version == null)
+            var version = GetVersion(VersionName);
+            if (version == null || version.Id != versionId.Id)
             {
                 return HttpNotFound();
             }
@@ -129,7 +157,7 @@ namespace ShiftCaptain.Controllers
             {
                 version.IsApproved = true;
                 db.Entry(version).State = EntityState.Modified;
-                db.SaveChanges();
+                SaveChange();
                 return RedirectToAction("Index", "Shift");
             }
 
@@ -139,9 +167,9 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /DisapproveSchedule/5
         [ManagerAccess]
-        public ActionResult DisapproveSchedule(int Id)
+        public ActionResult DisapproveSchedule(String VersionName)
         {
-            var version = db.Versions.FirstOrDefault(v => v.Id == Id);
+            var version = GetVersion(VersionName);
             if (version == null)
             {
                 return HttpNotFound();
@@ -156,18 +184,20 @@ namespace ShiftCaptain.Controllers
         [HttpPost]
         [ManagerAccess]
         [ValidateAntiForgeryToken]
-        public ActionResult DisapproveSchedule(ShiftCaptain.Models.Version versionId)
+        public ActionResult DisapproveSchedule(String VersionName, ShiftCaptain.Models.Version versionId)
         {
-            var version = db.Versions.FirstOrDefault(v => v.Id == versionId.Id);
-            if (version == null)
+            var version = GetVersion(VersionName);
+            if (version == null || version.Id != versionId.Id)
             {
                 return HttpNotFound();
             }
             if (version.IsApproved)
             {
-                version.IsApproved = false;
-                db.Entry(version).State = EntityState.Modified;
-                db.SaveChanges();
+                var v = db.Versions.FirstOrDefault(o => o.Id == version.Id);
+                v.IsApproved = false;
+                v.IsReadyForApproval = false;
+                db.Entry(v).State = EntityState.Modified;
+                SaveChange();
                 return RedirectToAction("Index", "Version");
             }
 
@@ -180,10 +210,10 @@ namespace ShiftCaptain.Controllers
         [HttpPost]
         [ManagerAccess]
         [ValidateAntiForgeryToken]
-        public ActionResult RejectSchedule(ShiftCaptain.Models.VersionErrors versionId)
+        public ActionResult RejectSchedule(String VersionName, ShiftCaptain.Models.VersionErrors versionId)
         {
-            var version = db.Versions.FirstOrDefault(v => v.Id == versionId.Id);
-            if (version == null)
+            var version = GetVersion(VersionName);
+            if (version == null || version.Id != versionId.Id)
             {
                 return HttpNotFound();
             }
@@ -192,7 +222,7 @@ namespace ShiftCaptain.Controllers
             {
                 version.IsReadyForApproval = false;
                 db.Entry(version).State = EntityState.Modified;
-                db.SaveChanges();
+                SaveChange();
             }
             
             return RedirectToAction("Index", "Shift");
@@ -201,53 +231,30 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /CloneSchedule/5
         [ManagerAccess]
-        public ActionResult CloneSchedule(int Id)
+        public ActionResult CloneSchedule(String VersionName)
         {
             ClassName = "CloneSchedule";
 
-            var version = db.Versions.FirstOrDefault(v => v.Id == Id);
+            var version = GetVersion(VersionName);
             if (version == null)
             {
                 return HttpNotFound();
             }
-            version.Name = version.Name + " - clone";
+            version.Name = version.Name + " clone";
             
             return View(GetClone(version));
         }
 
-        private Clone GetClone(ShiftCaptain.Models.Version version)
-        {
-            var userItems = new List<SelectListItem>();
-            var roomItems = new List<SelectListItem>();
-            var clone = new Clone
-            {
-                Version = version,
-                Room = roomItems,
-                User = userItems,
-                CloneUser = new List<string>(),
-                CloneRoom = new List<string>()
-            };
-            foreach (var user in db.UserViews.Where(uv => uv.VersionId == version.Id))
-            {
-                userItems.Add(new SelectListItem { Value = user.UserId.ToString(), Text = user.NickName });
-            }
-
-            foreach (var room in db.RoomViews.Where(rv => rv.VersionId == version.Id))
-            {
-                roomItems.Add(new SelectListItem { Value = room.RoomId.ToString(), Text = room.Name });
-            }
-
-            return clone;
-        }
-
+        
         //
         // POST: /CloneSchedule/5
 
         [HttpPost]
         [ManagerAccess]
         [ValidateAntiForgeryToken]
-        public ActionResult CloneSchedule(ShiftCaptain.Models.Clone clone)
+        public ActionResult CloneSchedule(String VersionName, ShiftCaptain.Models.Clone clone)
         {
+            ClassName = "CloneSchedule";
             if (ModelState.IsValid)
             {
                 var oldVersionId = clone.Version.Id;
@@ -270,9 +277,38 @@ namespace ShiftCaptain.Controllers
                 return RedirectToAction("Index", "Version");
             }
             var rtnClone = GetClone(clone.Version);
-            rtnClone.CloneRoom = clone.CloneRoom;
-            rtnClone.CloneUser = clone.CloneUser;
-            return View(rtnClone);
+            clone.User = rtnClone.User;
+            clone.Room = rtnClone.Room;
+
+            clone.SelectedRooms = new List<SelectListItem>();
+            clone.SelectedUsers = new List<SelectListItem>();
+
+            var selectedUsers = (List<SelectListItem>)clone.SelectedUsers;
+            var selectedRooms = (List<SelectListItem>)clone.SelectedRooms;
+            foreach (var roomId in clone.CloneRoom)
+            {
+                var room = clone.Room.FirstOrDefault(r => r.Value == roomId);
+                if (room != null)
+                {
+                    selectedRooms.Add(room);
+                    ((List<SelectListItem>)clone.Room).Remove(room);
+                }
+            }
+            foreach (var userId in clone.CloneUser)
+            {
+                var user = clone.User.FirstOrDefault(r => r.Value == userId);
+                if (user != null)
+                {
+                    selectedUsers.Add(user);
+                    ((List<SelectListItem>)clone.User).Remove(user);
+                }
+            }
+
+            
+            //rtnClone.CloneRoom = clone.CloneRoom;
+            //rtnClone.CloneUser = clone.CloneUser;
+            //return View(rtnClone);
+            return View(clone);
         }
 
         protected override void Dispose(bool disposing)

@@ -284,6 +284,20 @@
         </ComplexTypeMapping>
       </ResultMapping>
     </FunctionImportMapping>
+    <FunctionImportMapping FunctionName="ShiftCaptainModel.Store.ValidateShift" FunctionImportName="ValidateShift">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ShiftCaptainModel.ValidateShift_Result">
+          <ScalarProperty Name="message" ColumnName="message" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionName="ShiftCaptainModel.Store.ValidateShiftPreference" FunctionImportName="ValidateShiftPreference">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="ShiftCaptainModel.ValidateShiftPreference_Result">
+          <ScalarProperty Name="message" ColumnName="message" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
     <FunctionImportMapping FunctionImportName="sp_clone_schedule" FunctionName="ShiftCaptainModel.Store.sp_clone_schedule" />
   </EntityContainerMapping>
 </Mapping>

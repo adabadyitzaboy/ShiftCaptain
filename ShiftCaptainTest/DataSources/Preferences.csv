@@ -9,6 +9,9 @@
 
 
 @@ "DefaultPreference"
-"NAME","DESCRIPTION","CAN_WORK","COLOR","VALID"
-"Test Preference Can Work","Test Preference Can Work","1","green","1"
-"Test Preference Can't Work","Test Preference Can't Work","0","red","1"
+"NAME","DESCRIPTION","CAN_WORK","COLOR","VALID","VERSION_NAME"
+"Test Preference Can Work","Test Preference Can Work","1","green","1","StartupScenario"
+"Test Preference Can't Work","Test Preference Can't Work","0","red","1","StartupScenario"
+"Can't work","Can't work","0","Red","1","Test_Scenario"
+"Don't prefer to work","Don't prefer to work","1","Yellow","1","Test_Scenario"
+"Prefer to work","Prefer to work","1","Green","1","Test_Scenario"

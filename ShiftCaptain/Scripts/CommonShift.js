@@ -59,7 +59,27 @@ var displayError = function (response) {
     var errorHolder = $("#Errors");
     errorHolder.empty();
     var li = $("<li>");
-    li.text(JSON.parse(response).error);
+    var text = response;
+    try{
+        var json = JSON.parse(response);
+        if (json.error) {
+            if ($.isArray(json.error)) {
+                var ul = $("<ul>");
+                $.each(json.error, function (index, item) {
+                    var ili = $("<li>");
+                    ili.text(this.message || this);
+                    ul.append(ili);
+                });
+                errorHolder.append(ul);
+                return;
+            } else {
+                text = json.error;
+            }
+        }
+    } catch (ex) {
+        debugger;
+    }
+    li.text(text);
     errorHolder.append($("<ul>").html(li));
     sc.app.resizeHeader();
 };
@@ -199,6 +219,9 @@ var createShiftTable = function (roomHours, shifts, createShiftElement, options)
     //theadFixed.css('top', thead.offset().top);
     //theadFixed.find("th:first").width(tbody.find("tr:first-child td:first-child").width()).css('display', 'block');
     sh.append(theadBottom);
+    if (sh.width() > $("#shiftHolder").width()) {
+        $("#shiftHolder").width(sh.width() + 30);
+    }
     sh.trigger("table-ready");
 };
 

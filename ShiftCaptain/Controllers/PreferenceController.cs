@@ -16,7 +16,6 @@ namespace ShiftCaptain.Controllers
         {
             ClassName = "preference";
         }
-        private ShiftCaptainEntities db = new ShiftCaptainEntities();
 
         //
         // GET: /Preference/List
@@ -64,7 +63,7 @@ namespace ShiftCaptain.Controllers
             if (ModelState.IsValid)
             {
                 db.Preferences.Add(preference);
-                db.SaveChanges();
+                SaveChange();
                 return RedirectToAction("Index");
             }
 
@@ -93,7 +92,7 @@ namespace ShiftCaptain.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(preference).State = EntityState.Modified;
-                db.SaveChanges();
+                SaveChange();
                 return RedirectToAction("Index");
             }
             return View(preference);
@@ -120,7 +119,7 @@ namespace ShiftCaptain.Controllers
         {
             Preference preference = db.Preferences.Find(id);
             db.Preferences.Remove(preference);
-            db.SaveChanges();
+            SaveChange();
             return RedirectToAction("Index");
         }
 

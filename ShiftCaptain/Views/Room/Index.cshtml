@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<ShiftCaptain.Models.RoomView>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Rooms";
 }
 
-<h2>Index</h2>
+<h2>Rooms</h2>
 
 @if(!ViewBag.CurrentVersion.IsApproved){
     <p>
-        @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Create New", "Create", new { VersionName = ViewBag.CurrentVersionName })
     </p>
 }
 
@@ -164,12 +164,12 @@
         <td>
             @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && !ViewBag.CurrentVersion.IsApproved)
             { 
-                @Html.ActionLink("Edit", "Edit", new { id = item.RoomId }) @Html.Raw(" | ") 
+                @Html.ActionLink("Edit", "Edit", new { id = item.RoomId, VersionName = item.RoomInstanceId.HasValue?  ViewBag.CurrentVersionName : null }) @Html.Raw(" | ") 
             } 
-            @Html.ActionLink("Details", "Details", new { id=item.RoomId}) 
+            @Html.ActionLink("Details", "Details", new { id=item.RoomId, VersionName = item.RoomInstanceId.HasValue?  ViewBag.CurrentVersionName : null}) 
             @if(ShiftCaptain.Infrastructure.SessionManager.IsManager && (!item.RoomInstanceId.HasValue || !ViewBag.CurrentVersion.IsApproved))
             { 
-                @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.RoomId }) 
+                @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.RoomId, VersionName = item.RoomInstanceId.HasValue?  ViewBag.CurrentVersionName : null}) 
             }
         </td>
     </tr>

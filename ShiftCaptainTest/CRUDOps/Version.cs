@@ -27,11 +27,7 @@ namespace ShiftCaptainTest.CRUDOps
             foreach (var versionObj in createTable)
             {
                 GoToPage("Version");
-                var version = new ShiftCaptain.Models.Version
-                {
-                    Name = Clean<string>(versionObj, "NAME"),
-                    IsVisible = Clean<bool>(versionObj, "IS_VISIBLE")
-                };
+                var version = GetVersion(versionObj);
 
                 //Change version if necessary
                 var created = CreateVersion(version);
@@ -65,7 +61,7 @@ namespace ShiftCaptainTest.CRUDOps
         [TestCleanup]
         public void CleanUp()
         {
-            db = new ShiftCaptainEntities();
+            RefreshDB();
             try
             {
                 var createTable = new DataParser("Versions.csv").Tables["Create"];

@@ -23,7 +23,7 @@ namespace ShiftCaptainTest.Infrastructure
 
         }
 
-        public bool GoToPage(string page, bool force = false)
+        public bool GoToPage(string page, bool force = false, bool verifyUrl = true)
         {
             if (!force && (BaseUrl + page == Driver.Url || BaseUrl + page + "/" == Driver.Url))
             {
@@ -32,13 +32,18 @@ namespace ShiftCaptainTest.Infrastructure
             switch (page)
             {
                 default:
-                    _goToPage(page);
+                    _goToPage(page, verifyUrl);
                     break;
             }
             return true;
         }
+        
+        public bool GoToPage(string versionName, string page, bool force = false)
+        {
+            return GoToPage(String.Format("{0}/{1}", EncodeVersionName(versionName), page), force);
+        }
 
-        private void _goToPage(string page, string pageTitle = null)
+        private void _goToPage(string page, bool verifyUrl = true)
         {
             string currentUrl = Driver.Url;
             var start = DateTime.Now;
@@ -49,17 +54,12 @@ namespace ShiftCaptainTest.Infrastructure
             {
                 Logger.InfoFormat("{0}\t{1}{2}\t{3}\t{4}\t{5}", DateTime.Now.ToString("MM/dd/yy H:mm:ss"), BaseUrl, page, ellapsed, DriverType, IsLoggedIn());
             }
-            if (currentUrl != BaseUrl + page)
+            if (verifyUrl)
             {
-                WaitForNextPage(currentUrl);
-            }
-            if (pageTitle != null)
-            {
-                var pageTitleText = Driver.FindElement(By.Id("divPageTitle")).Text;
-                Assert.AreEqual(pageTitle, pageTitleText);
-            }
-            else
-            {
+                if (currentUrl != BaseUrl + page)
+                {
+                    WaitForNextPage(currentUrl);
+                }
                 Assert.AreEqual(BaseUrl + page, Driver.Url);
             }
         }
@@ -72,7 +72,7 @@ namespace ShiftCaptainTest.Infrastructure
             {
                 var defaultUser = UserTable.FirstOrDefault(u => u["NICK_NAME"].ToLower() == "default_manager");
                 var defaultEmail = defaultUser["EMAIL_ADDRESS"];
-                var user = db.Users.First(u => u.EmailAddress == defaultEmail);
+                var user = db.Users.FirstOrDefault(u => u.EmailAddress == defaultEmail);
                 if (user == null)
                 {
                     throw new Exception(String.Format("User {0} not found", defaultEmail));
@@ -82,49 +82,36 @@ namespace ShiftCaptainTest.Infrastructure
             }
             Driver.FindElement(By.Id("EmailAddress")).SendKeys(email);
             Driver.FindElement(By.Id("Pass")).SendKeys(password);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("#loginForm form input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true } });
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true } });
             return !ElementExists(By.Id("EmailAddress"));
         }
         #region User 
         
-        public bool CreateUser(UserView user)
+        public bool CreateUser(String VersionName, UserView user)
         {
-            GoToPage("User/Create");
+            GoToPage(VersionName, "User/Create");
             SetTextBoxValues(user);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("form[action='/User/Create'] input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false}, new ByExists{ by = By.CssSelector(".validation-summary-errors"), exists = true}, new ByExists{ by = By.CssSelector(".field-validation-error"), exists = true}});
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false}, new ByExists{ by = By.CssSelector(".validation-summary-errors"), exists = true}, new ByExists{ by = By.CssSelector(".field-validation-error"), exists = true}});
             return !Driver.Url.Contains("User/Create");
         }
 
         public ShiftCaptain.Models.UserView CreateDefaultUser(String NickName, int? VersionId, String VersionName)
         {
+            RefreshDB();
             var ticks = DateTime.Now.Ticks.ToString();
-            var counter = 0;
-
+            
             if (db.UserViews.Count(uv => uv.NickName == NickName && uv.VersionId == VersionId) == 0)
             {
                 var createTable = new DataParser("Users.csv").Tables["DefaultUser"];
                 foreach (var userObj in createTable)
                 {
-                    
-                    var user= new ShiftCaptain.Models.User
-                    {
-                        EmailAddress = Clean<string>(userObj, "EMAIL_ADDRESS") ?? String.Format("{0}-{1}@emails.com", ticks, ++counter),
-                        Pass = Clean<string>(userObj, "PASS"),
-                        FName = Clean<string>(userObj, "FIRST_NAME"),
-                        LName = Clean<string>(userObj, "LAST_NAME"),
-                        NickName = Clean<string>(userObj, "NICK_NAME"),
-                        EmployeeId = Clean<string>(userObj, "EMPLOYEE_ID"),
-                        PhoneNumber = Clean<string>(userObj, "PHONE_NUMBER"),
-                        IsManager = Clean<bool>(userObj, "IS_MANAGER"),
-                        IsShiftManager = Clean<bool>(userObj, "IS_SHIFT_MANAGER"),
-                        IsActive = Clean<bool>(userObj, "IS_ACTIVE"),
-                        IsMale = Clean<bool>(userObj, "IS_MALE")
-                    };
+
+                    var user = GetUser(userObj, ticks, 1);
                     if (user.NickName == NickName && Clean<string>(userObj, "VERSION_NAME") == VersionName)
                     {
                         if (db.UserViews.Count(uv => uv.NickName == NickName) == 0)
                         {
-                            var address = CreateAddress(userObj);
+                            var address = CreateAddress(user.Address);
                             
                             if (address != null)
                             {
@@ -152,15 +139,35 @@ namespace ShiftCaptainTest.Infrastructure
             }
             return db.UserViews.FirstOrDefault(uv => uv.NickName == NickName && uv.VersionId == VersionId);
         }
+        
+        public ShiftCaptain.Models.UserView GetDefaultUser(String NickName, int VersionId, String VersionName)
+        {
+            RefreshDB();
+            var ticks = DateTime.Now.Ticks.ToString();
 
-        public void RemoveDefaultUsers()
+            if (db.UserViews.Count(uv => uv.NickName == NickName && uv.VersionId == VersionId) == 0)
+            {
+                var createTable = new DataParser("Users.csv").Tables["DefaultUser"];
+                foreach (var userObj in createTable)
+                {
+                    var user = GetUserView(userObj, VersionId, ticks, 1);
+                    if (user.NickName == NickName && Clean<string>(userObj, "VERSION_NAME") == VersionName)
+                    {
+                        return user;
+                    }
+                }
+            }
+            return db.UserViews.FirstOrDefault(uv => uv.NickName == NickName && uv.VersionId == VersionId);
+        }
+
+        public void RemoveDefaultUsers(String VersionName)
         {
             try
             {
                 var createTable = new DataParser("Users.csv").Tables["DefaultUser"];
                 foreach (var userObj in createTable)
                 {
-                    if (!Clean<bool>(userObj, "CREATED"))
+                    if (!Clean<bool>(userObj, "CREATED") && Clean<string>(userObj, "VERSION_NAME") == VersionName)
                     {
                         var nickName = Clean<string>(userObj, "NICK_NAME");
                         var users = db.Users.Where(u => u.NickName == nickName).ToList();
@@ -173,14 +180,15 @@ namespace ShiftCaptainTest.Infrastructure
             }
             catch (Exception ex)
             {
+                Logger.Error(ex);
             }
         }
         
-        public bool EditUser(UserView user)
+        public bool EditUser(String VersionName, UserView user)
         {
-            GoToPage("User/Edit/"+  user.UserId);
+            GoToPage(VersionName, "User/Edit/" + user.UserId);
             SetTextBoxValues(user);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("form[action='/User/Edit/" + +user.UserId + "'] input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
             return !Driver.Url.Contains("User/Edit/");
         }
 
@@ -247,31 +255,37 @@ namespace ShiftCaptainTest.Infrastructure
         #endregion
 
         #region Version
-
         public ShiftCaptain.Models.Version CreateDefaultVersion(String VersionName)
         {
+            var version = GetDefaultVersion(VersionName);
+            if (version != null && version.Id == 0)
+            {
+                db.Versions.Add(version);
+                db.SaveChanges();        
+            }
+            return version;
+        }
+
+        public ShiftCaptain.Models.Version GetDefaultVersion(String VersionName)
+        {
+            RefreshDB();
             if (db.Versions.Count(v => v.Name == VersionName) == 0)
             {
                 var createTable = new DataParser("Versions.csv").Tables["DefaultVersion"];
                 foreach (var versionObj in createTable)
                 {
-                    var version = new ShiftCaptain.Models.Version
-                    {
-                        Name = Clean<string>(versionObj, "NAME"),
-                        IsVisible = Clean<bool>(versionObj, "IS_VISIBLE"),
-                        IsActive = Clean<bool>(versionObj, "IS_ACTIVE")
-                    };
+                    var version = GetVersion(versionObj);
                     if (version.Name == VersionName)
                     {
-                        db.Versions.Add(version);
-                        db.SaveChanges();
-                        break;
+                        return version;
                     }
                 }
             }
             return db.Versions.FirstOrDefault(v => v.Name == VersionName);
+
         }
-        public void RemoveDefaultVersions()
+
+        public void RemoveDefaultVersions(String VersionName)
         {
             try
             {
@@ -279,23 +293,56 @@ namespace ShiftCaptainTest.Infrastructure
                 foreach (var versionObj in createTable)
                 {
                     var name = Clean<string>(versionObj, "NAME");
-                    var version = db.Versions.FirstOrDefault(v => v.Name == name);
-                    if (version != null)
+                    if (Clean<string>(versionObj, "VERSION_NAME") == VersionName)
                     {
-                        db.Versions.Remove(version);
-                        db.SaveChanges();
+                        var version = db.Versions.FirstOrDefault(v => v.Name == name);
+                        if (version != null)
+                        {
+                            //var preferences = db.Preferences.Where(e => e.ShiftPreferences.Count(sp => sp.PreferenceId == e.Id && sp.VersionId == version.Id) > 0).ToList();
+                            //var userInstances = db.UserInstances.Where(e => e.VersionId == version.Id).ToList();
+                            //var address = db.Addresses.Where(e => e.Users.Count(u => e.Id == u.AddressId) > 0 || e.Users.Count(u => e.Id == u.AddressId) > 0).ToList();
+                            //var users = db.Users.Where(e => e.UserInstances.Count(sp => sp.UserId == e.Id && sp.VersionId == version.Id) > 0).ToList();
+                            //foreach (var entity in db.Shifts.Where(e => e.VersionId == version.Id).ToList())
+                            //{
+                            //    db.Shifts.Remove(entity);
+                            //    db.SaveChanges();
+                            //}
+                            //foreach (var entity in db.ShiftPreferences.Where(e => e.VersionId == version.Id).ToList())
+                            //{
+                            //    db.ShiftPreferences.Remove(entity);
+                            //    db.SaveChanges();
+                            //}
+                            //foreach (var entity in preferences)
+                            //{
+                            //    db.Preferences.Remove(entity);
+                            //    db.SaveChanges();
+                            //}
+                            //foreach (var entity in address)
+                            //{
+                            //    db.Users.Remove(entity);
+                            //    db.SaveChanges();
+                            //}
+                            //foreach (var entity in users)
+                            //{
+                            //    db.Users.Remove(entity);
+                            //    db.SaveChanges();
+                            //}
+                            db.Versions.Remove(version);
+                            db.SaveChanges();
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
+                Logger.Error(ex);
             }
         }
         public bool CreateVersion(ShiftCaptain.Models.Version version)
         {
             GoToPage("Version/Create");
             SetTextBoxValues(version);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("form[action='/Version/Create'] input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("Name"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
             return !Driver.Url.Contains("Version/Create");
         }
 
@@ -303,7 +350,7 @@ namespace ShiftCaptainTest.Infrastructure
         {
             GoToPage("Version/Edit/" + version.Id);
             SetTextBoxValues(version);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("form[action='/Version/Edit/" + version.Id + "'] input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("Name"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
             return !Driver.Url.Contains("Version/Edit/");
         }
 
@@ -369,20 +416,10 @@ namespace ShiftCaptainTest.Infrastructure
         
         #region Address
         
-        public ShiftCaptain.Models.Address CreateAddress(IDictionary<string, string> obj)
+        public ShiftCaptain.Models.Address CreateAddress(Address address)
         {
-            if (Clean<string>(obj, "LINE_1") != null)
+            if (address != null)
             {
-                var address = new ShiftCaptain.Models.Address
-                {
-                    Line1 = Clean<string>(obj, "LINE_1"),
-                    Line2 = Clean<string>(obj, "LINE_2"),
-                    City = Clean<string>(obj, "CITY"),
-                    State = Clean<string>(obj, "STATE"),
-                    ZipCode = Clean<string>(obj, "ZIP_CODE"),
-                    Country = Clean<string>(obj, "COUNTRY")
-                };
-
                 db.Addresses.Add(address);
                 db.SaveChanges();
                 return address;
@@ -398,39 +435,63 @@ namespace ShiftCaptainTest.Infrastructure
         {
             GoToPage("Building/Create");
             SetTextBoxValues(Building);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("form[action='/Building/Create'] input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("Name"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
             return !Driver.Url.Contains("Building/Create");
         }
+        
         public ShiftCaptain.Models.Building CreateDefaultBuilding(String BuildingName)
         {
+            var building = GetDefaultBuilding(BuildingName);
+            if (building.Id == 0)
+            {
+                db.Buildings.Add(building);
+                db.SaveChanges();
+                if (building.Address != null)
+                {
+                    building.Address = CreateAddress(building.Address);
+                    building.AddressId = building.Address.Id; 
+                }
+            }
+            return building;
+        }
+
+        public ShiftCaptain.Models.Building GetDefaultBuilding(String BuildingName)
+        {
+            RefreshDB();
             if (db.Buildings.Count(b => b.Name == BuildingName) == 0)
             {
                 var createTable = new DataParser("Buildings.csv").Tables["DefaultBuilding"];
                 foreach (var buildingObj in createTable)
                 {
-                    var building = new ShiftCaptain.Models.Building
-                    {
-                        Name = Clean<string>(buildingObj, "NAME"),
-                        ManagerPhone = Clean<string>(buildingObj, "MANAGER_PHONE"),
-                        PhoneNumber = Clean<string>(buildingObj, "PHONE_NUMBER")
-                    };
+                    var building = GetBuilding(buildingObj);
                     if (building.Name == BuildingName)
-                    {
-                        var address = CreateAddress(buildingObj);
-                        if (address != null)
-                        {
-                            building.AddressId = address.Id;
-                        }
-                        db.Buildings.Add(building);
-                        db.SaveChanges();
-                        
-                        break;
+                    {                       
+                        return building;
                     }
                 }
             }
             return db.Buildings.FirstOrDefault(v => v.Name == BuildingName);
         }
-        public void RemoveDefaultBuildings()
+
+        public ShiftCaptain.Models.BuildingView GetDefaultBuildingView(String BuildingName)
+        {
+            RefreshDB();
+            if (db.BuildingViews.Count(b => b.Name == BuildingName) == 0)
+            {
+                var createTable = new DataParser("Buildings.csv").Tables["DefaultBuilding"];
+                foreach (var buildingObj in createTable)
+                {
+                    var building = GetBuildingView(buildingObj);
+                    if (building.Name == BuildingName)
+                    {
+                        return building;
+                    }
+                }
+            }
+            return db.BuildingViews.FirstOrDefault(v => v.Name == BuildingName);
+        }
+
+        public void RemoveDefaultBuildings(String VersionName)
         {
             try
             {
@@ -438,21 +499,25 @@ namespace ShiftCaptainTest.Infrastructure
                 foreach (var buildingObj in createTable)
                 {
                     var name = Clean<string>(buildingObj, "NAME");
-                    var building = db.Buildings.FirstOrDefault(v => v.Name == name);
-                    if (building != null)
+                    if (Clean<string>(buildingObj, "VERSION_NAME") == VersionName)
                     {
-                        if (building.AddressId.HasValue)
+                        var building = db.Buildings.FirstOrDefault(v => v.Name == name);
+                        if (building != null)
                         {
-                            db.Addresses.Remove(building.Address);
+                            if (building.AddressId.HasValue)
+                            {
+                                db.Addresses.Remove(building.Address);
+                                db.SaveChanges();
+                            }
+                            db.Buildings.Remove(building);
                             db.SaveChanges();
                         }
-                        db.Buildings.Remove(building);
-                        db.SaveChanges();
                     }
                 }
             }
             catch (Exception ex)
             {
+                Logger.Error(ex);
             }
         }
 
@@ -460,7 +525,7 @@ namespace ShiftCaptainTest.Infrastructure
         {
             GoToPage("Building/Edit/" + Building.BuildingId);
             SetTextBoxValues(Building);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("form[action='/Building/Edit/" + +Building.BuildingId + "'] input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false}, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true}, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true}});
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("Name"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
             return !Driver.Url.Contains("Building/Edit/");
         }
 
@@ -510,17 +575,44 @@ namespace ShiftCaptainTest.Infrastructure
         #endregion
 
         #region Room
-        public bool CreateRoom(RoomView Room)
+        public bool CreateRoom(String VersionName, RoomView Room)
         {
-            GoToPage("Room/Create");
-            SetTextBoxValues(Room);
+            GoToPage(VersionName, "Room/Create");
+            RemoveFixedHeader();
             SetDropDownValues(Room);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("form[action='/Room/Create'] input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false}, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true}, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true}});
+            SetTextBoxValues(Room);
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("Name"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
             return !Driver.Url.Contains("Room/Create");
         }
 
-        public ShiftCaptain.Models.RoomView CreateDefaultRoom(String RoomName, int VersionId)
+        public ShiftCaptain.Models.Room CreateDefaultRoom(String RoomName, int VersionId)
         {
+            var room = GetDefaultRoom(RoomName, VersionId);
+            if (room != null && room.Id == 0)
+            {
+                db.Rooms.Add(room);
+                db.SaveChanges();
+            }
+            if (room.RoomInstances != null && room.RoomInstances.Count() > 0)
+            {
+                var roomInstance = room.RoomInstances.FirstOrDefault();
+                if (roomInstance.Id == 0)
+                {
+                    var updatedRoomInstance = db.RoomInstances.Add(roomInstance);
+                    db.SaveChanges();
+                    foreach (var roomHour in roomInstance.RoomHours)
+                    {
+                        roomHour.RoomInstanceId = updatedRoomInstance.Id;
+                        db.RoomHours.Add(roomHour);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            return room;
+        }
+        public ShiftCaptain.Models.Room GetDefaultRoom(String RoomName, int VersionId)
+        {
+            RefreshDB();
             if (db.RoomViews.Count(r => r.Name == RoomName && r.VersionId == VersionId) == 0)
             {
                 var createTable = new DataParser("Rooms.csv").Tables["DefaultRoom"];
@@ -529,34 +621,36 @@ namespace ShiftCaptainTest.Infrastructure
                     if (Clean<string>(roomObj, "NAME") == RoomName)
                     {
                         var building = CreateDefaultBuilding(Clean<string>(roomObj, "BUILDING_NAME"));
-                        var room = GetRoom(roomObj, building.Id);
-
-                        db.Rooms.Add(room);
-                        db.SaveChanges();
+                        var room = db.Rooms.FirstOrDefault(rv => rv.Name == RoomName);
+                        if (room == null)
+                        {
+                            room = GetRoom(roomObj, building.Id);
+                        }
                         if (HasRoomHours(roomObj))
                         {
                             var roomInstance = new RoomInstance
                             {
                                 RoomId = room.Id,
-                                VersionId = VersionId
+                                VersionId = VersionId,
+                                RoomHours = new List<RoomHour>()
                             };
-                            roomInstance = db.RoomInstances.Add(roomInstance);
-                            db.SaveChanges();
-                            foreach (var roomHour in GetRoomHours(roomObj, roomInstance))
+                            room.RoomInstances = new List<RoomInstance> { roomInstance };
+                            
+                            foreach (var roomHour in GetRoomHours(roomObj, 0))
                             {
-                                db.RoomHours.Add(roomHour);
-                                db.SaveChanges();
+                                roomInstance.RoomHours.Add(roomHour);
                             }
                         }
-                        break;
+                        return room;
                     }
                 }
             }
-            return db.RoomViews.FirstOrDefault(rv => rv.Name == RoomName && rv.VersionId == VersionId);
+            return db.Rooms.FirstOrDefault(rv => rv.Name == RoomName && rv.RoomInstances.Count(ri=>ri.RoomId == rv.Id && ri.VersionId == VersionId) > 0);
         }
 
         public ShiftCaptain.Models.RoomView CreateDefaultRoom(int VersionId, String VersionName)
         {
+            RefreshDB();
             if (db.RoomViews.Count(r => r.VersionId == VersionId) == 0)
             {
                 var createTable = new DataParser("Rooms.csv").Tables["DefaultRoom"];
@@ -578,7 +672,7 @@ namespace ShiftCaptainTest.Infrastructure
                             };
                             roomInstance = db.RoomInstances.Add(roomInstance);
                             db.SaveChanges();
-                            foreach (var roomHour in GetRoomHours(roomObj, roomInstance))
+                            foreach (var roomHour in GetRoomHours(roomObj, roomInstance.Id))
                             {
                                 if (roomHour != null)
                                 {
@@ -593,8 +687,8 @@ namespace ShiftCaptainTest.Infrastructure
             }
             return db.RoomViews.FirstOrDefault(rv => rv.VersionId == VersionId);
         }
-
-        public void RemoveDefaultRooms()
+                
+        public void RemoveDefaultRooms(String VersionName)
         {
             try
             {
@@ -602,21 +696,28 @@ namespace ShiftCaptainTest.Infrastructure
                 foreach (var roomObj in createTable)
                 {
                     var name = Clean<string>(roomObj, "NAME");
-                    foreach(var room in db.Rooms.Where(r => r.Name == name).ToList()){
-                        RemoveRoom(room.Id);
+                    if (Clean<string>(roomObj, "VERSION_NAME") == VersionName)
+                    {
+                        foreach (var room in db.Rooms.Where(r => r.Name == name).ToList())
+                        {
+                            RemoveRoom(room.Id);
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
+                Logger.Error(ex);
             }
         }
 
-        public bool EditRoom(RoomView Room)
+        public bool EditRoom(String VersionName, RoomView Room)
         {
-            GoToPage("Room/Edit/" + Room.RoomId);
+            GoToPage(VersionName, "Room/Edit/" + Room.RoomId);
+            RemoveFixedHeader();
+            SetDropDownValues(Room);
             SetTextBoxValues(Room);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("form[action='/Room/Edit/" + +Room.RoomId + "'] input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false}, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true}, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true}});
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("Name"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
             return !Driver.Url.Contains("Room/Edit/");
         }
 
@@ -675,23 +776,26 @@ namespace ShiftCaptainTest.Infrastructure
 
         public ShiftCaptain.Models.Preference CreateDefaultPreference(String PreferenceName)
         {
+            var defaultPreference = GetDefaultPreference(PreferenceName);
+            if (defaultPreference != null && defaultPreference.Id == 0)
+            {
+                defaultPreference= db.Preferences.Add(defaultPreference);
+                db.SaveChanges();
+            }
+            return defaultPreference;
+        }
+        public ShiftCaptain.Models.Preference GetDefaultPreference(String PreferenceName)
+        {
+            RefreshDB();
             if (db.Preferences.Count(p => p.Name == PreferenceName) == 0)
             {
                 var createTable = new DataParser("Preferences.csv").Tables["DefaultPreference"];
                 foreach (var preferenceObj in createTable)
                 {
-                    var preference = new ShiftCaptain.Models.Preference
-                    {
-                        Name = Clean<string>(preferenceObj, "NAME"),
-                        Description = Clean<string>(preferenceObj, "DESCRIPTION"),
-                        CanWork = Clean<bool>(preferenceObj, "CAN_WORK"),
-                        Color = Clean<string>(preferenceObj, "COLOR")
-                    };
+                    var preference = GetPreference(preferenceObj);
                     if (preference.Name == PreferenceName)
                     {
-                        db.Preferences.Add(preference);
-                        db.SaveChanges();
-                        break;
+                        return preference;
                     }
                 }
             }
@@ -699,23 +803,29 @@ namespace ShiftCaptainTest.Infrastructure
         }
         public void RemoveDefaultPreferences()
         {
-            var createTable = new DataParser("Preferences.csv").Tables["DefaultPreference"];
-            foreach (var preferenceObj in createTable)
+            try
             {
-                var name = Clean<string>(preferenceObj, "NAME");
-                var preference = db.Preferences.FirstOrDefault(v => v.Name == name);
-                if (preference != null)
+                var createTable = new DataParser("Preferences.csv").Tables["DefaultPreference"];
+                foreach (var preferenceObj in createTable)
                 {
-                    db.Preferences.Remove(preference);
-                    db.SaveChanges();
+                    var name = Clean<string>(preferenceObj, "NAME");
+                    var preference = db.Preferences.FirstOrDefault(v => v.Name == name);
+                    if (preference != null)
+                    {
+                        db.Preferences.Remove(preference);
+                        db.SaveChanges();
+                    }
                 }
+            }
+            catch (Exception ex) {
+                Logger.Error(ex);
             }
         }
         public bool CreatePreference(ShiftCaptain.Models.Preference preference)
         {
             GoToPage("Preference/Create");
             SetTextBoxValues(preference);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("form[action='/Preference/Create'] input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"), exists = false}, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true}, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true}});
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("Name"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
             return !Driver.Url.Contains("Preference/Create");
         }
 
@@ -723,7 +833,7 @@ namespace ShiftCaptainTest.Infrastructure
         {
             GoToPage("Preference/Edit/" + preference.Id);
             SetTextBoxValues(preference);
-            ClickAndWaitForElements(Driver.FindElement(By.CssSelector("form[action='/Preference/Edit/" + preference.Id + "'] input[type='submit']")), new List<ByExists> { new ByExists { by = By.Id("EmailAddress"),exists = false}, new ByExists { by =  By.CssSelector(".validation-summary-errors"), exists = true}, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true}});
+            ClickAndWaitForElements(Driver.FindElement(GetSubmitButton()), new List<ByExists> { new ByExists { by = By.Id("Name"), exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
             return !Driver.Url.Contains("Preference/Edit/");
         }
 
@@ -794,26 +904,26 @@ namespace ShiftCaptainTest.Infrastructure
         //    }
         //    return db.ShiftPreferences.FirstOrDefault(p => p.Name == ShiftPreferenceName);
         //}
-        //public void RemoveDefaultShiftPreferences()
-        //{
-        //    var createTable = new DataParser("ShiftPreferences.csv").Tables["DefaultShiftPreference"];
-        //    foreach (var shiftPreferenceObj in createTable)
-        //    {
-        //        var name = Clean<string>(shiftPreferenceObj, "NAME");
-        //        var shiftPreference = db.ShiftPreferences.FirstOrDefault(sp => sp.Name == name);
-        //        if (shiftPreference != null)
-        //        {
-        //            db.ShiftPreferences.Remove(shiftPreference);
-        //            db.SaveChanges();
-        //        }
-        //    }
-        //}
-
-        public bool CreateShiftPreference(ShiftCaptain.Models.ShiftPreference shiftPreference)
+        public void RemoveDefaultShiftPreferences(String VersionName)
         {
             try
             {
-                var navigated = GoToPage("ShiftPreference");
+                foreach (var shiftPreference in db.ShiftPreferences.Where(sp => sp.Version.Name == VersionName).ToList())
+                {
+                    db.ShiftPreferences.Remove(shiftPreference);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+        }
+        public bool CreateShiftPreference(String VersionName, ShiftCaptain.Models.ShiftPreference shiftPreference)
+        {
+            try
+            {
+                var navigated = GoToPage(VersionName, "ShiftPreference");
                 bool changedVersion = SetDropDownValue(Driver.FindElement(By.Id("VersionId")), shiftPreference.VersionId.ToString());
                 if (changedVersion)
                 {
@@ -824,8 +934,12 @@ namespace ShiftCaptainTest.Infrastructure
                 {
                     WaitTillAvailable(By.CssSelector(String.Format(".{0}", Enum.GetName(typeof(DayOfWeek), shiftPreference.Day))), TimeSpan.FromSeconds(2));
                 }
-                SetDropDownValue(Driver.FindElement(By.Id("ShiftDuration")), ((double)shiftPreference.Duration).ToString());
-                var dropBy = By.CssSelector(String.Format(".{0} .open[s='{1}']", Enum.GetName(typeof(DayOfWeek), shiftPreference.Day), shiftPreference.StartTime.TotalHours));
+                var changedDuration = SetDropDownValue(Driver.FindElement(By.Id("ShiftDuration")), ((double)shiftPreference.Duration).ToString());
+                if (!changedDuration && GetDropDownValue(Driver.FindElement(By.Id("ShiftDuration"))) != ((double)shiftPreference.Duration).ToString())
+                {//if changedDuration, then save loop up value operation.
+                    SetDurationDropDownValue(((double)shiftPreference.Duration).ToString());
+                }
+                var dropBy = By.CssSelector(String.Format(".{0} .open[s='{1}']", Enum.GetName(typeof(DayOfWeek), shiftPreference.Day), shiftPreference.StartTime.TotalHours.ToString()));
                 if (!ElementExists(dropBy))
                 {
                     return false;
@@ -833,11 +947,12 @@ namespace ShiftCaptainTest.Infrastructure
                 WaitTillAvailable(By.CssSelector("#Preferences preference"));
                 var preferenceElement = Driver.FindElement(By.CssSelector("preference[preferenceid='" + shiftPreference.PreferenceId + "']"));
                 var dropElement = Driver.FindElement(dropBy);
-                var action = new OpenQA.Selenium.Interactions.Actions(Driver);
-                action.DragAndDrop(preferenceElement, dropElement);
-                action.Perform();
+                var success = DragElement(preferenceElement, dropElement);
+                //var action = new OpenQA.Selenium.Interactions.Actions(Driver);
+                //action.DragAndDrop(preferenceElement, dropElement);
+                //action.Perform();
                 var droppedBy = By.CssSelector(String.Format(".{0} .taken[s='{1}']", Enum.GetName(typeof(DayOfWeek), shiftPreference.Day), shiftPreference.StartTime.TotalHours));
-                
+
                 WaitForElement(new List<ByExists> { new ByExists { by = droppedBy, exists = true }, new ByExists { by = By.CssSelector("#Errors ul li"), exists = true } }, TimeSpan.FromSeconds(2));
                 if (ElementExists(droppedBy))
                 {
@@ -846,26 +961,81 @@ namespace ShiftCaptainTest.Infrastructure
                     return true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Error(ex.Message, ex);
             }
             return false;
         }
+        //public bool CreateShiftPreference(String VersionName, ShiftCaptain.Models.ShiftPreference shiftPreference)
+        //{
+        //    try
+        //    {
+        //        var navigated = GoToPage(VersionName, "ShiftPreference");
+        //        bool changedVersion = SetDropDownValue(Driver.FindElement(By.Id("VersionId")), shiftPreference.VersionId.ToString());
+        //        if (changedVersion)
+        //        {   
+        //            WaitTillAvailable(By.Id("Preferences"));
+        //        }
+        //        bool changedUser = SetDropDownValue(Driver.FindElement(By.Id("UserID")), shiftPreference.UserId.ToString());
+        //        if (navigated || changedUser)
+        //        {
+        //            WaitTillAvailable(By.CssSelector(String.Format(".{0}", Enum.GetName(typeof(DayOfWeek), shiftPreference.Day))), TimeSpan.FromSeconds(2));
+        //        }
+        //        var changedDuration = SetDropDownValue(Driver.FindElement(By.Id("ShiftDuration")), ((double)shiftPreference.Duration).ToString());
+        //        if (!changedDuration && GetDropDownValue(Driver.FindElement(By.Id("ShiftDuration"))) != ((double)shiftPreference.Duration).ToString())
+        //        {//if changedDuration, then save loop up value operation.
+        //            SetDurationDropDownValue(((double)shiftPreference.Duration).ToString());
+        //        }
+        //        var dropBy = By.CssSelector(String.Format(".{0} .open[s='{1}']", Enum.GetName(typeof(DayOfWeek), shiftPreference.Day), shiftPreference.StartTime.TotalHours.ToString()));
+        //        if (!ElementExists(dropBy))
+        //        {
+        //            return false;
+        //        }
+        //        WaitTillAvailable(By.CssSelector("#Preferences preference"));
+        //        var preferenceElement = Driver.FindElement(By.CssSelector("preference[preferenceid='" + shiftPreference.PreferenceId + "']"));
+        //        var dropElement = Driver.FindElement(dropBy);
+        //        var action = new OpenQA.Selenium.Interactions.Actions(Driver);
+        //        action.DragAndDrop(preferenceElement, dropElement);
+        //        action.Perform();
+        //        var droppedBy = By.CssSelector(String.Format(".{0} .taken[s='{1}']", Enum.GetName(typeof(DayOfWeek), shiftPreference.Day), shiftPreference.StartTime.TotalHours));
+                
+        //        WaitForElement(new List<ByExists> { new ByExists { by = droppedBy, exists = true }, new ByExists { by = By.CssSelector("#Errors ul li"), exists = true } }, TimeSpan.FromSeconds(2));
+        //        if (ElementExists(droppedBy))
+        //        {
+        //            var droppedElement = Driver.FindElement(droppedBy);
+        //            shiftPreference.Id = Int32.Parse(droppedElement.GetAttribute("shiftpreferenceid"));
+        //            return true;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Logger.Error(ex.Message, ex);
+        //    }
+        //    return false;
+        //}
 
-        public bool EditShiftPreference(ShiftCaptain.Models.ShiftPreference shiftPreference)
+        public bool EditShiftPreference(String VersionName, ShiftCaptain.Models.ShiftPreference shiftPreference)
         {
-            GoToPage("ShiftPreference");
+            GoToPage(VersionName, "ShiftPreference");
             var dragBy = By.CssSelector(String.Format(".taken[shiftpreferenceid='{0}']", shiftPreference.Id));
-            var dropBy = By.CssSelector(String.Format(".{0} .open[s='{1}']", Enum.GetName(typeof(DayOfWeek), shiftPreference.Day), shiftPreference.StartTime.TotalHours));
+            var dropBy = By.CssSelector(String.Format(".{0} .open[s='{1}']", Enum.GetName(typeof(DayOfWeek), shiftPreference.Day), shiftPreference.StartTime.TotalHours.ToString()));
             WaitTillAvailable(dragBy, TimeSpan.FromSeconds(2));
             if (!ElementExists(dragBy) || !ElementExists(dropBy))
             {
                 return false;
             }
-            SetDropDownValue(Driver.FindElement(By.Id("ShiftDuration")), ((double)shiftPreference.Duration).ToString());
-            var action = new OpenQA.Selenium.Interactions.Actions(Driver);
-            action.DragAndDrop(Driver.FindElement(dragBy), Driver.FindElement(dropBy));
-            action.Perform();
+            var changedDuration = SetDropDownValue(Driver.FindElement(By.Id("ShiftDuration")), ((double)shiftPreference.Duration).ToString());
+            if (!changedDuration && GetDropDownValue(Driver.FindElement(By.Id("ShiftDuration"))) != ((double)shiftPreference.Duration).ToString())
+            {//if changedDuration, then save loop up value operation.
+                SetDurationDropDownValue(((double)shiftPreference.Duration).ToString());
+            }
+            Assert.AreEqual(GetDropDownValue(Driver.FindElement(By.Id("ShiftDuration"))), ((double)shiftPreference.Duration).ToString(), "Duration not selected");
+            //var action = new OpenQA.Selenium.Interactions.Actions(Driver);
+            //action.DragAndDrop(Driver.FindElement(dragBy), Driver.FindElement(dropBy));
+            //action.Perform();
+            var success = DragElement(Driver.FindElement(dragBy), Driver.FindElement(dropBy));
+
             var droppedBy = By.CssSelector(String.Format(".{0} .taken[shiftpreferenceid='{1}']", Enum.GetName(typeof(DayOfWeek), shiftPreference.Day), shiftPreference.Id));
             WaitTillAvailable(droppedBy, TimeSpan.FromSeconds(2));
             if (ElementExists(droppedBy))
@@ -877,9 +1047,9 @@ namespace ShiftCaptainTest.Infrastructure
         }
 
 
-        public bool RemoveShiftPreferenceWithUI(ShiftCaptain.Models.ShiftPreference shiftPreference)
+        public bool RemoveShiftPreferenceWithUI(String VersionName, ShiftCaptain.Models.ShiftPreference shiftPreference)
         {
-            GoToPage("ShiftPreference");
+            GoToPage(VersionName, "ShiftPreference");
             var dragBy = By.CssSelector(String.Format(".taken[shiftpreferenceid='{0}']", shiftPreference.Id));
             var dropBy = By.CssSelector("#Preferences");
             WaitTillAvailable(dragBy, TimeSpan.FromSeconds(2));
@@ -920,7 +1090,7 @@ namespace ShiftCaptainTest.Infrastructure
 
         public bool CompareShiftPreference(ShiftCaptain.Models.ShiftPreference v1, ShiftCaptain.Models.ShiftPreference v2)
         {
-            var invalidNames = new string[] { "Id", "Preference", "User", "Version" };
+            var invalidNames = new string[] { "Id", "Preference", "User", "Version", "VersionId" };
             var type = v1.GetType();
             foreach (System.Reflection.PropertyInfo propertyInfo in type.GetProperties())
             {
@@ -952,40 +1122,48 @@ namespace ShiftCaptainTest.Infrastructure
         
         #region Shift
 
-        public bool CreateShift(ShiftCaptain.Models.Shift shift, int BuildingId)
+        public bool CreateShift(String VersionName, ShiftCaptain.Models.Shift shift, int BuildingId)
         {
             try
             {
-                var navigated = GoToPage("Shift");
+                var navigated = GoToPage(VersionName, "Shift");
                 bool changedVersion = SetDropDownValue(Driver.FindElement(By.Id("VersionId")), shift.VersionId.ToString());
                 if (changedVersion)
                 {
                     WaitTillAvailable(By.Id("BuildingID"), TimeSpan.FromSeconds(2));
                 }
-                SetDropDownValue(Driver.FindElement(By.Id("ShiftDuration")), ((double)shift.Duration).ToString());
+                Assert.AreEqual(GetDropDownValue(Driver.FindElement(By.Id("VersionId"))), shift.VersionId.ToString(), "Version not selected");
+                var changedDuration = SetDropDownValue(Driver.FindElement(By.Id("ShiftDuration")), ((double)shift.Duration).ToString());
+                if (!changedDuration && GetDropDownValue(Driver.FindElement(By.Id("ShiftDuration"))) != ((double)shift.Duration).ToString())
+                {//if changedDuration, then save loop up value operation.
+                    SetDurationDropDownValue(((double)shift.Duration).ToString());
+                }
+                Assert.AreEqual(GetDropDownValue(Driver.FindElement(By.Id("ShiftDuration"))), ((double)shift.Duration).ToString(), "Duration not selected");
                 bool changedBuilding = SetDropDownValue(Driver.FindElement(By.Id("BuildingID")), BuildingId.ToString());
                 if (changedBuilding)
                 {
                     WaitTillAvailable(By.Id("RoomID"), TimeSpan.FromSeconds(2));
                 }
+                Assert.AreEqual(GetDropDownValue(Driver.FindElement(By.Id("BuildingID"))), BuildingId.ToString(), "Building not selected");
                 bool changedRoom = SetDropDownValue(Driver.FindElement(By.Id("RoomID")), shift.RoomId.ToString());
                 if (navigated || changedRoom)
                 {
                     WaitTillAvailable(By.CssSelector(String.Format(".{0}", Enum.GetName(typeof(DayOfWeek), shift.Day))), TimeSpan.FromSeconds(2));
                 }
-                var dropBy = By.CssSelector(String.Format(".{0} .open[s='{1}']", Enum.GetName(typeof(DayOfWeek), shift.Day), shift.StartTime.TotalHours));
-                if (!ElementExists(dropBy))
+                Assert.AreEqual(GetDropDownValue(Driver.FindElement(By.Id("RoomID"))), shift.RoomId.ToString(), "Room not selected");
+                WaitTillAvailable(By.CssSelector("#Employees user"));
+                var shiftElement = Driver.FindElement(By.CssSelector("user[userid='" + shift.UserId + "']"));
+                var dropElement = GetDropElement(shift.Day, (double)shift.StartTime.TotalHours, (double)shift.Duration);
+                if (dropElement == null)
                 {
                     return false;
                 }
-
-                WaitTillAvailable(By.CssSelector("#Employees user"));
-                var preferenceElement = Driver.FindElement(By.CssSelector("user[userid='" + shift.UserId + "']"));
-                var dropElement = Driver.FindElement(dropBy);
-                var action = new OpenQA.Selenium.Interactions.Actions(Driver);
-                action.DragAndDrop(preferenceElement, dropElement);
-                action.Perform();
-                var droppedBy = By.CssSelector(String.Format(".{0} .taken[s='{1}'][userid='{2}']", Enum.GetName(typeof(DayOfWeek), shift.Day), shift.StartTime.TotalHours, shift.UserId));
+                //var action = new OpenQA.Selenium.Interactions.Actions(Driver);
+                //action.DragAndDrop(preferenceElement, dropElement);
+                //action.Perform();
+                var success = DragElement(shiftElement, dropElement);
+                
+                var droppedBy = By.CssSelector(String.Format(".{0} .taken[s='{1}'][userid='{2}']", Enum.GetName(typeof(DayOfWeek), shift.Day), shift.StartTime.TotalHours.ToString(), shift.UserId));
 
                 WaitForElement(new List<ByExists> { new ByExists { by = droppedBy, exists = true }, new ByExists { by = By.CssSelector("#Errors ul li"), exists = true } }, TimeSpan.FromSeconds(2));
                 if (ElementExists(By.CssSelector("#Errors ul li")))
@@ -1003,21 +1181,59 @@ namespace ShiftCaptainTest.Infrastructure
             }
             return false;
         }
-
-        public bool EditShift(ShiftCaptain.Models.Shift shift)
+        public IWebElement GetDropElement(int day, double totalHours, double duration)
         {
-            GoToPage("Shift");
+            var selector = By.CssSelector(String.Format(".{0} .open[s='{1}']", Enum.GetName(typeof(DayOfWeek), day), totalHours.ToString()));
+            if (!ElementExists(selector))
+            {
+                return null;
+            }
+            var start = totalHours + .5;
+            var end = totalHours + duration;
+            foreach (var element in Driver.FindElements(selector))
+            {
+                var valid = true;
+                for (var idx = start; idx < end; idx += .5)
+                {
+                    if (!ElementExists(element, By.XPath(String.Format("following-sibling::td[contains(@class,'open')][@s='{0}']", (idx % 24).ToString()))))
+                    {
+                        valid = false;
+                        break;
+                    }
+
+                }
+                if (valid)
+                {
+                    return element;
+                }
+            }
+            return null;
+
+        }
+        public bool EditShift(String VersionName, ShiftCaptain.Models.Shift shift)
+        {
+            GoToPage(VersionName, "Shift");
             var dragBy = By.CssSelector(String.Format(".taken[shiftid='{0}']", shift.Id));
-            var dropBy = By.CssSelector(String.Format(".{0} .open[s='{1}']", Enum.GetName(typeof(DayOfWeek), shift.Day), shift.StartTime.TotalHours));
             WaitTillAvailable(dragBy, TimeSpan.FromSeconds(2));
-            if (!ElementExists(dragBy) || !ElementExists(dropBy))
+            if (!ElementExists(dragBy))
             {
                 return false;
             }
-            SetDropDownValue(Driver.FindElement(By.Id("ShiftDuration")), ((double)shift.Duration).ToString());
-            var action = new OpenQA.Selenium.Interactions.Actions(Driver);
-            action.DragAndDrop(Driver.FindElement(dragBy), Driver.FindElement(dropBy));
-            action.Perform();
+            var changedDuration = SetDropDownValue(Driver.FindElement(By.Id("ShiftDuration")), ((double)shift.Duration).ToString());
+            if (!changedDuration && GetDropDownValue(Driver.FindElement(By.Id("ShiftDuration"))) != ((double)shift.Duration).ToString())
+            {//if changedDuration, then save loop up value operation.
+                SetDurationDropDownValue(((double)shift.Duration).ToString());
+            }
+            var dropElement = GetDropElement(shift.Day, (double)shift.StartTime.TotalHours, (double)shift.Duration);
+            if (dropElement == null)
+            {
+                return false;
+            }
+            //var action = new OpenQA.Selenium.Interactions.Actions(Driver);
+            //action.DragAndDrop(Driver.FindElement(dragBy), dropElement);
+            //action.Perform();
+            var success = DragElement(Driver.FindElement(dragBy), dropElement);
+
             var droppedBy = By.CssSelector(String.Format(".{0} .taken[shiftid='{1}']", Enum.GetName(typeof(DayOfWeek), shift.Day), shift.Id));
             WaitTillAvailable(droppedBy, TimeSpan.FromSeconds(2));
             if (ElementExists(droppedBy))
@@ -1029,9 +1245,9 @@ namespace ShiftCaptainTest.Infrastructure
         }
 
 
-        public bool RemoveShiftWithUI(ShiftCaptain.Models.Shift shift)
+        public bool RemoveShiftWithUI(String VersionName, ShiftCaptain.Models.Shift shift)
         {
-            GoToPage("Shift");
+            GoToPage(VersionName, "Shift");
             var dragBy = By.CssSelector(String.Format(".taken[shiftid='{0}']", shift.Id));
             var dropBy = By.Id("Employees");
             WaitTillAvailable(dragBy, TimeSpan.FromSeconds(2));
@@ -1051,11 +1267,22 @@ namespace ShiftCaptainTest.Infrastructure
             return false;
 
         }
-        //public void RemoveShift(String Name)
-        //{
-        //    RemoveShift(db.Shifts.FirstOrDefault(sp => sp.Name == Name));
-        //}
 
+        public void RemoveDefaultShifts(String VersionName)
+        {
+            try
+            {
+                foreach (var shift in db.Shifts.Where(s => s.Version.Name == VersionName).ToList())
+                {
+                    db.Shifts.Remove(shift);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex);
+            }
+        }
         public void RemoveShift(int id)
         {
             RemoveShift(db.Shifts.FirstOrDefault(sp => sp.Id == id));
@@ -1072,7 +1299,7 @@ namespace ShiftCaptainTest.Infrastructure
 
         public bool CompareShift(ShiftCaptain.Models.Shift v1, ShiftCaptain.Models.Shift v2)
         {
-            var invalidNames = new string[] { "Id", "Room", "User", "Version" };
+            var invalidNames = new string[] { "Id", "Room", "User", "Version", "VersionId" };
             var type = v1.GetType();
             foreach (System.Reflection.PropertyInfo propertyInfo in type.GetProperties())
             {
@@ -1102,6 +1329,169 @@ namespace ShiftCaptainTest.Infrastructure
 
         #endregion
 
+        #region Manage Schedule
+
+        public bool SubmitForApproval(ShiftCaptain.Models.Version version)
+        {
+            GoToPage(version.Name, "ValidateSchedule");
+            var by = GetSubmitButton();
+            var element = Driver.FindElement(by);
+            var disabled = element.GetAttribute("disabled");
+            if (disabled == "disabled")
+            {
+                return false;
+            }
+            ClickAndWaitForElements(element, new List<ByExists> { new ByExists { by = by, exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
+
+            db = new ShiftCaptainEntities();//Not sure why but the version isn't updated in this db instance.
+            if (db.Versions.FirstOrDefault(v => v.Id == version.Id).IsReadyForApproval)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool RejectSchedule(ShiftCaptain.Models.Version version)
+        {
+            GoToPage(version.Name, "ApproveSchedule");
+            var by = By.Id("RejectSchedule");
+            var element = Driver.FindElement(by);
+            var disabled = element.GetAttribute("disabled");
+            if (disabled == "disabled")
+            {
+                return false;
+            }
+            ClickAndWaitForElements(element, new List<ByExists> { new ByExists { by = by, exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
+
+            db = new ShiftCaptainEntities();//Not sure why but the version isn't updated in this db instance.
+            version = db.Versions.FirstOrDefault(v => v.Id == version.Id);
+            if (version.IsReadyForApproval == false && version.IsApproved == false)
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        public bool ApproveSchedule(ShiftCaptain.Models.Version version)
+        {
+            GoToPage(version.Name, "ApproveSchedule");
+            var by = GetSubmitButton();
+            var element = Driver.FindElement(by);
+            var disabled = element.GetAttribute("disabled");
+            if (disabled == "disabled")
+            {
+                return false;
+            }
+            ClickAndWaitForElements(element, new List<ByExists> { new ByExists { by = by, exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
+
+            db = new ShiftCaptainEntities();//Not sure why but the version isn't updated in this db instance.
+            if (db.Versions.FirstOrDefault(v => v.Id == version.Id).IsApproved)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool DisapproveSchedule(ShiftCaptain.Models.Version version)
+        {
+            GoToPage(version.Name, "DisapproveSchedule");
+            var by = GetSubmitButton();
+            var element = Driver.FindElement(by);
+            var disabled = element.GetAttribute("disabled");
+            if (disabled == "disabled")
+            {
+                return false;
+            }
+            ClickAndWaitForElements(element, new List<ByExists> { new ByExists { by = by, exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
+
+            db = new ShiftCaptainEntities();//Not sure why but the version isn't updated in this db instance.
+            version = db.Versions.FirstOrDefault(v => v.Id == version.Id);
+            if (!version.IsApproved && !version.IsReadyForApproval)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool CloneSchedule(String VersionName, String CloneName, IQueryable<UserView> CloneUsers, IQueryable<RoomView> CloneRooms, out ShiftCaptain.Models.Version version)
+        {
+            version = null;
+            GoToPage(VersionName, "CloneSchedule");
+            SetTextBoxValue(Driver.FindElement(By.Id("Version_Name")), CloneName);
+            foreach (var user in CloneUsers)
+            {
+                Driver.FindElement(By.CssSelector("#users option[value='" + user.UserId.ToString() + "']")).Click();
+            }
+            Driver.FindElement(By.Id("btnCloneUser")).Click();
+            foreach (var room in CloneRooms)
+            {
+                Driver.FindElement(By.CssSelector("#rooms option[value='" + room.RoomId.ToString() + "']")).Click();
+            }
+            Driver.FindElement(By.Id("btnCloneRoom")).Click();
+
+            var by = GetSubmitButton();
+            var element = Driver.FindElement(by);
+            var disabled = element.GetAttribute("disabled");
+            if (disabled == "disabled")
+            {
+                return false;
+            }
+            ClickAndWaitForElements(element, new List<ByExists> { new ByExists { by = by, exists = false }, new ByExists { by = By.CssSelector(".validation-summary-errors"), exists = true }, new ByExists { by = By.CssSelector(".field-validation-error"), exists = true } });
+            if (ElementExists(By.CssSelector(".validation-summary-errors")))
+            {
+                return false;
+            }
+            db = new ShiftCaptainEntities();//Not sure why but the version isn't updated in this db instance.
+            version = db.Versions.FirstOrDefault(v => v.Name == CloneName);
+            if (version != null)
+            {
+                var newId = version.Id;
+                var old_version = db.Versions.FirstOrDefault(v => v.Name == VersionName);
+                var new_users = db.UserViews.Where(uv => uv.VersionId == newId);
+                Assert.AreEqual(new_users.Count(), CloneUsers.Count(), "Did not clone the right number of users");
+                foreach (var user in new_users)
+                {
+                    var old_user = db.UserViews.FirstOrDefault(uv => uv.UserId == user.UserId && uv.VersionId == old_version.Id);
+                    Assert.IsNotNull(old_user, String.Format("Could not find old user {0}", user.NickName));
+                    Assert.IsTrue(CompareUser(user, old_user), "Cloned user does not match");
+                }
+
+                var new_rooms = db.RoomViews.Where(rv => rv.VersionId == newId);
+                Assert.AreEqual(new_rooms.Count(), CloneRooms.Count(), "Did not clone the right number of rooms");
+                foreach (var room in new_rooms)
+                {
+                    var old_room = db.RoomViews.FirstOrDefault(rv => rv.RoomId == room.RoomId && rv.VersionId == old_version.Id);
+                    Assert.IsNotNull(old_room, String.Format("Could not find old room {0}", room.Name));
+                    Assert.IsTrue(CompareRoom(room, old_room), "Cloned room does not match");
+                }
+
+                var new_shiftPreferences = db.ShiftPreferences.Where(sp => sp.VersionId == newId);
+                var old_shiftPreferences = db.ShiftPreferences.Where(sp => sp.VersionId == old_version.Id);
+                Assert.AreEqual(new_shiftPreferences.Count(), old_shiftPreferences.Count(), "Did not clone the right number of shift preferences");
+                foreach (var shiftPreference in new_shiftPreferences)
+                {
+                    var shiftPreference_clone = old_shiftPreferences.FirstOrDefault(sp => sp.UserId == shiftPreference.UserId && sp.PreferenceId == shiftPreference.PreferenceId && sp.StartTime == shiftPreference.StartTime && sp.Duration == shiftPreference.Duration && sp.Day == shiftPreference.Day);
+                    Assert.IsNotNull(shiftPreference, String.Format("Could not find old shift Preference {0}", shiftPreference.Id));
+                    Assert.IsTrue(CompareShiftPreference(shiftPreference, shiftPreference_clone), "Cloned shift preference does not match");
+                }
+
+                var new_shifts = db.Shifts.Where(s => s.VersionId == newId);
+                var old_shifts = db.Shifts.Where(s => s.VersionId == old_version.Id);
+                Assert.AreEqual(new_shifts.Count(), old_shifts.Count(), "Did not clone the right number of shifts");
+                foreach (var shift in new_shifts)
+                {
+                    var shift_clone = old_shifts.FirstOrDefault(s => s.UserId == shift.UserId && s.RoomId == shift.RoomId && s.StartTime == shift.StartTime && s.Duration == shift.Duration && s.Day == shift.Day);
+                    Assert.IsNotNull(shift, String.Format("Could not find old shift {0}", shift.Id));
+                    Assert.IsTrue(CompareShift(shift, shift_clone), "Cloned shift does not match");
+                }
+                return true;
+            }
+            
+            return false;
+        }
+        #endregion
+
         public void SetTextBoxValues(object item)
         {
             var type = item.GetType();
@@ -1113,7 +1503,7 @@ namespace ShiftCaptainTest.Infrastructure
                     var value = propertyInfo.GetValue(item);
                     if (value != null && ElementExists(by) && Driver.FindElement(by).Displayed)
                     {
-                        if (value.GetType() == typeof(string))
+                        if (value.GetType() == typeof(string) || value.GetType() == typeof(Decimal))
                         {
                             SetTextBoxValue(Driver.FindElement(by), value.ToString());
                         }
@@ -1123,7 +1513,16 @@ namespace ShiftCaptainTest.Infrastructure
                             if (element.Selected != (bool)value)
                             {
                                 element.Click();
-                            }                            
+                            }
+                        }
+                        else if (value.GetType() == typeof(Decimal?) )
+                        {
+                            string val = ((Decimal?)value).HasValue ? ((Decimal?)value).Value.ToString() : "0";
+                            SetTextBoxValue(Driver.FindElement(by), val);
+                        }
+                        else if (value.GetType() == typeof(TimeSpan) || (value.GetType() == typeof(TimeSpan?) && ((TimeSpan?)value).HasValue))
+                        {
+                            SetTextBoxValue(Driver.FindElement(by), ((TimeSpan)value).ToString("hh\\:mm"));
                         }
                     }
                 }

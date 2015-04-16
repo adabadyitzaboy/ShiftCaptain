@@ -9,6 +9,7 @@ dnd.drag = (function () {
         dragging = false,
         processingDrop = false,
         overridableFunctions,
+        counter = 0,
         ctx = {},
         movingCtx = {},
         settings = {
@@ -56,6 +57,7 @@ dnd.drag = (function () {
                             && event.clientY >= p.top && event.clientY <= p.top + ctx.dropSection.height()) {
                             //dragging element is inside the drag area
                             movingCtx.dropTarget = event.target;
+                            console.log("here!", event.target, $(event.target).hasClass(settings.canDropClass));
                             if ($(event.target).hasClass(settings.canDropClass) && $target.triggerHandler('validatedrop', { target: event.target, callback: completeCallback })) {
                                 dropComplete = false;
                             } else {
@@ -67,8 +69,10 @@ dnd.drag = (function () {
                                 }
                             }
                         } else {
+                            console.log("dragged out", $target, event.clientX, event.clientY, event.target);
                             //dragging element is outside the drag area
                             $target.trigger('draggedout', movingCtx.temp);
+                            
                         }
                     }
                 }
@@ -89,6 +93,7 @@ dnd.drag = (function () {
     };
     onMouseDown = function (event) {
         if (event.which == 1 && !dragging && !processingDrop) {
+            var i_counter = ++counter;
             console.log("dragging");
             dragging = true;
             $(".drop-section").addClass("dragging");
@@ -98,7 +103,12 @@ dnd.drag = (function () {
             ctx.dropSection.append(movingCtx.movingDiv);
             movingCtx.movingDiv.css('top', event.pageY);
             movingCtx.movingDiv.css('left', event.pageX - parseFloat($("body").css("margin-left")));
-            movingCtx.temp = $(event.target).trigger("dragstart");
+            movingCtx.temp = movingCtx.target;
+            $(event.target).on('dragstart-complete', function (event, temp) {
+                if (i_counter == counter) {
+                    movingCtx.temp = temp;
+                }
+            }).trigger("dragstart");
         }
         return false;        
     };

@@ -13,8 +13,17 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>02/11/2015 09:56:34</publishTime>
     </File>
+    <File Include="bin/ClosedXML.dll">
+      <publishTime>02/04/2012 14:30:28</publishTime>
+    </File>
+    <File Include="bin/DocumentFormat.OpenXml.dll">
+      <publishTime>02/07/2012 09:37:46</publishTime>
+    </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>02/11/2015 09:45:03</publishTime>
+    </File>
+    <File Include="bin/log4net.dll">
+      <publishTime>03/24/2015 21:03:12</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>02/10/2015 19:57:53</publishTime>
@@ -26,7 +35,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/10/2015 18:27:37</publishTime>
     </File>
     <File Include="bin/ShiftCaptain.dll">
-      <publishTime>03/27/2015 11:08:46</publishTime>
+      <publishTime>04/16/2015 12:51:48</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
       <publishTime>02/10/2015 19:57:55</publishTime>
@@ -233,13 +242,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/10/2015 19:57:37</publishTime>
     </File>
     <File Include="Models/ShiftCaptain.Context.tt">
-      <publishTime>03/23/2015 11:32:49</publishTime>
+      <publishTime>04/07/2015 15:08:45</publishTime>
     </File>
     <File Include="Models/ShiftCaptain.edmx.diagram">
-      <publishTime>03/23/2015 11:32:54</publishTime>
+      <publishTime>04/07/2015 15:08:47</publishTime>
     </File>
     <File Include="Models/ShiftCaptain.tt">
-      <publishTime>03/23/2015 11:32:49</publishTime>
+      <publishTime>04/07/2015 15:08:45</publishTime>
     </File>
     <File Include="Models/ShiftCaptainModel.Context.tt">
       <publishTime>02/19/2015 14:13:55</publishTime>
@@ -254,13 +263,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/10/2015 18:27:40</publishTime>
     </File>
     <File Include="Scripts/app.js">
-      <publishTime>03/23/2015 11:13:19</publishTime>
+      <publishTime>03/30/2015 16:03:38</publishTime>
     </File>
     <File Include="Scripts/Clone.js">
-      <publishTime>03/23/2015 11:30:36</publishTime>
+      <publishTime>04/13/2015 13:21:22</publishTime>
     </File>
     <File Include="Scripts/CommonShift.js">
-      <publishTime>03/26/2015 22:38:12</publishTime>
+      <publishTime>04/07/2015 20:23:37</publishTime>
     </File>
     <File Include="Scripts/DisplayShift.js">
       <publishTime>03/12/2015 09:06:02</publishTime>
@@ -269,7 +278,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/26/2015 22:44:29</publishTime>
     </File>
     <File Include="Scripts/DragNDrop/drag-n-drop.js">
-      <publishTime>03/11/2015 17:09:22</publishTime>
+      <publishTime>04/07/2015 20:54:42</publishTime>
     </File>
     <File Include="Scripts/jquery-1.7.1.js">
       <publishTime>02/11/2015 09:50:18</publishTime>
@@ -311,46 +320,46 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/11/2015 09:50:19</publishTime>
     </File>
     <File Include="Scripts/Preference/CRUD.js">
-      <publishTime>02/23/2015 17:03:14</publishTime>
+      <publishTime>03/30/2015 12:01:19</publishTime>
     </File>
     <File Include="Scripts/Room/CRUD.js">
-      <publishTime>02/24/2015 09:12:17</publishTime>
+      <publishTime>03/30/2015 12:01:26</publishTime>
     </File>
     <File Include="Scripts/Shift.js">
-      <publishTime>03/12/2015 09:01:03</publishTime>
+      <publishTime>03/30/2015 13:59:36</publishTime>
     </File>
     <File Include="Scripts/Shift/CRUD.js">
-      <publishTime>02/20/2015 20:24:44</publishTime>
+      <publishTime>03/30/2015 12:01:40</publishTime>
     </File>
     <File Include="Scripts/ShiftPreference.js">
-      <publishTime>03/12/2015 08:58:43</publishTime>
+      <publishTime>04/07/2015 21:05:17</publishTime>
     </File>
     <File Include="Scripts/ShiftPreference/CRUD.js">
-      <publishTime>02/24/2015 13:49:07</publishTime>
+      <publishTime>03/30/2015 12:01:52</publishTime>
     </File>
     <File Include="Scripts/sort.js">
       <publishTime>03/12/2015 11:31:34</publishTime>
     </File>
     <File Include="Scripts/User/CRUD.js">
-      <publishTime>02/20/2015 20:24:41</publishTime>
+      <publishTime>03/30/2015 12:01:57</publishTime>
     </File>
     <File Include="Scripts/_references.js">
       <publishTime>02/11/2015 09:50:19</publishTime>
     </File>
     <File Include="Views/Building/Create.cshtml">
-      <publishTime>03/12/2015 12:33:35</publishTime>
+      <publishTime>04/02/2015 13:54:22</publishTime>
     </File>
     <File Include="Views/Building/Delete.cshtml">
-      <publishTime>03/26/2015 22:21:56</publishTime>
+      <publishTime>04/02/2015 13:54:17</publishTime>
     </File>
     <File Include="Views/Building/Details.cshtml">
-      <publishTime>03/13/2015 12:51:33</publishTime>
+      <publishTime>04/02/2015 13:54:12</publishTime>
     </File>
     <File Include="Views/Building/Edit.cshtml">
-      <publishTime>03/12/2015 12:33:30</publishTime>
+      <publishTime>04/02/2015 13:54:03</publishTime>
     </File>
     <File Include="Views/Building/Index.cshtml">
-      <publishTime>03/13/2015 12:49:37</publishTime>
+      <publishTime>04/02/2015 13:53:02</publishTime>
     </File>
     <File Include="Views/EmailTemplate/Details.cshtml">
       <publishTime>03/13/2015 13:34:02</publishTime>
@@ -370,11 +379,29 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Error/InternalError.cshtml">
       <publishTime>03/26/2015 19:20:51</publishTime>
     </File>
+    <File Include="Views/Error/NoBuildings.cshtml">
+      <publishTime>04/02/2015 13:37:22</publishTime>
+    </File>
+    <File Include="Views/Error/NoPreferences.cshtml">
+      <publishTime>04/02/2015 13:37:31</publishTime>
+    </File>
+    <File Include="Views/Error/NoRooms.cshtml">
+      <publishTime>04/02/2015 13:37:15</publishTime>
+    </File>
     <File Include="Views/Error/NotAuthorized.cshtml">
       <publishTime>03/26/2015 19:12:13</publishTime>
     </File>
+    <File Include="Views/Error/NoUsers.cshtml">
+      <publishTime>04/02/2015 13:37:06</publishTime>
+    </File>
+    <File Include="Views/Error/NoVersions.cshtml">
+      <publishTime>03/27/2015 15:46:12</publishTime>
+    </File>
     <File Include="Views/Error/PageNotFound.cshtml">
       <publishTime>03/26/2015 19:12:57</publishTime>
+    </File>
+    <File Include="Views/Error/ScheduleNotReady.cshtml">
+      <publishTime>03/27/2015 15:06:54</publishTime>
     </File>
     <File Include="Views/Login/Index.cshtml">
       <publishTime>03/26/2015 19:24:40</publishTime>
@@ -383,52 +410,52 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/23/2015 19:22:32</publishTime>
     </File>
     <File Include="Views/ManageSchedule/CloneSchedule.cshtml">
-      <publishTime>03/23/2015 21:34:08</publishTime>
+      <publishTime>04/10/2015 22:33:30</publishTime>
     </File>
     <File Include="Views/ManageSchedule/DisapproveSchedule.cshtml">
-      <publishTime>03/26/2015 18:55:12</publishTime>
+      <publishTime>04/10/2015 18:24:58</publishTime>
     </File>
     <File Include="Views/ManageSchedule/ValidateSchedule.cshtml">
       <publishTime>03/18/2015 14:10:59</publishTime>
     </File>
     <File Include="Views/ManageSchedule/_CloneRoom.cshtml">
-      <publishTime>03/23/2015 09:15:46</publishTime>
+      <publishTime>04/10/2015 21:01:35</publishTime>
     </File>
     <File Include="Views/ManageSchedule/_CloneUser.cshtml">
-      <publishTime>03/23/2015 21:34:35</publishTime>
+      <publishTime>04/10/2015 21:01:31</publishTime>
     </File>
     <File Include="Views/ManageSchedule/_ScheduleErrors.cshtml">
-      <publishTime>03/18/2015 13:35:50</publishTime>
+      <publishTime>04/08/2015 10:09:10</publishTime>
     </File>
     <File Include="Views/Preference/Create.cshtml">
-      <publishTime>03/12/2015 12:34:00</publishTime>
+      <publishTime>04/02/2015 13:53:52</publishTime>
     </File>
     <File Include="Views/Preference/Delete.cshtml">
-      <publishTime>03/12/2015 12:34:27</publishTime>
+      <publishTime>04/02/2015 13:53:45</publishTime>
     </File>
     <File Include="Views/Preference/Details.cshtml">
-      <publishTime>02/23/2015 16:57:20</publishTime>
+      <publishTime>04/02/2015 13:53:31</publishTime>
     </File>
     <File Include="Views/Preference/Edit.cshtml">
       <publishTime>03/12/2015 12:34:37</publishTime>
     </File>
     <File Include="Views/Preference/Index.cshtml">
-      <publishTime>03/12/2015 11:30:58</publishTime>
+      <publishTime>04/02/2015 13:53:14</publishTime>
     </File>
     <File Include="Views/Room/Create.cshtml">
-      <publishTime>03/12/2015 14:47:33</publishTime>
+      <publishTime>04/02/2015 13:55:05</publishTime>
     </File>
     <File Include="Views/Room/Delete.cshtml">
-      <publishTime>03/26/2015 21:35:38</publishTime>
+      <publishTime>04/02/2015 13:54:59</publishTime>
     </File>
     <File Include="Views/Room/Details.cshtml">
-      <publishTime>03/12/2015 09:56:38</publishTime>
+      <publishTime>04/02/2015 13:54:50</publishTime>
     </File>
     <File Include="Views/Room/Edit.cshtml">
-      <publishTime>03/12/2015 12:35:14</publishTime>
+      <publishTime>04/02/2015 13:54:41</publishTime>
     </File>
     <File Include="Views/Room/Index.cshtml">
-      <publishTime>03/26/2015 21:34:24</publishTime>
+      <publishTime>04/02/2015 13:54:31</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>02/11/2015 09:50:16</publishTime>
@@ -458,46 +485,46 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/20/2015 16:18:38</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>03/23/2015 11:14:47</publishTime>
+      <publishTime>03/31/2015 08:01:23</publishTime>
     </File>
     <File Include="Views/Shift/Index.cshtml">
-      <publishTime>03/26/2015 22:40:53</publishTime>
+      <publishTime>04/16/2015 10:53:10</publishTime>
     </File>
     <File Include="Views/ShiftPreference/Index.cshtml">
-      <publishTime>03/26/2015 22:42:34</publishTime>
+      <publishTime>04/02/2015 13:52:39</publishTime>
     </File>
     <File Include="Views/User/Create.cshtml">
-      <publishTime>03/26/2015 20:19:26</publishTime>
+      <publishTime>04/02/2015 13:55:25</publishTime>
     </File>
     <File Include="Views/User/Delete.cshtml">
-      <publishTime>03/26/2015 21:01:09</publishTime>
+      <publishTime>04/02/2015 13:55:30</publishTime>
     </File>
     <File Include="Views/User/Details.cshtml">
-      <publishTime>03/13/2015 12:52:00</publishTime>
+      <publishTime>04/02/2015 13:55:41</publishTime>
     </File>
     <File Include="Views/User/Edit.cshtml">
-      <publishTime>03/26/2015 20:18:51</publishTime>
+      <publishTime>04/02/2015 13:55:49</publishTime>
     </File>
     <File Include="Views/User/EditProfile.cshtml">
-      <publishTime>03/26/2015 20:08:54</publishTime>
+      <publishTime>04/02/2015 13:55:57</publishTime>
     </File>
     <File Include="Views/User/Index.cshtml">
-      <publishTime>03/26/2015 20:17:43</publishTime>
+      <publishTime>04/02/2015 17:04:35</publishTime>
     </File>
     <File Include="Views/Version/Create.cshtml">
-      <publishTime>03/13/2015 12:57:59</publishTime>
+      <publishTime>04/02/2015 13:56:14</publishTime>
     </File>
     <File Include="Views/Version/Delete.cshtml">
-      <publishTime>03/13/2015 12:57:46</publishTime>
+      <publishTime>04/02/2015 13:56:19</publishTime>
     </File>
     <File Include="Views/Version/Details.cshtml">
-      <publishTime>03/13/2015 12:57:34</publishTime>
+      <publishTime>04/02/2015 13:56:29</publishTime>
     </File>
     <File Include="Views/Version/Edit.cshtml">
-      <publishTime>03/13/2015 12:57:20</publishTime>
+      <publishTime>04/02/2015 13:56:34</publishTime>
     </File>
     <File Include="Views/Version/Index.cshtml">
-      <publishTime>03/26/2015 21:45:27</publishTime>
+      <publishTime>04/02/2015 23:47:06</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>02/11/2015 09:58:29</publishTime>
@@ -506,7 +533,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/11/2015 09:50:16</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>03/27/2015 11:08:47</publishTime>
+      <publishTime>04/16/2015 12:51:49</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -16,7 +16,7 @@ namespace ShiftCaptain.Controllers
         {
             ClassName = "building";
         }
-        private ShiftCaptainEntities db = new ShiftCaptainEntities();
+
         private BuildingView GetBuildingView(int id = 0)
         {
             return db.BuildingViews.Where(bv => bv.BuildingId == id).FirstOrDefault();
@@ -77,12 +77,12 @@ namespace ShiftCaptain.Controllers
                         ZipCode = buildingview.ZipCode
                     };
                     db.Addresses.Add(address);
-                    db.SaveChanges();
+                    SaveChange();
                     building.AddressId = address.Id;
                 }
 
                 db.Buildings.Add(building);
-                db.SaveChanges();
+                SaveChange();
                 return RedirectToAction("Index");
             }
 
@@ -129,13 +129,13 @@ namespace ShiftCaptain.Controllers
                     if (buildingview.AddressId != null)
                     {
                         db.Addresses.Add(address);
-                        db.SaveChanges();
+                        SaveChange();
                         building.AddressId = address.Id;
                     }
                     else
                     {
                         db.Entry(address).State = EntityState.Modified;
-                        db.SaveChanges();
+                        SaveChange();
                     }
                 }
                 else
@@ -148,7 +148,7 @@ namespace ShiftCaptain.Controllers
                 }
 
                 db.Entry(building).State = EntityState.Modified;
-                db.SaveChanges();
+                SaveChange();
                 return RedirectToAction("Index");
             }
             return View(buildingview);
@@ -189,10 +189,10 @@ namespace ShiftCaptain.Controllers
             {
                 var address = db.Addresses.Find(building.AddressId);
                 db.Addresses.Remove(address);
-                db.SaveChanges();
+                SaveChange();
             }
             db.Buildings.Remove(building);
-            db.SaveChanges();
+            SaveChange();
             return RedirectToAction("Index");
         }
 

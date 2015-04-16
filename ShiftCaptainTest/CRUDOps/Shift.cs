@@ -19,6 +19,7 @@ namespace ShiftCaptainTest.CRUDOps
     [DeploymentItem("DataSources/Shifts.csv", "")]
     public class Shift : CommonActions
     {
+        List<String> VersionNames = new List<string>();
 
         private List<int> shiftIds = new List<int>();
         private String OutputShift(IDictionary<string, string> Shift)
@@ -40,17 +41,19 @@ namespace ShiftCaptainTest.CRUDOps
             var createTable = new DataParser("Shifts.csv").Tables["Create"];
             var ticks = DateTime.Now.Ticks.ToString();
 
-            var prevVersionName = String.Empty;
             foreach (var shiftObj in createTable)
             {
                 var version = CreateDefaultVersion(Clean<string>(shiftObj, "VERSION_NAME"));
+                if (!VersionNames.Contains(version.Name))
+                {
+                    VersionNames.Add(version.Name);
+                }
                 var user = CreateDefaultUser(Clean<string>(shiftObj, "NICK_NAME"), version.Id, version.Name);
                 var room = CreateDefaultRoom(Clean<string>(shiftObj, "ROOM_NAME"), version.Id);
-                var shift = GetShift(shiftObj, version.Id, user.UserId, room.RoomId);
-                GoToPage("Shift", version.Name != prevVersionName);
-                prevVersionName = version.Name;
+                var shift = GetShift(shiftObj, version.Id, user.UserId, room.Id);
+                GoToPage(version.Name, "Shift");
 
-                var created = CreateShift(shift, room.BuildingId);
+                var created = CreateShift(version.Name, shift, room.BuildingId);
                 if (created)
                 {
                     shiftIds.Add(shift.Id);
@@ -65,12 +68,12 @@ namespace ShiftCaptainTest.CRUDOps
                     shift.StartTime = shift.StartTime.Add(TimeSpan.FromHours(Clean<double>(shiftObj, "ADD_HOURS")));
                     shift.Day = (shift.Day + Clean<int>(shiftObj, "ADD_DAYS")) % 7;
 
-                    var edited = EditShift(shift);
+                    var edited = EditShift(version.Name, shift);
                     Assert.IsTrue(edited, String.Format("Failed editing shift {0}", OutputShift(shiftObj)));
                     createdShift = db.Shifts.FirstOrDefault(s => s.Id == shift.Id);
                     Assert.IsTrue(CompareShift(shift, createdShift), String.Format("Shift does not match {0}", OutputShift(shiftObj)));
 
-                    RemoveShiftWithUI(shift);
+                    RemoveShiftWithUI(version.Name, shift);
 
                     createdShift = db.Shifts.FirstOrDefault(s => s.Id == shift.Id);
                     Assert.IsNull(createdShift, String.Format("Failed to remove shift {0}", OutputShift(shiftObj)));
@@ -85,7 +88,7 @@ namespace ShiftCaptainTest.CRUDOps
         [TestCleanup]
         public void CleanUp()
         {
-            db = new ShiftCaptainEntities();
+            RefreshDB();
             try
             {
                 foreach (var shiftId in shiftIds)
@@ -96,10 +99,14 @@ namespace ShiftCaptainTest.CRUDOps
             catch (Exception ex)
             {
             }
-            RemoveDefaultRooms();
-            RemoveDefaultUsers();
-            RemoveDefaultBuildings();
-            RemoveDefaultVersions();
+
+            foreach (var VersionName in VersionNames)
+            {
+                RemoveDefaultRooms(VersionName);
+                RemoveDefaultUsers(VersionName);
+                RemoveDefaultBuildings(VersionName);
+                RemoveDefaultVersions(VersionName);
+            }            
         }
     }
 }

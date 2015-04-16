@@ -126,6 +126,7 @@ var movedAround = function (event, data) {
     });
 };
 var validateDrop = function (event, data) {
+    console.log("validating drop start");
     var callback = data.callback;
     var $dragElement = $(this);
     var $dropElement = $(data.target);
@@ -138,7 +139,9 @@ var validateDrop = function (event, data) {
         }
     }
     var shiftInfo = getShiftInfo($dragElement, $dropElement);
+    console.log("validating drop", $dropElement);
     sc.ShiftPreference.validate(shiftInfo, callback, function (xhr, textStatus, errorThrown) {
+        console.log("error validating drop", $dropElement);
         sc.app.displayError(xhr.responseText);
         callback(false);
     });

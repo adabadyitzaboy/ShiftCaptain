@@ -41,15 +41,7 @@ namespace ShiftCaptain.Infrastructure
 
                         SessionManager.UserId = validUser.Id;
                         SessionManager.token = encr;
-                        var version = db.Versions.FirstOrDefault(v => v.IsActive);
-                        if (version != null)
-                        {
-                            SessionManager.VersionId = version.Id;
-                        }
-                        else
-                        {
-                            SessionManager.VersionId = 0;
-                        }
+                        SessionManager.GetVersion();
                         return true;
                     }
                 }

@@ -14,6 +14,8 @@ namespace ShiftCaptain.Controllers
 {
 //    [Authorized]
 // not necessary since all methods allow anonymous
+
+    [ShiftCaptain.Filters.BaseActionFilterAttribute.HandleExceptions]
     public class LoginController : Controller
     {
         private ShiftCaptainEntities db = new ShiftCaptainEntities();
@@ -55,6 +57,46 @@ namespace ShiftCaptain.Controllers
                 String errorMessage = "";
                 if (ModelState.IsValid && Authentication.Login(user, ref errorMessage))
                 {
+                    if (returnUrl == "/")
+                    {
+                        if (db.Versions.Count() == 0)
+                        {
+                            return RedirectToLocal("/Version");
+                        }
+                        var version = db.Versions.FirstOrDefault(v => v.IsActive);
+                        if (version == null)
+                        {
+                            if (SessionManager.IsManager || SessionManager.IsShiftManager)
+                            {
+                                version = db.Versions.OrderByDescending(v => v.Id).FirstOrDefault();
+                            }
+                            else
+                            {
+                                version = db.Versions.OrderByDescending(v => v.Id).FirstOrDefault(v=>v.IsVisible);
+                            }
+                            if (version == null)
+                            {
+                                return RedirectToLocal("/Version");
+                            }
+                        }
+                        SessionManager.VersionId = version.Id;
+                        if (db.Buildings.Count() == 0)
+                        {
+                            return RedirectToLocal("/Building");
+                        }
+                        else if (db.RoomViews.Count(rv => rv.VersionId == version.Id) == 0)
+                        {
+                            return RedirectToAction("Index", "Room", new { VersionName = version.EncodedName });
+                        }
+                        else if (db.UserViews.Count(uv => uv.VersionId == version.Id) == 0)
+                        {
+                            return RedirectToAction("Index", "User", new { VersionName = version.EncodedName });
+                        }
+                        else if (db.Preferences.Count() == 0)
+                        {
+                            return RedirectToLocal("/Preference");
+                        }
+                    }
                     return RedirectToLocal(returnUrl);
                 }
 

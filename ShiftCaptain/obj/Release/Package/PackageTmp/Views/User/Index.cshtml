@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<ShiftCaptain.Models.UserView>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Users";
 }
 
-<h2>Index</h2>
+<h2>Users</h2>
 
 <p>
-    @if(!ViewBag.CurrentVersion.IsApproved){
-        @Html.ActionLink("Create New", "Create")
+    @if(ViewBag.CurrentVersion == null || !ViewBag.CurrentVersion.IsApproved){
+        @Html.ActionLink("Create New", "Create", new { VersionName = ViewBag.CurrentVersionName })
     }
 </p>
 <table class="sortable">
@@ -109,12 +109,12 @@
         <td>
             @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && item.UserId != ShiftCaptain.Infrastructure.SessionManager.UserId)
             {
-                @Html.ActionLink("Edit", "Edit", new { id=item.UserId }) @Html.Raw(" | ") 
+                @Html.ActionLink("Edit", "Edit", new { id=item.UserId, VersionName = ViewBag.CurrentVersionName }) @Html.Raw(" | ") 
             } 
-                @Html.ActionLink("Details", "Details", new { id=item.UserId }) 
+                @Html.ActionLink("Details", "Details", new { id=item.UserId, VersionName = ViewBag.CurrentVersionName  }) 
             @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && item.UserId != ShiftCaptain.Infrastructure.SessionManager.UserId)
             {
-                 @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.UserId }) 
+                 @Html.Raw(" | ") @Html.ActionLink("Delete", "Delete", new { id=item.UserId, VersionName = ViewBag.CurrentVersionName  }) 
             }
             @if (ShiftCaptain.Infrastructure.SessionManager.IsManager && item.UserId != ShiftCaptain.Infrastructure.SessionManager.UserId){
                  @Html.Raw(" | ")  @Html.ActionLink("Reset Pass", "ResetPassword", "EmailTemplate",new { id=item.UserId }, null)

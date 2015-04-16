@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 
@@ -194,10 +196,36 @@ namespace ShiftCaptain.Models
                 return IsActive? Name + " (Active) ": Name;
             }
         }
+        public String EncodedName
+        {
+            get{
+                if (String.IsNullOrEmpty(Name))
+                {
+                    return String.Empty;
+                }
+                return Name.Replace(" ", "_");
+            }
+        }
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (!IsVisible  && IsActive)
                 yield return new ValidationResult("Version must be visible to set to active.");
+            var matches = Regex.Matches(Name, "[^_\\. a-zA-Z0-9()]");
+            if (matches.Count > 0)
+            {
+                var badChars = new List<String>();
+                foreach (Match match in matches)
+                {
+                    badChars.Add(match.Value);
+                }
+                yield return new ValidationResult("Version Name cannot contain " + String.Join(", ", badChars));
+            }
+            var encodedName = Name.Replace(" ", "_");
+            var duplicate = new ShiftCaptainEntities().Versions.FirstOrDefault(v => v.Id != Id && v.Name.Replace(" ", "_") == encodedName);
+            if (duplicate != null)
+            {
+                yield return new ValidationResult("Duplicate Version Name \"" + duplicate.Name + "\"");
+            }
         }
     }
 
@@ -239,14 +267,17 @@ namespace ShiftCaptain.Models
     {
         public Version Version { get; set; }
         public IEnumerable<SelectListItem> User { get; set; }
+        public IEnumerable<SelectListItem> SelectedUsers { get; set; }
         public IEnumerable<string> CloneUser { get; set; }
         public IEnumerable<SelectListItem> Room { get; set; }
+        public IEnumerable<SelectListItem> SelectedRooms { get; set; }
         public IEnumerable<string> CloneRoom { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var db = new ShiftCaptainEntities();
-            var versionCount = db.Versions.Count(v =>v.Name == Version.Name);
+            var versionName = Version.Name.Replace(" ", "_");
+            var versionCount = db.Versions.Count(v =>v.Name.Replace(" ", "_") == versionName);
             if (versionCount > 0)
                 yield return new ValidationResult("Version Name must be unique.");
         }

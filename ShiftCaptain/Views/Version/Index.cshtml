@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<ShiftCaptain.Models.Version>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Versions";
 }
 
-<h2>Index</h2>
+<h2>Versions</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -59,20 +59,20 @@
             @if (ShiftCaptain.Infrastructure.SessionManager.IsManager || ShiftCaptain.Infrastructure.SessionManager.IsShiftManager)
             { 
                 if(!item.IsApproved && !item.IsReadyForApproval){
-                    @Html.Raw(" | ") @Html.ActionLink("Validate Schedule", "ValidateSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
+                    @Html.Raw(" | ") @Html.ActionLink("Validate Schedule", "ValidateSchedule", "ManageSchedule", new { VersionName = item.Name }, new { }) 
                 }
             
                 if (ShiftCaptain.Infrastructure.SessionManager.IsManager)
                 { 
                     if(!item.IsApproved && item.IsReadyForApproval){
-                        @Html.Raw(" | ") @Html.ActionLink("Approve Schedule", "ApproveSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
+                        @Html.Raw(" | ") @Html.ActionLink("Approve Schedule", "ApproveSchedule", "ManageSchedule", new { VersionName = item.Name }, new { }) 
                     }
                     else if (item.IsApproved)
                     {
-                        @Html.Raw(" | ") @Html.ActionLink("Disapprove Schedule", "DisapproveSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
+                        @Html.Raw(" | ") @Html.ActionLink("Disapprove Schedule", "DisapproveSchedule", "ManageSchedule", new { VersionName = item.Name}, new { }) 
                     }
                  
-                    @Html.Raw(" | ") @Html.ActionLink("Clone Schedule", "CloneSchedule", "ManageSchedule", new { id = item.Id }, new { }) 
+                    @Html.Raw(" | ") @Html.ActionLink("Clone Schedule", "CloneSchedule", "ManageSchedule", new { VersionName = item.Name }, new { }) 
                 }
             }
         </td>

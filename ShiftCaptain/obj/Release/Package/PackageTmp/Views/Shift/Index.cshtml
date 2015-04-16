@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Schedule";
 }
 
 @section header {
@@ -39,14 +39,15 @@
         </div>
         <div class="small-12 large-12 columns left links">
             @if(!ViewBag.CurrentVersion.IsReadyForApproval){
-                @Html.ActionLink("Validate Schedule", "ValidateSchedule", "ManageSchedule", new { id = ViewBag.CurrentVersion.Id }, new { target = "_blank"})
+                @Html.ActionLink("Validate Schedule", "ValidateSchedule", "ManageSchedule", new { VersionName = ViewBag.CurrentVersionName}, new { target = "_blank"})
             }
             else if (ViewBag.CurrentVersion.IsReadyForApproval && !ViewBag.CurrentVersion.IsApproved)
             {
-                @Html.ActionLink("Approve Schedule", "ApproveSchedule", "ManageSchedule", new { id = ViewBag.CurrentVersion.Id }, new { target = "_blank"})
+                @Html.ActionLink("Approve Schedule", "ApproveSchedule", "ManageSchedule", new { VersionName = ViewBag.CurrentVersionName}, new { target = "_blank"})
             }else if(ViewBag.CurrentVersion.IsApproved){
                 <p>Version is approved.</p>
             }
+            @Html.ActionLink("Download Schedule", "Download", "Output", new { VersionName = ViewBag.CurrentVersionName}, new { target = "_blank"})
         </div>
     </section>
 }

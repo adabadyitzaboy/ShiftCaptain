@@ -1,10 +1,10 @@
 ﻿@model ShiftCaptain.Models.RoomView
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Room Details";
 }
 
-<h2>Details</h2>
+<h2>Room Details</h2>
 
 <fieldset>
     <legend>RoomView</legend>
@@ -136,6 +136,6 @@
     </div>
 </fieldset>
 <p>
-    @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.ActionLink("Edit", "Edit", new { id=Model.RoomInstanceId }) @Html.Raw(" | ") } 
-    @Html.ActionLink("Back to List", "Index")
+    @if(ShiftCaptain.Infrastructure.SessionManager.IsManager){ @Html.ActionLink("Edit", "Edit", new { id=Model.RoomInstanceId, VersionName = ViewBag.CurrentVersionName }) @Html.Raw(" | ") } 
+    @Html.ActionLink("Back to List", "Index", new { VersionName = ViewBag.CurrentVersionName })
 </p>

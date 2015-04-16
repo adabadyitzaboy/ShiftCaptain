@@ -28,18 +28,7 @@ namespace ShiftCaptainTest.CRUDOps
             foreach (var buildingObj in createTable)
             {
                 GoToPage("Building");
-                var building = new ShiftCaptain.Models.BuildingView
-                {
-                    Name = Clean<string>(buildingObj, "NAME") ?? String.Format("Test Building - {0}", ticks, ++counter),
-                    Line1 = Clean<string>(buildingObj, "LINE_1"),
-                    Line2 = Clean<string>(buildingObj, "LINE_2"),
-                    City = Clean<string>(buildingObj, "CITY"),
-                    State = Clean<string>(buildingObj, "STATE"),
-                    ZipCode = Clean<string>(buildingObj, "ZIP_CODE"),
-                    Country = Clean<string>(buildingObj, "COUNTRY"),
-                    ManagerPhone = Clean<string>(buildingObj, "MANAGER_PHONE"),
-                    PhoneNumber = Clean<string>(buildingObj, "PHONE_NUMBER")
-                };
+                var building = GetBuildingView(buildingObj, ticks, ++counter);
 
                 //Change building if necessary
                 var created = CreateBuilding(building);
@@ -76,7 +65,7 @@ namespace ShiftCaptainTest.CRUDOps
         [TestCleanup]
         public void CleanUp()
         {
-            db = new ShiftCaptainEntities();
+            RefreshDB();
             try
             {
                 var createTable = new DataParser("Buildings.csv").Tables["Create"];

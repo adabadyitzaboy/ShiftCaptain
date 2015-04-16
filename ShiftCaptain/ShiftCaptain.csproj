@@ -43,9 +43,20 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="ClosedXML, Version=0.64.0.0, Culture=neutral, PublicKeyToken=fd1eb21b62ae805b, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -136,6 +147,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BuildingController.cs" />
+    <Compile Include="Controllers\OutputController.cs" />
     <Compile Include="Controllers\EmailTemplateController.cs" />
     <Compile Include="Controllers\EntitySelector.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -154,6 +166,7 @@
     </Compile>
     <Compile Include="Infrastructure\Authentication.cs" />
     <Compile Include="Infrastructure\EmailManager.cs" />
+    <Compile Include="Infrastructure\OutputManager.cs" />
     <Compile Include="Infrastructure\SessionManager.cs" />
     <Compile Include="Models\Address.cs">
       <DependentUpon>ShiftCaptain.tt</DependentUpon>
@@ -222,6 +235,12 @@
       <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserView.cs">
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ValidateShiftPreference_Result.cs">
+      <DependentUpon>ShiftCaptain.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ValidateShift_Result.cs">
       <DependentUpon>ShiftCaptain.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Version.cs">
@@ -402,6 +421,10 @@
     <Content Include="Views\Error\InternalError.cshtml" />
     <Content Include="Views\Error\ScheduleNotReady.cshtml" />
     <Content Include="Views\Error\NoVersions.cshtml" />
+    <Content Include="Views\Error\NoBuildings.cshtml" />
+    <Content Include="Views\Error\NoRooms.cshtml" />
+    <Content Include="Views\Error\NoUsers.cshtml" />
+    <Content Include="Views\Error\NoPreferences.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

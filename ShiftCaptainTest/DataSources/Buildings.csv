@@ -15,5 +15,8 @@
 "","","","","door 2","plano","texas","75075","usa","1"
 
 @@ "DefaultBuilding"
-"NAME","MANAGER_PHONE","PHONE_NUMBER","LINE_1","LINE_2","CITY","STATE","ZIP_CODE","COUNTRY"
-"Test_Building","1234567890","1234567890","123 street","door 2","plano","texas","75075","usa"
+"NAME","MANAGER_PHONE","PHONE_NUMBER","LINE_1","LINE_2","CITY","STATE","ZIP_CODE","COUNTRY","VERSION_NAME"
+"Test_Building","1234567890","1234567890","123 street","door 2","plano","texas","75075","usa","Test_Version"
+"Building #1","1234567890","1234567890","123 street","door 2","plano","texas","75075","usa","StartupScenario"
+"Building #2","1234567890","1234567890","123 street","door 2","plano","texas","75075","usa","StartupScenario"
+"Test_Scenario_Building", "", "", "", "", "", "", "", "","Test_Scenario"

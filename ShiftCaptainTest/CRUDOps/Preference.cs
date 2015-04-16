@@ -27,13 +27,7 @@ namespace ShiftCaptainTest.CRUDOps
             foreach (var preferenceObj in createTable)
             {
                 GoToPage("Preference");
-                var preference = new ShiftCaptain.Models.Preference
-                {
-                    Name = Clean<string>(preferenceObj, "NAME"),
-                    Description = Clean<string>(preferenceObj, "DESCRIPTION"),
-                    CanWork = Clean<bool>(preferenceObj, "CAN_WORK"),
-                    Color = Clean<string>(preferenceObj, "COLOR")
-                };
+                var preference = GetPreference(preferenceObj);
 
                 //Change preference if necessary
                 var created = CreatePreference(preference);

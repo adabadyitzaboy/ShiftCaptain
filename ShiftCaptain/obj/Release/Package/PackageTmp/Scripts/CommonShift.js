@@ -58,9 +58,29 @@ var openTD = function (s, classname, extra) {
 var displayError = function (response) {
     var errorHolder = $("#Errors");
     errorHolder.empty();
-    var li = $("<ul><li></li></ul>");
-    li.text(JSON.parse(response).error);
-    errorHolder.append(li);
+    var li = $("<li>");
+    var text = response;
+    try{
+        var json = JSON.parse(response);
+        if (json.error) {
+            if ($.isArray(json.error)) {
+                var ul = $("<ul>");
+                $.each(json.error, function (index, item) {
+                    var ili = $("<li>");
+                    ili.text(this.message || this);
+                    ul.append(ili);
+                });
+                errorHolder.append(ul);
+                return;
+            } else {
+                text = json.error;
+            }
+        }
+    } catch (ex) {
+        debugger;
+    }
+    li.text(text);
+    errorHolder.append($("<ul>").html(li));
     sc.app.resizeHeader();
 };
 var FilterShifts = function (shifts, dayId) {
@@ -112,11 +132,11 @@ var makeRow = function (rC, tbody, dayData, s, e, shifts, start, maxEnd, createS
         tr.append("<td class='closed' s='" + (notOpen % 24) + "'>&nbsp;</td>");
     }
     tbody.append(tr);
+    if (rC == 0) {
+        tr.addClass('first-row');
+    }
     if (shifts.length > 0) {
         //recursive call
-        if (rC == 0) {
-            tr.addClass('first-row');
-        }
         if (emptyRow) {
             console.log("Unable to schedule the rest of the shifts");
             console.log(shifts);
@@ -199,6 +219,9 @@ var createShiftTable = function (roomHours, shifts, createShiftElement, options)
     //theadFixed.css('top', thead.offset().top);
     //theadFixed.find("th:first").width(tbody.find("tr:first-child td:first-child").width()).css('display', 'block');
     sh.append(theadBottom);
+    if (sh.width() > $("#shiftHolder").width()) {
+        $("#shiftHolder").width(sh.width() + 30);
+    }
     sh.trigger("table-ready");
 };
 
@@ -214,6 +237,7 @@ var replaceWithOpen = function ($element, temp) {
     var $replacement = $(replacement);
     var next = $element.nextSibling;
     $element.replaceWith($replacement, true);
+    console.log($replacement);
     return $replacement;
 };
 var replaceDropElementWithNewShift = function ($newShift, $dropElement) {

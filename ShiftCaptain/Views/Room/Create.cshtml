@@ -1,10 +1,10 @@
 ﻿@model ShiftCaptain.Models.RoomView
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Create Room";
 }
 
-<h2>Create</h2>
+<h2>Create Room</h2>
 
 @using (Html.BeginForm())
 {
@@ -164,7 +164,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", new { VersionName = ViewBag.CurrentVersionName })
 </div>
 
 @section Scripts {

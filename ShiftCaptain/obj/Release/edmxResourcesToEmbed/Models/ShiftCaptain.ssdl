@@ -98,59 +98,59 @@
       [UserView].[Country] AS [Country]
       FROM [dbo].[UserView] AS [UserView]</DefiningQuery>
     </EntitySet>
-    <AssociationSet Name="FK__Building__Addres__5106BC7A" Association="ShiftCaptainModel.Store.FK__Building__Addres__5106BC7A">
+    <AssociationSet Name="FK__Building__Addres__5C443053" Association="ShiftCaptainModel.Store.FK__Building__Addres__5C443053">
       <End Role="Address" EntitySet="Address" />
       <End Role="Building" EntitySet="Building" />
     </AssociationSet>
-    <AssociationSet Name="FK__Room__BuildingId__53E32925" Association="ShiftCaptainModel.Store.FK__Room__BuildingId__53E32925">
+    <AssociationSet Name="FK__Room__BuildingId__5F209CFE" Association="ShiftCaptainModel.Store.FK__Room__BuildingId__5F209CFE">
       <End Role="Building" EntitySet="Building" />
       <End Role="Room" EntitySet="Room" />
     </AssociationSet>
-    <AssociationSet Name="FK__RoomHours__RoomI__5A9026B4" Association="ShiftCaptainModel.Store.FK__RoomHours__RoomI__5A9026B4">
+    <AssociationSet Name="FK__RoomHours__RoomI__65CD9A8D" Association="ShiftCaptainModel.Store.FK__RoomHours__RoomI__65CD9A8D">
       <End Role="RoomInstance" EntitySet="RoomInstance" />
       <End Role="RoomHours" EntitySet="RoomHours" />
     </AssociationSet>
-    <AssociationSet Name="FK__RoomInsta__RoomI__56BF95D0" Association="ShiftCaptainModel.Store.FK__RoomInsta__RoomI__56BF95D0">
+    <AssociationSet Name="FK__RoomInsta__RoomI__61FD09A9" Association="ShiftCaptainModel.Store.FK__RoomInsta__RoomI__61FD09A9">
       <End Role="Room" EntitySet="Room" />
       <End Role="RoomInstance" EntitySet="RoomInstance" />
     </AssociationSet>
-    <AssociationSet Name="FK__RoomInsta__Versi__57B3BA09" Association="ShiftCaptainModel.Store.FK__RoomInsta__Versi__57B3BA09">
+    <AssociationSet Name="FK__RoomInsta__Versi__62F12DE2" Association="ShiftCaptainModel.Store.FK__RoomInsta__Versi__62F12DE2">
       <End Role="Version" EntitySet="Version" />
       <End Role="RoomInstance" EntitySet="RoomInstance" />
     </AssociationSet>
-    <AssociationSet Name="FK__Shift__RoomId__650DB527" Association="ShiftCaptainModel.Store.FK__Shift__RoomId__650DB527">
+    <AssociationSet Name="FK__Shift__RoomId__704B2900" Association="ShiftCaptainModel.Store.FK__Shift__RoomId__704B2900">
       <End Role="Room" EntitySet="Room" />
       <End Role="Shift" EntitySet="Shift" />
     </AssociationSet>
-    <AssociationSet Name="FK__Shift__UserId__641990EE" Association="ShiftCaptainModel.Store.FK__Shift__UserId__641990EE">
+    <AssociationSet Name="FK__Shift__UserId__6F5704C7" Association="ShiftCaptainModel.Store.FK__Shift__UserId__6F5704C7">
       <End Role="User" EntitySet="User" />
       <End Role="Shift" EntitySet="Shift" />
     </AssociationSet>
-    <AssociationSet Name="FK__Shift__VersionId__6601D960" Association="ShiftCaptainModel.Store.FK__Shift__VersionId__6601D960">
+    <AssociationSet Name="FK__Shift__VersionId__713F4D39" Association="ShiftCaptainModel.Store.FK__Shift__VersionId__713F4D39">
       <End Role="Version" EntitySet="Version" />
       <End Role="Shift" EntitySet="Shift" />
     </AssociationSet>
-    <AssociationSet Name="FK__ShiftPref__Prefe__6CAED6EF" Association="ShiftCaptainModel.Store.FK__ShiftPref__Prefe__6CAED6EF">
+    <AssociationSet Name="FK__ShiftPref__Prefe__77EC4AC8" Association="ShiftCaptainModel.Store.FK__ShiftPref__Prefe__77EC4AC8">
       <End Role="Preference" EntitySet="Preference" />
       <End Role="ShiftPreference" EntitySet="ShiftPreference" />
     </AssociationSet>
-    <AssociationSet Name="FK__ShiftPref__UserI__6AC68E7D" Association="ShiftCaptainModel.Store.FK__ShiftPref__UserI__6AC68E7D">
+    <AssociationSet Name="FK__ShiftPref__UserI__76040256" Association="ShiftCaptainModel.Store.FK__ShiftPref__UserI__76040256">
       <End Role="User" EntitySet="User" />
       <End Role="ShiftPreference" EntitySet="ShiftPreference" />
     </AssociationSet>
-    <AssociationSet Name="FK__ShiftPref__Versi__6BBAB2B6" Association="ShiftCaptainModel.Store.FK__ShiftPref__Versi__6BBAB2B6">
+    <AssociationSet Name="FK__ShiftPref__Versi__76F8268F" Association="ShiftCaptainModel.Store.FK__ShiftPref__Versi__76F8268F">
       <End Role="Version" EntitySet="Version" />
       <End Role="ShiftPreference" EntitySet="ShiftPreference" />
     </AssociationSet>
-    <AssociationSet Name="FK__User__AddressId__5D6C935F" Association="ShiftCaptainModel.Store.FK__User__AddressId__5D6C935F">
+    <AssociationSet Name="FK__User__AddressId__68AA0738" Association="ShiftCaptainModel.Store.FK__User__AddressId__68AA0738">
       <End Role="Address" EntitySet="Address" />
       <End Role="User" EntitySet="User" />
     </AssociationSet>
-    <AssociationSet Name="FK__UserInsta__UserI__6049000A" Association="ShiftCaptainModel.Store.FK__UserInsta__UserI__6049000A">
+    <AssociationSet Name="FK__UserInsta__UserI__6B8673E3" Association="ShiftCaptainModel.Store.FK__UserInsta__UserI__6B8673E3">
       <End Role="User" EntitySet="User" />
       <End Role="UserInstance" EntitySet="UserInstance" />
     </AssociationSet>
-    <AssociationSet Name="FK__UserInsta__Versi__613D2443" Association="ShiftCaptainModel.Store.FK__UserInsta__Versi__613D2443">
+    <AssociationSet Name="FK__UserInsta__Versi__6C7A981C" Association="ShiftCaptainModel.Store.FK__UserInsta__Versi__6C7A981C">
       <End Role="Version" EntitySet="Version" />
       <End Role="UserInstance" EntitySet="UserInstance" />
     </AssociationSet>
@@ -403,7 +403,7 @@
     <Property Name="ZipCode" Type="nvarchar" MaxLength="9" />
     <Property Name="Country" Type="nvarchar" MaxLength="200" />
   </EntityType>
-  <Association Name="FK__Building__Addres__5106BC7A">
+  <Association Name="FK__Building__Addres__5C443053">
     <End Role="Address" Type="ShiftCaptainModel.Store.Address" Multiplicity="0..1" />
     <End Role="Building" Type="ShiftCaptainModel.Store.Building" Multiplicity="*" />
     <ReferentialConstraint>
@@ -415,7 +415,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Room__BuildingId__53E32925">
+  <Association Name="FK__Room__BuildingId__5F209CFE">
     <End Role="Building" Type="ShiftCaptainModel.Store.Building" Multiplicity="1" />
     <End Role="Room" Type="ShiftCaptainModel.Store.Room" Multiplicity="*" />
     <ReferentialConstraint>
@@ -427,7 +427,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__RoomHours__RoomI__5A9026B4">
+  <Association Name="FK__RoomHours__RoomI__65CD9A8D">
     <End Role="RoomInstance" Type="ShiftCaptainModel.Store.RoomInstance" Multiplicity="1" />
     <End Role="RoomHours" Type="ShiftCaptainModel.Store.RoomHours" Multiplicity="*" />
     <ReferentialConstraint>
@@ -439,7 +439,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__RoomInsta__RoomI__56BF95D0">
+  <Association Name="FK__RoomInsta__RoomI__61FD09A9">
     <End Role="Room" Type="ShiftCaptainModel.Store.Room" Multiplicity="1" />
     <End Role="RoomInstance" Type="ShiftCaptainModel.Store.RoomInstance" Multiplicity="*" />
     <ReferentialConstraint>
@@ -451,7 +451,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__RoomInsta__Versi__57B3BA09">
+  <Association Name="FK__RoomInsta__Versi__62F12DE2">
     <End Role="Version" Type="ShiftCaptainModel.Store.Version" Multiplicity="1" />
     <End Role="RoomInstance" Type="ShiftCaptainModel.Store.RoomInstance" Multiplicity="*" />
     <ReferentialConstraint>
@@ -463,7 +463,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Shift__RoomId__650DB527">
+  <Association Name="FK__Shift__RoomId__704B2900">
     <End Role="Room" Type="ShiftCaptainModel.Store.Room" Multiplicity="1" />
     <End Role="Shift" Type="ShiftCaptainModel.Store.Shift" Multiplicity="*" />
     <ReferentialConstraint>
@@ -475,7 +475,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Shift__UserId__641990EE">
+  <Association Name="FK__Shift__UserId__6F5704C7">
     <End Role="User" Type="ShiftCaptainModel.Store.User" Multiplicity="1" />
     <End Role="Shift" Type="ShiftCaptainModel.Store.Shift" Multiplicity="*" />
     <ReferentialConstraint>
@@ -487,7 +487,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__Shift__VersionId__6601D960">
+  <Association Name="FK__Shift__VersionId__713F4D39">
     <End Role="Version" Type="ShiftCaptainModel.Store.Version" Multiplicity="1" />
     <End Role="Shift" Type="ShiftCaptainModel.Store.Shift" Multiplicity="*" />
     <ReferentialConstraint>
@@ -499,7 +499,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__ShiftPref__Prefe__6CAED6EF">
+  <Association Name="FK__ShiftPref__Prefe__77EC4AC8">
     <End Role="Preference" Type="ShiftCaptainModel.Store.Preference" Multiplicity="1" />
     <End Role="ShiftPreference" Type="ShiftCaptainModel.Store.ShiftPreference" Multiplicity="*" />
     <ReferentialConstraint>
@@ -511,7 +511,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__ShiftPref__UserI__6AC68E7D">
+  <Association Name="FK__ShiftPref__UserI__76040256">
     <End Role="User" Type="ShiftCaptainModel.Store.User" Multiplicity="1" />
     <End Role="ShiftPreference" Type="ShiftCaptainModel.Store.ShiftPreference" Multiplicity="*" />
     <ReferentialConstraint>
@@ -523,7 +523,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__ShiftPref__Versi__6BBAB2B6">
+  <Association Name="FK__ShiftPref__Versi__76F8268F">
     <End Role="Version" Type="ShiftCaptainModel.Store.Version" Multiplicity="1" />
     <End Role="ShiftPreference" Type="ShiftCaptainModel.Store.ShiftPreference" Multiplicity="*" />
     <ReferentialConstraint>
@@ -535,7 +535,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__User__AddressId__5D6C935F">
+  <Association Name="FK__User__AddressId__68AA0738">
     <End Role="Address" Type="ShiftCaptainModel.Store.Address" Multiplicity="0..1" />
     <End Role="User" Type="ShiftCaptainModel.Store.User" Multiplicity="*" />
     <ReferentialConstraint>
@@ -547,7 +547,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__UserInsta__UserI__6049000A">
+  <Association Name="FK__UserInsta__UserI__6B8673E3">
     <End Role="User" Type="ShiftCaptainModel.Store.User" Multiplicity="1" />
     <End Role="UserInstance" Type="ShiftCaptainModel.Store.UserInstance" Multiplicity="*" />
     <ReferentialConstraint>
@@ -559,7 +559,7 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK__UserInsta__Versi__613D2443">
+  <Association Name="FK__UserInsta__Versi__6C7A981C">
     <End Role="Version" Type="ShiftCaptainModel.Store.Version" Multiplicity="1" />
     <End Role="UserInstance" Type="ShiftCaptainModel.Store.UserInstance" Multiplicity="*" />
     <ReferentialConstraint>
@@ -629,5 +629,37 @@
     <Parameter Name="VersionName" Type="nvarchar" Mode="In" />
     <Parameter Name="Users" Type="nvarchar(max)" Mode="In" />
     <Parameter Name="Rooms" Type="nvarchar(max)" Mode="In" />
+  </Function>
+  <Function Name="ValidateShift" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="UserId" Type="int" Mode="In" />
+    <Parameter Name="VersionId" Type="int" Mode="In" />
+    <Parameter Name="RoomId" Type="int" Mode="In" />
+    <Parameter Name="Day" Type="int" Mode="In" />
+    <Parameter Name="StartTime" Type="time" Mode="In" />
+    <Parameter Name="Duration" Type="decimal" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="message" Type="nvarchar(max)" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+  <Function Name="ValidateShiftPreference" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Id" Type="int" Mode="In" />
+    <Parameter Name="UserId" Type="int" Mode="In" />
+    <Parameter Name="VersionId" Type="int" Mode="In" />
+    <Parameter Name="PreferenceId" Type="int" Mode="In" />
+    <Parameter Name="Day" Type="int" Mode="In" />
+    <Parameter Name="StartTime" Type="time" Mode="In" />
+    <Parameter Name="Duration" Type="decimal" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="message" Type="nvarchar(max)" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
   </Function>
 </Schema>

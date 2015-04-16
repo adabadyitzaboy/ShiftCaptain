@@ -4,14 +4,16 @@ var $lbRooms = $("#rooms");
 var $lbRoomClones = $("#CloneRoom");
 var move = function (from, to) {
     var items = from.val();
-    for (var idx = 0; idx < items.length; idx++) {
-        var item = from.find("[value='" + items[idx] + "']");
-        if (item.length) {
-            to.append(item);
+    if (items && items.length) {
+        for (var idx = 0; idx < items.length; idx++) {
+            var item = from.find("[value='" + items[idx] + "']");
+            if (item.length) {
+                to.append(item);
+            }
         }
+        from.val("");
+        to.val("");
     }
-    from.val("");
-    to.val("");
 };
 $('#btnCloneAllUsers').on('click touchstart', function (e) {
     $lbUsers.find("option").prop("selected", true);

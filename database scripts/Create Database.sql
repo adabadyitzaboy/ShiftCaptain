@@ -60,6 +60,21 @@ if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'UTILf
 if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'sp_clone_schedule')
     drop procedure [sp_clone_schedule];
 
+	
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'ValidateShiftPreference')
+    drop function ValidateShiftPreference;
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'ValidateShift')
+    drop function ValidateShift;
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'fn_GetDate')
+    drop function fn_GetDate;
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'fn_AdjustHour')
+    drop function fn_AdjustHour
+
+if exists (select * from INFORMATION_SCHEMA.ROUTINES where ROUTINE_NAME = 'fn_GetTOD')
+    drop function fn_GetTOD
 
 Create Table [Version]
 (
@@ -556,5 +571,267 @@ BEGIN
 	Where SP.VersionId = @VersionId
 
 	Select @NewVersionId
+END
+GO
+
+CREATE function [dbo].[fn_GetDate](
+	@Day int
+)
+returns nvarchar(10)
+BEGIN
+	Declare @DayOfWeek nvarchar(10)
+	SELECT @DayOfWeek = CASE @Day
+		when 0 then 'Sunday' 
+		when 1 then 'Monday' 
+		when 2 then 'Tuesday' 
+		when 3 then 'Wednesday' 
+		when 4 then 'Thursday' 
+		when 5 then 'Friday' 
+		when 6 then 'Saturday' 
+	END
+
+	return @DayOfWeek
+END
+Go
+
+CREATE function [dbo].[fn_AdjustHour](
+	@StartTime time(7),
+	@DayStart int
+)
+returns nvarchar(100)
+BEGIN
+	Declare @Hour nvarchar(100)
+	Declare @_StartTime decimal(9)
+	select @_StartTime = cast(DATEDIFF(minute, '00:00:00',@StartTime) as decimal(9)) / 60
+	if(@_StartTime > @DayStart / 60)
+	BEGIN
+		select @Hour = STR(@_StartTime, 10,1)
+	END
+	ELSE
+	BEGIN
+		select @Hour = STR(@_StartTime + 24, 10,1)
+	END
+
+	return @Hour
+END
+Go
+CREATE function [dbo].[fn_GetTOD](
+	@StartTime time(7)
+)
+returns nvarchar(100)
+BEGIN
+	Declare @TOD nvarchar(100)
+	if(DATEDIFF(hour, '12:00:00',@StartTime) >= 0 AND DATEDIFF(hour, '23:59:59',@StartTime)<=0)
+	BEGIN
+		select @TOD = convert(nvarchar(5),@StartTime, 108) + ' PM'
+	END
+	ELSE
+	BEGIN
+		select @TOD = convert(nvarchar(5),@StartTime, 108) + ' AM'
+	END
+	return @TOD
+END
+Go
+CREATE function [dbo].[ValidateShiftPreference](
+	@Id int,
+	@UserId int,
+	@VersionId int,
+	@PreferenceId int,
+	@Day int,
+	@StartTime time(7),
+	@Duration decimal(9,1)
+)
+returns @Conflicts table ([message] nvarchar(max))
+BEGIN
+
+	Declare @RoomHours table
+	(
+		[Day] int Primary Key,
+		[start] int
+	)
+
+	insert into @RoomHours
+	select [Day], Min(DATEDIFF(minute, '00:00:00',StartTime))
+	From RoomHours RH
+	JOIN RoomInstance RI on RI.Id = RH.RoomInstanceId
+	Where RI.VersionId = @VersionId
+	AND RH.[Day] = @Day
+	Group By [Day]
+
+	if(@@ROWCOUNT = 0)
+	BEGIN
+		insert into @Conflicts
+		select 'Invalid Day - ' + case when @Day >= 0 AND @Day < 7 then dbo.fn_GetDate(@Day) else cast(@Day as nvarchar) end
+	END
+
+	Declare @StartTimeMinutes Decimal(9)
+	Declare @EndTimeMinutes Decimal(9)
+	select @StartTimeMinutes = cast(DATEDIFF(minute, '00:00:00',@StartTime) as decimal(9)),
+	 @EndTimeMinutes  = cast(DATEDIFF(minute, '00:00:00',@StartTime) as decimal(9)) + @Duration * 60
+
+	if not exists(Select 1 from Preference P where P.Id = @PreferenceId)
+	BEGIN
+		insert into @Conflicts
+		Select 'Preference ' + cast(@PreferenceId as nvarchar) + ' does not exist'
+	END
+
+	if not exists(Select 1 from [User] U where U.Id = @UserId)
+	BEGIN
+		insert into @Conflicts
+		Select 'User ' + cast(@UserId as nvarchar) + ' does not exist'
+	END
+	
+	if not exists(Select 1 from [UserInstance] U where U.UserId= @UserId AND U.VersionId = @VersionId)
+	BEGIN
+		insert into @Conflicts
+		Select 'User ' + NickName + ' is not part of this version.'
+		from [User] 
+		where id = @UserId
+	END
+
+	--Ensure user has no other shift preference at this time.
+	insert into @Conflicts
+	select 'Conflicting Shift Preference for ' + U.NickName + ': ' + dbo.fn_GetDate(SP.[Day]) + ' ' + dbo.fn_GetTOD(SP.StartTime)
+	from [ShiftPreference] SP 
+	JOIN Preference P
+	on P.id = @PreferenceId
+	JOIN @RoomHours RH on SP.[Day] = RH.[Day]
+	JOIN [User] U
+	on U.Id = SP.UserId
+	WHERE SP.VersionId = @VersionId AND 
+	SP.UserId = @UserId AND
+	SP.Id != @Id AND
+		( 
+			SP.StartTime = @StartTime  OR
+			(cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) < @StartTimeMinutes AND cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) + (SP.Duration * 60)> @StartTimeMinutes ) OR --new shift preference starts before old shift preference but ends after
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) < RH.[start] AND cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) <= @StartTimeMinutes + 1440 /*(24 * 60)*/ AND cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) + (SP.Duration * 60) > @StartTimeMinutes + 1440 /*(24 * 60)*/) OR--overflow and old shift preference starts before new shift preference but ends after
+			(@StartTimeMinutes < cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) AND @EndTimeMinutes > cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)))  OR --preference starts before shift but ends after
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) < RH.[start] AND @StartTimeMinutes <= cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/ AND @EndTimeMinutes > cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/)--overflow and new shift preference starts before old shift preference but ends after
+		)
+	 
+
+	return 
+END
+GO
+CREATE function [dbo].[ValidateShift](
+	@Id int,
+	@UserId int,
+	@VersionId int,
+	@RoomId int,
+	@Day int,
+	@StartTime time(7),
+	@Duration decimal(9,1)
+)
+returns @Conflicts table ([message] nvarchar(max))
+BEGIN
+	Declare @RoomHours table
+	(
+		[Day] int Primary Key,
+		[start] int
+	)
+
+	insert into @RoomHours
+	select [Day], Min(DATEDIFF(minute, '00:00:00',StartTime))
+	From RoomHours RH
+	JOIN RoomInstance RI on RI.Id = RH.RoomInstanceId
+	Where RI.VersionId = @VersionId
+	AND RH.[Day] = @Day
+	Group By [Day]
+
+	Declare @StartTimeMinutes Decimal(9)
+	Declare @EndTimeMinutes Decimal(9)
+	select @StartTimeMinutes = cast(DATEDIFF(minute, '00:00:00',@StartTime) as decimal(9)),
+	 @EndTimeMinutes  = cast(DATEDIFF(minute, '00:00:00',@StartTime) as decimal(9)) + @Duration * 60
+
+	--Ensure user doesn't have conflicting shift preference
+	insert into @Conflicts 
+	select 'Conflicting Shift Preference for ' + U.NickName + ': ' + dbo.fn_GetDate(SP.[Day]) + ' ' + dbo.fn_GetTOD(SP.StartTime)
+	from [ShiftPreference] SP
+	JOIN Preference P
+	on P.CanWork = 0 AND SP.PreferenceId = P.Id
+	JOIN @RoomHours RH on SP.[Day] = RH.[Day]
+	JOIN [User] U
+	on U.Id = SP.UserId
+	WHERE SP.VersionId = @VersionId AND 
+	SP.UserId = @UserId AND
+	SP.Id != @Id AND
+		( 
+			SP.StartTime = @StartTime  OR
+			(cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) < @StartTimeMinutes AND cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) + (SP.Duration * 60)> @StartTimeMinutes ) OR --new shift preference starts before old shift preference but ends after
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) < RH.start AND cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) <= @StartTimeMinutes + 1440 /*(24 * 60)*/ AND cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) + (SP.Duration * 60) > @StartTimeMinutes + 1440 /*(24 * 60)*/) OR--overflow and old shift preference starts before new shift preference but ends after
+			(@StartTimeMinutes < cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) AND @EndTimeMinutes > cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)))  OR --preference starts before shift but ends after
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) < RH.start AND @StartTimeMinutes <= cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/ AND @EndTimeMinutes > cast(DATEDIFF(minute, '00:00:00',SP.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/)--overflow and new shift preference starts before old shift preference but ends after
+		)
+		 
+
+	if not exists(Select 1 from Room R where R.Id = @RoomId)
+	BEGIN
+		insert into @Conflicts
+		Select 'Room ' + cast(@RoomId as nvarchar) + ' does not exist'
+	END
+
+	if not exists(Select 1 from RoomView RV where RV.RoomId = @RoomId AND RV.VersionId = @VersionId)
+	BEGIN
+		insert into @Conflicts
+		Select 'Room ' + cast(@RoomId as nvarchar) + ' is not part of this version'
+	END
+
+	if not exists(Select 1 from Room R JOIN RoomInstance RI on R.Id = RI.RoomId JOIN RoomHours RH on RH.RoomInstanceId = RI.Id where R.Id = @RoomId AND RI.VersionId = @VersionId AND RH.[Day] = @Day AND 
+		(
+			(RH.StartTime = @StartTime AND cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) + RH.Duration * 60 >= @EndTimeMinutes) OR
+			(RH.StartTime < @StartTime AND cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) + RH.Duration * 60 > @StartTimeMinutes AND cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) + RH.Duration * 60 >= @EndTimeMinutes) OR
+			(RH.StartTime > @StartTime AND cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) + RH.Duration * 60 > @StartTimeMinutes + 1440 /*(24 * 60)*/ AND cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) + RH.Duration * 60 >= @EndTimeMinutes + 1440 /*(24 * 60)*/ )
+		)
+	)
+	BEGIN
+		insert into @Conflicts
+		Select 'Shift is outside of room hours ' + dbo.fn_GetTOD(@StartTime)
+	END
+
+	if not exists(Select 1 from [User] U where U.Id = @UserId)
+	BEGIN
+		insert into @Conflicts
+		Select 'User ' + cast(@UserId as nvarchar) + ' does not exist'
+	END
+	
+	if not exists(Select 1 from [UserInstance] U where U.UserId= @UserId AND U.VersionId = @VersionId)
+	BEGIN
+		insert into @Conflicts
+		Select 'User ' + NickName + ' is not part of this version.'
+		from [User] 
+		where id = @UserId
+	END	
+
+	if exists(Select 1 from [UserView] U where U.UserId= @UserId AND U.VersionId = @VersionId AND MaxHours < CurrentHours + @Duration)
+	BEGIN
+		insert into @Conflicts
+		Select 'New Shift would cause ' + NickName + ' to have too many hours.'
+		from [User] 
+		where id = @UserId
+	END	
+
+	--Ensure user has no other shift at this time.
+	insert into @Conflicts 
+	select 'Conflicting Shift Preference for ' + U.NickName + ': ' + dbo.fn_GetDate(S.[Day]) + ' ' + dbo.fn_GetTOD(S.StartTime) + ' in ' + R.Name
+	from [Shift] S
+	JOIN Room R on R.Id = S.RoomId 
+	JOIN RoomInstance RI on RI.VersionId = @VersionId AND RI.RoomId = S.RoomId
+	JOIN RoomHours RH on S.[Day] = RH.[Day] AND RH.RoomInstanceId = RI.Id
+	JOIN [User] U
+	on U.Id = S.UserId
+	WHERE S.VersionId = @VersionId AND 
+	S.UserId = @UserId AND
+	S.[Day] = @Day AND
+	S.Id != @Id AND
+		( 
+			S.StartTime = @StartTime  OR
+			(cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) < @StartTimeMinutes AND cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) + (S.Duration * 60)> @StartTimeMinutes ) OR --new shift preference starts before old shift preference but ends after
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) < cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) AND cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) <= @StartTimeMinutes + 1440 /*(24 * 60)*/ AND cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) + (S.Duration * 60) > @StartTimeMinutes + 1440 /*(24 * 60)*/) OR--overflow and old shift preference starts before new shift preference but ends after
+			(@StartTimeMinutes < cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) AND @EndTimeMinutes > cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)))  OR --preference starts before shift but ends after
+			(/*overflow*/cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) < cast(DATEDIFF(minute, '00:00:00',RH.StartTime) as decimal(9)) AND @StartTimeMinutes <= cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/ AND @EndTimeMinutes > cast(DATEDIFF(minute, '00:00:00',S.StartTime) as decimal(9)) + 1440 /*(24 * 60)*/)--overflow and new shift preference starts before old shift preference but ends after
+		)
+		 
+	
+	return
 END
 GO

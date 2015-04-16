@@ -27,7 +27,7 @@
                 <div class="row">
                     <div class="small-6 large-3 columns">
                         <p class="site-title">
-                            <a href='@Url.Action("Index", "Shift")'>
+                            <a href='@Url.Action("Index", "Shift", new { VersionName = ViewBag.CurrentVersionName  })'>
                                 <img src='@Url.Content("~/Content/images/header/logo.png")' />
                             </a>
                         </p>
@@ -36,24 +36,24 @@
                         <div class="small-6 large-7 columns">
                             <nav>
                                 <ul id="menu">
-                                   <li>@Html.ActionLink("Shifts", "Index", "Shift")</li>
-                                   <li>@Html.ActionLink("Shift Preferences", "Index", "ShiftPreference")</li>
+                                   <li>@Html.ActionLink("Shifts", "Index", "Shift", new { VersionName = ViewBag.CurrentVersionName  }, new { })</li>
+                                   <li>@Html.ActionLink("Shift Preferences", "Index", "ShiftPreference", new { VersionName = ViewBag.CurrentVersionName  }, new { })</li>
                                    <li>@Html.ActionLink("Preferences", "Index", "Preference")</li>
                                    @if(ShiftCaptain.Infrastructure.SessionManager.IsManager || ShiftCaptain.Infrastructure.SessionManager.IsShiftManager){
                                        <li>@Html.ActionLink("Buildings", "Index", "Building")</li>
-                                       <li>@Html.ActionLink("Rooms", "Index", "Room")</li>
-                                       <li>@Html.ActionLink("Users", "Index", "User")</li>
+                                       <li>@Html.ActionLink("Rooms", "Index", "Room", new { VersionName = ViewBag.CurrentVersionName  }, new { })</li>
+                                       <li>@Html.ActionLink("Users", "Index", "User", new { VersionName = ViewBag.CurrentVersionName  }, new { })</li>
                                        <li>@Html.ActionLink("Versions", "Index", "Version")</li>
                                    }
                                 </ul>
                             </nav>
                         </div>
                         <div class="small-6 large-2 columns">
-                            @if(@ViewBag.VersionId != null){
-                                using (Html.BeginForm("ChangeVersion", "Version"))
+                            @if (@ViewBag.VersionId != null && ViewBag.CurrentVersionName != null)
+                            {
+                                using (Html.BeginForm("ChangeVersion", "Version", new { VersionName = ViewBag.CurrentVersionName }, FormMethod.Post, new { id = "VersionForm" }))
                                 {
                                     @Html.DropDownList("VersionId")
-                                    <input type="submit" id="ChangeVersion" style="display: none;" />
                                 }
                             }
                         </div>

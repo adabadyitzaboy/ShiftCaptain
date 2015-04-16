@@ -20,6 +20,7 @@ namespace ShiftCaptainTest.CRUDOps
     [DeploymentItem("DataSources/Preferences.csv", "")]
     public class ShiftPreference : CommonActions
     {
+        List<String> VersionNames = new List<string>();
 
         private List<int> shiftPreferenceIds = new List<int>();
         private String OutputShiftPreference(IDictionary<string, string> ShiftPreference)
@@ -40,19 +41,21 @@ namespace ShiftCaptainTest.CRUDOps
             var createTable = new DataParser("ShiftPreferences.csv").Tables["Create"];
             var ticks = DateTime.Now.Ticks.ToString();
 
-            var prevVersionName = String.Empty;
             foreach (var shiftPreferenceObj in createTable)
             {
                 var version = CreateDefaultVersion(Clean<string>(shiftPreferenceObj, "VERSION_NAME"));
+                if (!VersionNames.Contains(version.Name))
+                {
+                    VersionNames.Add(version.Name);
+                }
                 var user = CreateDefaultUser(Clean<string>(shiftPreferenceObj, "NICK_NAME"), version.Id, version.Name);
                 var preference = CreateDefaultPreference(Clean<string>(shiftPreferenceObj, "PREFERENCE_NAME"));
                 var shiftPreference = GetShiftPreference(shiftPreferenceObj, version.Id, user.UserId, preference.Id);
                 CreateDefaultRoom(version.Id, version.Name);
-                GoToPage("ShiftPreference", version.Name != prevVersionName);
-                prevVersionName = version.Name;
+                GoToPage(version.Name, "ShiftPreference");
                 
     
-                var created = CreateShiftPreference(shiftPreference);
+                var created = CreateShiftPreference(version.Name, shiftPreference);
                 if (created)
                 {
                     shiftPreferenceIds.Add(shiftPreference.Id);
@@ -67,12 +70,12 @@ namespace ShiftCaptainTest.CRUDOps
                     shiftPreference.StartTime = shiftPreference.StartTime.Add(TimeSpan.FromHours(Clean<double>(shiftPreferenceObj, "ADD_HOURS")));
                     shiftPreference.Day = (shiftPreference.Day + Clean<int>(shiftPreferenceObj, "ADD_DAYS")) % 7;
                     
-                    var edited = EditShiftPreference(shiftPreference);
+                    var edited = EditShiftPreference(version.Name, shiftPreference);
                     Assert.IsTrue(edited, String.Format("Failed editing shiftPreference {0}", OutputShiftPreference(shiftPreferenceObj)));
                     createdShiftPreference = db.ShiftPreferences.FirstOrDefault(s => s.Id == shiftPreference.Id);
                     Assert.IsTrue(CompareShiftPreference(shiftPreference, createdShiftPreference), String.Format("ShiftPreference does not match {0}", OutputShiftPreference(shiftPreferenceObj)));
 
-                    RemoveShiftPreferenceWithUI(shiftPreference);
+                    RemoveShiftPreferenceWithUI(version.Name, shiftPreference);
                     
                     createdShiftPreference = db.ShiftPreferences.FirstOrDefault(s => s.Id == shiftPreference.Id);
                     Assert.IsNull(createdShiftPreference, String.Format("Failed to remove shiftPreference {0}", OutputShiftPreference(shiftPreferenceObj)));
@@ -87,7 +90,7 @@ namespace ShiftCaptainTest.CRUDOps
         [TestCleanup]
         public void CleanUp()
         {
-            db = new ShiftCaptainEntities();
+            RefreshDB();
             try
             {
                 foreach (var shiftPreferenceId in shiftPreferenceIds)
@@ -98,10 +101,15 @@ namespace ShiftCaptainTest.CRUDOps
             catch (Exception ex)
             {
             }
-            RemoveDefaultRooms();
-            RemoveDefaultUsers();
-            RemoveDefaultBuildings();
-            RemoveDefaultVersions();           
+
+            
+            foreach (var VersionName in VersionNames)
+            {
+                RemoveDefaultRooms(VersionName);
+                RemoveDefaultUsers(VersionName);
+                RemoveDefaultBuildings(VersionName);
+                RemoveDefaultVersions(VersionName);
+            }
         }
     }
 }

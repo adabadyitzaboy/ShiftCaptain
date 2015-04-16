@@ -16,3 +16,7 @@
 @@ "DefaultRoom"
 "NAME","BUILDING_NAME","ROOM_NUMBER","PHONE_NUMBER","SUNDAY_START_TIME","SUNDAY_DURATION","MONDAY_START_TIME","MONDAY_DURATION","TUESDAY_START_TIME","TUESDAY_DURATION","WEDNESDAY_START_TIME","WEDNESDAY_DURATION","THURSDAY_START_TIME","THURSDAY_DURATION","FRIDAY_START_TIME","FRIDAY_DURATION","SATURDAY_START_TIME","SATURDAY_DURATION","VERSION_NAME"
 "Default_Room","Test_Building","101","1234567890","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","Test_Version"
+"Default_Room2","Test_Building","101","1234567890","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","Test_Version2"
+"Default_Room","Test_Building","101","1234567890","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","08:00","2","StartupScenario"
+"Comp. Lab #1", "Test_Scenario_Building", "201", "", "13:00", "13.0", "08:00", "18.0", "08:00", "18.0", "08:00", "18.0", "08:00", "18.0", "08:00", "16.0", "09:00", "11.0", "Test_Scenario"
+"Comp. Lab #2", "Test_Scenario_Building", "202", "", "13:00", "10.0", "08:00", "15.0", "08:00", "15.0", "08:00", "15.0", "08:00", "15.0", "08:00", "15.0", "09:00", "9.0", "Test_Scenario"

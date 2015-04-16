@@ -12,6 +12,8 @@
                 @Html.HiddenFor(model => model.Id)
                 
                 <input type="submit" value='Disapprove Schedule' id="DisapproveSchedule" />
+                <p>Disapprove schedules to move from an approved status to "Ready for Approval"</p>
+                <p>This should only be performed for changes to non-active future schedules.  Otherwise, you should clone this version to create a new schedule.</p>
             }
         } else if (!Model.IsApproved) {
             <p>Version is not approved.</p>

@@ -13,66 +13,58 @@ namespace ShiftCaptain
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            var actions = new List<String> { "Create", "Edit", "Details", "Delete"};
+            foreach (var route in new List<String> { "Shift", "ShiftPreference", "User", "Room" })
+            {
+                routes.MapRoute(
+                  route,                                           // Route name
+                  "{VersionName}/" + route,                            // URL with parameters
+                  new { controller = route, action = "Index" }  // Parameter defaults
+                  );
+                if (route != "Shift" && route != "ShiftPreference")
+                {
+                    foreach (var action in actions)
+                    {
+                        var test = String.Format("{{VersionName}}/{0}/{1}{2}", route, action, action == "Create" ? "" : "/{id}");
+                        routes.MapRoute(
+                          route + action,                                           // Route name
+                          String.Format("{{VersionName}}/{0}/{1}{2}", route, action, action == "Create" ? "" : "/{id}"),                            // URL with parameters
+                          new { controller = route, action = action }  // Parameter defaults
+                        );
+                    }
+                }
+            }
             routes.MapRoute(
-                "ScheduleNotReady",                                           // Route name
-                "ScheduleNotReady",                            // URL with parameters
-                new { controller = "Error", action = "ScheduleNotReady" }  // Parameter defaults
+                "Version",                                           // Route name
+                "{VersionName}/ChangeVersion",                            // URL with parameters
+                new { controller = "Version", action = "ChangeVersion" }  // Parameter defaults
             );
 
-            routes.MapRoute(
-                "NoVersions",                                           // Route name
-                "NoVersion",                            // URL with parameters
-                new { controller = "Error", action = "NoVersions" }  // Parameter defaults
-            );
-
-            routes.MapRoute(
-                "InternalError",                                           // Route name
-                "InternalError",                            // URL with parameters
-                new { controller = "Error", action = "InternalError" }  // Parameter defaults
-            );
-
-            routes.MapRoute(
-                "NotAuthorized",                                           // Route name
-                "NotAuthorized",                            // URL with parameters
-                new { controller = "Error", action = "NotAuthorized" }  // Parameter defaults
-            );
-
-            routes.MapRoute(
-                "PageNotFound",                                           // Route name
-                "PageNotFound",                            // URL with parameters
-                new { controller = "Error", action = "PageNotFound" }  // Parameter defaults
-            );
-
-            routes.MapRoute(
-                "ValidateSchedule",                                           // Route name
-                "ValidateSchedule/{id}",                            // URL with parameters
-                new { controller = "ManageSchedule", action = "ValidateSchedule" }  // Parameter defaults
-            );
-
-            routes.MapRoute(
-                "ApproveSchedule",                                           // Route name
-                "ApproveSchedule/{id}",                            // URL with parameters
-                new { controller = "ManageSchedule", action = "ApproveSchedule" }  // Parameter defaults
-            );
-
-            routes.MapRoute(
-                "DisapproveSchedule",                                           // Route name
-                "DisapproveSchedule/{id}",                            // URL with parameters
-                new { controller = "ManageSchedule", action = "DisapproveSchedule" }  // Parameter defaults
-            );
-
-            routes.MapRoute(
-                "RejectSchedule",                                           // Route name
-                "RejectSchedule/{id}",                            // URL with parameters
-                new { controller = "ManageSchedule", action = "RejectSchedule" }  // Parameter defaults
-            );
-
-            routes.MapRoute(
-                "CloneSchedule",                                           // Route name
-                "CloneSchedule/{id}",                            // URL with parameters
-                new { controller = "ManageSchedule", action = "CloneSchedule" }  // Parameter defaults
-            );
-
+            foreach (var route in new List<String> { "ScheduleNotReady", "NoVersions", "InternalError", "NotAuthorized", "PageNotFound" })
+            {
+                routes.MapRoute(
+                  route,                                           // Route name
+                  route,                            // URL with parameters
+                  new { controller = "Error", action = route }  // Parameter defaults
+                  );
+            }
+            foreach (var route in new List<String> { "NoBuildings", "NoRooms", "NoPreferences", "NoUsers"})
+            {
+                routes.MapRoute(
+                  route,                                           // Route name
+                  "{VersionName}/" + route,                            // URL with parameters
+                  new { controller = "Error", action = route }  // Parameter defaults
+                  );
+            }
+            foreach (var route in new List<String> { "ValidateSchedule", "ApproveSchedule", "DisapproveSchedule", "RejectSchedule", "CloneSchedule" })
+            {
+                routes.MapRoute(
+                  route,                                           // Route name
+                  "{VersionName}/" + route,                            // URL with parameters
+                  new { controller = "ManageSchedule", action = route }  // Parameter defaults
+                  );
+            }
+            
             routes.MapRoute(
                 "ForgotPassword",                                           // Route name
                 "ForgotPassword/",                            // URL with parameters
@@ -87,15 +79,20 @@ namespace ShiftCaptain
 
             routes.MapRoute(
                 "Profile",                                           // Route name
-                "Profile/",                            // URL with parameters
+                "{VersionName}/Profile/",                            // URL with parameters
                 new { controller = "User", action = "EditProfile" }  // Parameter defaults
+            );
+            routes.MapRoute(
+                "Output",                                           // Route name
+                "{VersionName}/Download/",                            // URL with parameters
+                new { controller = "Output", action = "Download" }  // Parameter defaults
             );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Shift", action = "Index", id = UrlParameter.Optional }
             );
-            
+
         }
     }
 }

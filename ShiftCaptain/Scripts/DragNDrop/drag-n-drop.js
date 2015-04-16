@@ -57,6 +57,7 @@ dnd.drag = (function () {
                             && event.clientY >= p.top && event.clientY <= p.top + ctx.dropSection.height()) {
                             //dragging element is inside the drag area
                             movingCtx.dropTarget = event.target;
+                            console.log("here!", event.target, $(event.target).hasClass(settings.canDropClass));
                             if ($(event.target).hasClass(settings.canDropClass) && $target.triggerHandler('validatedrop', { target: event.target, callback: completeCallback })) {
                                 dropComplete = false;
                             } else {
@@ -68,8 +69,10 @@ dnd.drag = (function () {
                                 }
                             }
                         } else {
+                            console.log("dragged out", $target, event.clientX, event.clientY, event.target);
                             //dragging element is outside the drag area
                             $target.trigger('draggedout', movingCtx.temp);
+                            
                         }
                     }
                 }

@@ -157,12 +157,12 @@ namespace ShiftCaptainTest.Infrastructure
                                 l => !string.IsNullOrEmpty(l) &&
                                      !l.Trim().StartsWith(CommentIndicator) &&
                                      l.Trim().StartsWith(FieldQualifier.ToString()));
-
+                        var partialLines = csvLines.ToArray();
                         if (lastTable)
                         {
-                            var startIdx = Array.IndexOf(_allLines, colLine) + 1;
+                            var startIdx = Array.IndexOf(partialLines, colLine) + 1;
 
-                            dataLines = _allLines.Skip(startIdx).Where(
+                            dataLines = partialLines.Skip(startIdx).Where(
                                 dl =>
                                     !string.IsNullOrEmpty(dl) &&
                                     !dl.Trim().StartsWith(CommentIndicator) &&
@@ -170,11 +170,11 @@ namespace ShiftCaptainTest.Infrastructure
                         }
                         else
                         {
-                            var startIdx = Array.IndexOf(_allLines, colLine) + 1;
-                            var stopIdx = Array.IndexOf(_allLines, tableLines[tableIndex + 1]) - 1;
+                            var startIdx = Array.IndexOf(partialLines, colLine) + 1;
+                            var stopIdx = Array.IndexOf(partialLines, tableLines[tableIndex + 1]) - 1;
                             var dataLineCount = stopIdx - startIdx + 1;
 
-                            dataLines = _allLines.Skip(startIdx).Take(dataLineCount).Where(
+                            dataLines = partialLines.Skip(startIdx).Take(dataLineCount).Where(
                                 dl =>
                                     !string.IsNullOrEmpty(dl) &&
                                     !dl.Trim().StartsWith(CommentIndicator) &&

@@ -37,3 +37,5 @@ D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.WebData.dll
 D:\GitHub\ShiftCaptain\ShiftCaptain\bin\OmidID.Web.Security.EFMembershipProvider.pdb
 D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.Data.xml
 D:\GitHub\ShiftCaptain\ShiftCaptain\bin\WebMatrix.WebData.xml
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\log4net.dll
+D:\GitHub\ShiftCaptain\ShiftCaptain\bin\log4net.xml

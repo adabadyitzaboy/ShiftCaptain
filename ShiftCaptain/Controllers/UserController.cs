@@ -18,17 +18,17 @@ namespace ShiftCaptain.Controllers
         {
             ClassName = "user";
         }
-        private ShiftCaptainEntities db = new ShiftCaptainEntities();
-
+        #region JsonResults
         public JsonResult List(int VersionId = 0, int UserId = 0)
         {
             var result = db.UserViews.Where(uv => uv.VersionId == VersionId && (UserId == 0 || uv.UserId == UserId) && (currentUser.IsManager || currentUser.IsShiftManager || uv.UserId == currentUser.Id));
             return Json(EntitySelector.SelectUserInstance(result), JsonRequestBehavior.AllowGet);            
         }
+        #endregion
 
-        private UserView GetUserView(int id = 0)
+        #region Helpers
+        private UserView GetUserView(int VersionId, int id)
         {
-            int VersionId = GetVersionId();
             var userview = db.UserViews.Where(uv => uv.VersionId == VersionId && uv.UserId == id).FirstOrDefault();
             if (userview == null)
             {
@@ -36,87 +36,15 @@ namespace ShiftCaptain.Controllers
             }
             return userview;
         }
-        //
-        // GET: /User/
-        [ShiftManagerAccess]
-        public ActionResult Index()
-        {
-            var userviews = db.UserViews.Where(uv => uv.VersionId == CurrentVersionId || uv.VersionId == null).OrderByDescending(o=>o.VersionId).ThenBy(o=>o.EmailAddress);
-            AddVersionDropDown();
-            return View(userviews);
-        }
-
-        //
-        // GET: /User/Details/5
-        [ShiftManagerAccess]
-        public ActionResult Details(int id = 0)
-        {
-            UserView userview = GetUserView(id);
-            if (userview == null)
-            {
-                return HttpNotFound();
-            }
-            return View(userview);
-        }
-
-        //
-        // GET: /User/Create
-        [ManagerAccess]
-        [VersionNotApproved]
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        //
-        // POST: /User/Create
-
-        [HttpPost]
-        [ManagerAccess]
-        [ValidateAntiForgeryToken]
-        [VersionNotApproved]
-        public ActionResult Create(UserView userview)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = ModelConverter.GetUser(userview);
-                user.Locked = false;
-                user.IsActive = true;
-                user.Pass = "12345";
-
-                if (userview.Line1 != null)
-                {
-                    var address = ModelConverter.GetAddress(userview, db);
-                    db.Addresses.Add(address);
-                    db.SaveChanges();
-                    user.AddressId = address.Id;
-                }
-                db.Users.Add(user);
-                db.SaveChanges();
-                if (userview.MinHours.HasValue)
-                {
-                    var userI = new UserInstance
-                    {
-                        MinHours = userview.MinHours.Value,
-                        MaxHours = userview.MaxHours.Value
-                    };
-
-                    db.UserInstances.Add(userI);
-                    db.SaveChanges();
-                }
-                if(!SendNewUserEmail(user)){
-                    return View(userview);
-                }
-                return RedirectToAction("Index");
-            }
-
-            return View(userview);
-        }
 
         private bool SendNewUserEmail(User user)
         {
             var email = db.EmailTemplates.FirstOrDefault(t => t.Name == "NewUserEmail");
             if (!email.IsActive)
+            {
+                ModelState.AddModelError("CustomError", "USER CREATED.  No Forgot Password Email Template found.");
+                return false;
+            } else if (!email.IsActive)
             {
                 ModelState.AddModelError("CustomError", "USER CREATED.  Forgot Password Email Template is not active.");
                 return false;
@@ -134,13 +62,113 @@ namespace ShiftCaptain.Controllers
             }
             return true;
         }
+        
+        #endregion
+
+        //
+        // GET: /User/
+        [ShiftManagerAccess]
+        public ActionResult Index(String VersionName)
+        {
+            var version = GetVersion(VersionName);
+            if (version != null)
+            {
+                AddVersionDropDown(version);
+
+                var userviews = db.UserViews.Where(uv => uv.VersionId == version.Id || uv.VersionId == null).OrderByDescending(o => o.VersionId).ThenBy(o => o.EmailAddress);
+                return View(userviews);
+            }
+            return View(db.UserViews.OrderBy(o => o.EmailAddress));
+        }
+
+        //
+        // GET: /User/Details/5
+        [ShiftManagerAccess]
+        public ActionResult Details(String VersionName, int id = 0)
+        {
+            var version = GetVersion(VersionName);
+            AddVersionDropDown(version);
+            
+            UserView userview = GetUserView(version.Id, id);
+            if (userview == null)
+            {
+                return HttpNotFound();
+            }
+            return View(userview);
+        }
+
+        //
+        // GET: /User/Create
+        [ManagerAccess]
+        [VersionNotApproved]
+        public ActionResult Create(String VersionName)
+        {
+            var version = GetVersion(VersionName);
+            AddVersionDropDown(version);
+            
+            return View();
+        }
+
+        //
+        // POST: /User/Create
+
+        [HttpPost]
+        [ManagerAccess]
+        [ValidateAntiForgeryToken]
+        [VersionNotApproved]
+        public ActionResult Create(String VersionName, UserView userview)
+        {
+            var version = GetVersion(VersionName);
+            if (ModelState.IsValid)
+            {
+                var user = ModelConverter.GetUser(userview);
+                user.Locked = false;
+                user.IsActive = true;
+                user.Pass = "12345";
+
+                if (userview.Line1 != null)
+                {
+                    var address = ModelConverter.GetAddress(userview, db);
+                    db.Addresses.Add(address);
+                    SaveChange();
+                    user.AddressId = address.Id;
+                }
+                db.Users.Add(user);
+                SaveChange();
+                if (userview.MinHours.HasValue)
+                {
+                    var userI = new UserInstance
+                    {
+                        MinHours = userview.MinHours.Value,
+                        MaxHours = userview.MaxHours.Value,
+                        VersionId = version.Id,
+                        UserId = user.Id
+                    };
+
+                    db.UserInstances.Add(userI);
+                    SaveChange();
+                }
+                if(!SendNewUserEmail(user)){
+                    return View(userview);
+                }
+                return RedirectToAction("Index");
+            }
+            
+            AddVersionDropDown(version);
+            
+            return View(userview);
+        }
+
         //
         // GET: /User/Edit/5
         [ManagerAccess]
         [NoSelfAccess]
-        public ActionResult Edit(int id = 0)
+        public ActionResult Edit(String VersionName, int id = 0)
         {
-            UserView userview = GetUserView(id);
+            var version = GetVersion(VersionName);
+            AddVersionDropDown(version);
+
+            UserView userview = GetUserView(version.Id, id);
             if (userview == null)
             {
                 return HttpNotFound();
@@ -155,8 +183,10 @@ namespace ShiftCaptain.Controllers
         [ManagerAccess]
         [NoSelfAccess]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(UserView userview)
+        public ActionResult Edit(String VersionName, UserView userview)
         {
+
+            var version = GetVersion(VersionName);
             if (ModelState.IsValid)
             {
                 
@@ -176,13 +206,13 @@ namespace ShiftCaptain.Controllers
                     if (userview.AddressId == null)
                     {
                         db.Addresses.Add(address);
-                        db.SaveChanges();
+                        SaveChange();
                         user.AddressId = address.Id;
                     }
                     else
                     {
                         db.Entry(address).State = EntityState.Modified;
-                        db.SaveChanges();
+                        SaveChange();
                     }                    
                 }
                 else
@@ -194,33 +224,38 @@ namespace ShiftCaptain.Controllers
                     }
                 }
                 db.Entry(user).State = EntityState.Modified;
-                db.SaveChanges();
-                var versionId = GetVersionId();
-                var version = db.Versions.FirstOrDefault(v => v.Id == versionId);
+                SaveChange();
                 if (!version.IsApproved)
                 {
+                    var instanceExists = userview.VersionId.HasValue;
+                    userview.VersionId = version.Id;                    
                     var userI = ModelConverter.GetUserInstance(userview, db);
                     if (userI != null)
                     {
                         if (userview.MinHours.HasValue)
                         {
-                            db.Entry(userI).State = EntityState.Modified;
-                            db.SaveChanges();
+                            if (instanceExists)
+                            {
+                                db.Entry(userI).State = EntityState.Modified;
+                                SaveChange();
+                            }
+                            else
+                            {
+                                db.UserInstances.Add(userI);
+                                SaveChange();
+                            }
                         }
-                        else
+                        else if (instanceExists)
                         {
                             db.UserInstances.Remove(userI);
-                            db.SaveChanges();
+                            SaveChange();
                         }
-                    }
-                    else if (userview.MinHours.HasValue)
-                    {
-                        db.UserInstances.Add(userI);
-                        db.SaveChanges();
                     }
                 }
                 return RedirectToAction("Index");
             }
+
+            AddVersionDropDown(version);
             return View(userview);
         }
 
@@ -228,13 +263,15 @@ namespace ShiftCaptain.Controllers
         //
         // GET: /Profile/
         [SelfAccess]
-        public ActionResult EditProfile()
+        public ActionResult EditProfile(String VersionName)
         {
-            UserView userview = GetUserView(SessionManager.UserId);
+            var version = GetVersion(VersionName);
+            UserView userview = GetUserView(version.Id, SessionManager.UserId);
             if (userview == null)
             {
                 return HttpNotFound();
             }
+            AddVersionDropDown(version);
             return View(userview);
         }
 
@@ -244,8 +281,9 @@ namespace ShiftCaptain.Controllers
         [HttpPost]
         [SelfAccess]
         [ValidateAntiForgeryToken]
-        public ActionResult EditProfile([Bind(Exclude = "IsActive")]UserView userview)
+        public ActionResult EditProfile(String VersionName, [Bind(Exclude = "IsActive")]UserView userview)
         {
+            var version = GetVersion(VersionName);
             if (ModelState.IsValid)
             {
                 if (SessionManager.UserId == userview.UserId)
@@ -266,13 +304,13 @@ namespace ShiftCaptain.Controllers
                         if (userview.AddressId != null)
                         {
                             db.Addresses.Add(address);
-                            db.SaveChanges();
+                            SaveChange();
                             user.AddressId = address.Id;
                         }
                         else
                         {
                             db.Entry(address).State = EntityState.Modified;
-                            db.SaveChanges();
+                            SaveChange();
                         }
                     }
                     else
@@ -284,23 +322,34 @@ namespace ShiftCaptain.Controllers
                         }
                     }
                     db.Entry(user).State = EntityState.Modified;
-                    db.SaveChanges();
+                    SaveChange();
                     if (user.IsManager)
                     {//only a manager can update the hours on the profile page
-                        var versionId = GetVersionId();
-                        var version = db.Versions.FirstOrDefault(v => v.Id == versionId);
                         if (!version.IsApproved)
                         {
+                            var instanceExists = userview.VersionId.HasValue;
+                            userview.VersionId = version.Id;
                             var userI = ModelConverter.GetUserInstance(userview, db);
-                            if (userview.MinHours.HasValue)
+                            if (userI != null)
                             {
-                                db.Entry(userI).State = EntityState.Modified;
-                                db.SaveChanges();
-                            }
-                            else if(userI != null)
-                            {
-                                db.UserInstances.Remove(userI);
-                                db.SaveChanges();
+                                if (userview.MinHours.HasValue)
+                                {
+                                    if (instanceExists)
+                                    {
+                                        db.Entry(userI).State = EntityState.Modified;
+                                        SaveChange();
+                                    }
+                                    else
+                                    {
+                                        db.UserInstances.Add(userI);
+                                        SaveChange();
+                                    }
+                                }
+                                else if (instanceExists)
+                                {
+                                    db.UserInstances.Remove(userI);
+                                    SaveChange();
+                                }
                             }
                         }
                     }
@@ -310,17 +359,20 @@ namespace ShiftCaptain.Controllers
                 {
                     return RedirectToAction("Edit", userview.UserId);
                 }
-                
+
             }
+            AddVersionDropDown(version);
             return View(userview);
         }
 
         //
         // GET: /User/Delete/5
         [ManagerAccess]
-        public ActionResult Delete(int id = 0)
+        public ActionResult Delete(String VersionName, int id = 0)
         {
-            UserView userview = GetUserView(id);
+            var version = GetVersion(VersionName);
+            AddVersionDropDown(version);
+            UserView userview = GetUserView(version.Id, id);
             if (userview == null)
             {
                 return HttpNotFound();
@@ -361,9 +413,11 @@ namespace ShiftCaptain.Controllers
         [HttpPost, ActionName("Delete")]
         [ManagerAccess]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(String VersionName, int id)
         {
-            UserView userview = GetUserView(id);
+
+            var version = GetVersion(VersionName);
+            UserView userview = GetUserView(version.Id, id);
             String ErrorMessage;
             if (userview == null)
             {
@@ -379,15 +433,15 @@ namespace ShiftCaptain.Controllers
             {
                 var address = db.Addresses.Find(user.AddressId);
                 db.Addresses.Remove(address);
-                db.SaveChanges();
+                SaveChange();
             }
             foreach (var shiftPreference in db.ShiftPreferences.Where(sp => sp.UserId == user.Id))
             {
                 db.ShiftPreferences.Remove(shiftPreference);
             }
-            db.SaveChanges();
+            SaveChange();
             db.Users.Remove(user);
-            db.SaveChanges();
+            SaveChange();
             return RedirectToAction("Index");
         }
 

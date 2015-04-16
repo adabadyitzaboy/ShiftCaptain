@@ -82,6 +82,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\CommonActions.cs" />
     <Compile Include="CRUDOps\User.cs" />
+    <Compile Include="Scenarios\BaseScenario.cs" />
+    <Compile Include="Scenarios\ManageSchedule.cs" />
+    <Compile Include="Scenarios\Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

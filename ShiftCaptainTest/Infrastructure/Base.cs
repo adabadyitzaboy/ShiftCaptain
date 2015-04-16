@@ -86,7 +86,7 @@ namespace ShiftCaptainTest.Infrastructure
                 Driver.Navigate().GoToUrl(BaseUrl);
                 new WebDriverWait(Driver, DefaultTimeout).Until(d => d.Url != currentUrl);
             }
-
+            Driver.Manage().Window.Maximize();
         }
         [TestCleanup]
         public void TestCleanup()
@@ -97,6 +97,15 @@ namespace ShiftCaptainTest.Infrastructure
             }
             catch (Exception)
             { }
+        }
+        
+        public void RefreshDB()
+        {
+            var modifiedEntries = db.ChangeTracker.Entries().Where(e => e.State == System.Data.EntityState.Modified);
+            foreach (var modifiedEntry in modifiedEntries)
+            {
+                modifiedEntry.Reload();
+            }
         }
     }
 }

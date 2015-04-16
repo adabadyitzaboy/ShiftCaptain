@@ -15,6 +15,7 @@
             <h3>Version Name</h3>
             @Html.EditorFor(model => model.Version.Name)
             @Html.ValidationMessageFor(model => model.Version.Name)
+            @Html.ValidationMessageFor(model => model.Version)
         </div>
     </div>
     @Html.Partial("_CloneUser")

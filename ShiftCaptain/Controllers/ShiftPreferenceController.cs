@@ -16,38 +16,22 @@ namespace ShiftCaptain.Controllers
 {
     public class ShiftPreferenceController : BaseController
     {
-        private ShiftCaptainEntities db = new ShiftCaptainEntities();
         public ShiftPreferenceController()
         {
             ClassName = "shiftpreference";
-            if (SessionManager.IsShiftManager || SessionManager.IsManager)
-            {
-                var versionId = GetVersionId();
-                ViewData["UserId"] = new SelectList(db.UserInstances.Where(ui => ui.VersionId == CurrentVersionId), "UserId", "User.NickName");
-            }
-            AddVersionDropDown();
         }
 
         private object IsValid(ShiftPreference shiftPreference)
         {
-            var endTime = shiftPreference.StartTime.Add(TimeSpan.FromHours((double)shiftPreference.Duration));
-            //check for unable to work preference.
-            var cantWorkShifts = db.ShiftPreferences.Where(s => s.VersionId == shiftPreference.VersionId && s.UserId == shiftPreference.UserId && s.Id != shiftPreference.Id && s.Day == shiftPreference.Day && 
-                (
-                    s.StartTime == shiftPreference.StartTime ||
-                    (s.StartTime > shiftPreference.StartTime && s.StartTime < endTime) ||//new shiftPreference ends before old shiftPreference starts
-                    (s.StartTime < shiftPreference.StartTime && SqlFunctions.DateAdd("minute", (double)s.Duration, s.StartTime) > shiftPreference.StartTime)//new shiftPreference starts during old shiftPreference   
-                )
-                );
-
-            if (cantWorkShifts.Count() > 0)
+            var conflicts = db.ValidateShiftPreference(shiftPreference.Id, shiftPreference.UserId, shiftPreference.VersionId, shiftPreference.PreferenceId, shiftPreference.Day, shiftPreference.StartTime, shiftPreference.Duration);
+            if (conflicts.Count() > 0)
             {
-                return new { error = "A shift preference already exists during this time.", shiftPreference = EntitySelector.SelectShiftPreference(cantWorkShifts) };
-            }
 
+                return new { error = conflicts };
+            }
             return null;
         }
-
+        #region JsonResults
         //
         // GET: /ShiftPreference/Validate
         [ShiftManagerAccess]
@@ -95,7 +79,7 @@ namespace ShiftCaptain.Controllers
                 return Json(errors, JsonRequestBehavior.AllowGet);
             }
             db.ShiftPreferences.Add(shiftPreference);
-            db.SaveChanges();
+            SaveChange();
 
             var shifts = db.ShiftPreferences.Where(s => s.Id == shiftPreference.Id);
             return Json(EntitySelector.SelectShiftPreference(shifts), JsonRequestBehavior.AllowGet);
@@ -114,7 +98,7 @@ namespace ShiftCaptain.Controllers
             shiftPreference.Duration = Duration;
 
             db.Entry(shiftPreference).State = EntityState.Modified;
-            db.SaveChanges();
+            SaveChange();
 
             var shifts = db.ShiftPreferences.Where(s => s.Id == shiftPreference.Id);
             return Json(EntitySelector.SelectShiftPreference(shifts), JsonRequestBehavior.AllowGet);
@@ -137,17 +121,28 @@ namespace ShiftCaptain.Controllers
         {
             var shiftPreference = db.ShiftPreferences.Find(id);
             db.ShiftPreferences.Remove(shiftPreference);
-            db.SaveChanges();
+            SaveChange();
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
-
+        #endregion
         //
         // GET: /ShiftPreference/
 
-        [VersionRequired]
-        public ActionResult Index()
+        [VersionRequired(Order = 1)]
+        [BuildingRequired(Order = 2)]
+        [RoomRequired(Order = 3)]
+        [UserRequired(Order = 4)]
+        [PreferenceRequired(Order=5)]
+        public ActionResult Index(String VersionName)
         {
+            var version = GetVersion(VersionName);
+            AddVersionDropDown(version);
+            
+            if (SessionManager.IsShiftManager || SessionManager.IsManager)
+            {
+                ViewData["UserId"] = new SelectList(db.UserInstances.Where(ui => ui.VersionId == version.Id), "UserId", "User.NickName");
+            }
             return View();
         }
 

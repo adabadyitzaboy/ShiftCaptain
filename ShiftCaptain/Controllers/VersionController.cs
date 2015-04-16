@@ -17,7 +17,6 @@ namespace ShiftCaptain.Controllers
         {
             ClassName = "version";
         }
-        private ShiftCaptainEntities db = new ShiftCaptainEntities();
 
         //
         // GET: /Version/
@@ -68,7 +67,7 @@ namespace ShiftCaptain.Controllers
                     }
                 }
                 db.Versions.Add(version); 
-                db.SaveChanges();
+                SaveChange();
                 return RedirectToAction("Index");
             }
 
@@ -110,7 +109,7 @@ namespace ShiftCaptain.Controllers
                         db.Entry(activeVersion).State = EntityState.Modified;
                     }
                 }
-                db.SaveChanges();
+                SaveChange();
                 return RedirectToAction("Index");
             }
             return View(version);
@@ -175,7 +174,7 @@ namespace ShiftCaptain.Controllers
 
             var version = db.Versions.Find(id);
             db.Versions.Remove(version);
-            db.SaveChanges();
+            SaveChange();
             if (SessionManager.VersionId == id)
             {
                 var currentVersion = db.Versions.OrderByDescending(v=>v.Id).OrderBy(v => v.IsActive).FirstOrDefault();
@@ -195,11 +194,36 @@ namespace ShiftCaptain.Controllers
         // POST: /Version/Create
 
         [HttpPost]
-        public ActionResult ChangeVersion(string selected)
+        public ActionResult ChangeVersion(string VersionName)
         {
             int newId = 0;
             if(!String.IsNullOrEmpty(Request.Params["VersionId"]) && Int32.TryParse(Request.Params["VersionId"], out newId)){
                 SessionManager.VersionId = newId;
+            }else{
+                return HttpNotFound();
+            }
+            var version = db.Versions.FirstOrDefault(v=> v.Id == newId);
+            if(version == null){
+                return HttpNotFound();
+            }
+            var baseUrl = String.Format("{0}://{1}", Request.Url.Scheme, Request.Url.Authority);
+            if (Request.UrlReferrer.AbsoluteUri == baseUrl || Request.UrlReferrer.AbsoluteUri == baseUrl + "/")
+            {
+                return Redirect(String.Format("{0}/{1}/Shift", baseUrl, version.EncodedName));
+            }
+            else if (VersionName != null)
+            {
+                var responseUrl = Request.UrlReferrer.AbsoluteUri.Replace(String.Format("/{0}/", version.EncodedName), String.Format("/{0}/", version.EncodedName));
+                if (responseUrl != Request.UrlReferrer.AbsoluteUri)
+                {
+                    return Redirect(responseUrl);
+                }
+                responseUrl = Request.UrlReferrer.AbsoluteUri.Replace(String.Format("/{0}/", Uri.EscapeDataString(version.EncodedName)), String.Format("/{0}/", version.EncodedName));
+                if (responseUrl != Request.UrlReferrer.AbsoluteUri)
+                {
+                    return Redirect(responseUrl);
+                }
+                return Redirect(String.Format("{0}/{1}/Shift", baseUrl, version.EncodedName));
             }
             return Redirect(Request.UrlReferrer.AbsoluteUri);
         }

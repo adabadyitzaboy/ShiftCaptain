@@ -20,9 +20,8 @@ namespace ShiftCaptain.Controllers
         public ShiftController()
         {
             ClassName = "shift";
-            AddVersionDropDown();
         }
-        private ShiftCaptainEntities db = new ShiftCaptainEntities();
+        #region helpers
         private Decimal GetCurrentHours(int VersionId, int UserId)
         {
             return db.Shifts.Where(s => s.VersionId == VersionId && s.UserId == UserId).ToList().Sum(r => r.Duration);
@@ -30,51 +29,17 @@ namespace ShiftCaptain.Controllers
 
         private object IsValid(Shift shift)
         {
-            var userInstance = db.UserInstances.FirstOrDefault(uv => uv.UserId == shift.UserId && uv.VersionId == shift.VersionId);
-            if (userInstance == null)
+            var conflicts = db.ValidateShift(shift.Id, shift.UserId, shift.VersionId, shift.RoomId, shift.Day, shift.StartTime, shift.Duration);
+            if (conflicts.Count() > 0)
             {
-                return new { error = "User does not exist in this version given"};
-            }
-            if (shift.Id == 0)
-            {
-                var maxHours = userInstance.MaxHours;
-                var currentHours = GetCurrentHours(shift.VersionId, shift.UserId);
-                if (maxHours < currentHours + shift.Duration)
-                {
-                    return new { error = "New shift would cause " + userInstance.User.NickName + " to have too many hours" };
-                }
-            }
-            var endTime = shift.StartTime.Add(TimeSpan.FromHours((double)shift.Duration));
-            //check for unable to work preference.
-            var cantWorkShifts = db.ShiftPreferences.Where(s => s.VersionId == shift.VersionId && s.UserId == shift.UserId && s.Day == shift.Day && !s.Preference.CanWork && 
-                (
-                    s.StartTime == shift.StartTime ||
-                    (s.StartTime > shift.StartTime && s.StartTime < endTime) ||//new shift ends before old shift starts
-                    (s.StartTime < shift.StartTime && SqlFunctions.DateAdd("minute", (double) s.Duration, s.StartTime) > shift.StartTime)//new shift starts during old shift   
-                )
-                );
 
-            if (cantWorkShifts.Count() > 0)
-            {
-                return new { error = userInstance.User.NickName + " cant work this shift.", shift = EntitySelector.SelectShiftPreference(cantWorkShifts) };
-            }
-            
-
-            //check for shift during this time period
-            var conflictingShifts = db.Shifts.Where(s => s.VersionId == shift.VersionId && s.UserId == shift.UserId && s.Id != shift.Id && s.Day == shift.Day &&
-                (
-                    s.StartTime == shift.StartTime ||
-                    (s.StartTime > shift.StartTime && s.StartTime < endTime) ||//new shift ends before old shift starts
-                    (s.StartTime < shift.StartTime && SqlFunctions.DateAdd("minute", (double) s.Duration, s.StartTime) > shift.StartTime)//new shift starts during old shift   
-                )
-                );
-            
-            if (conflictingShifts.Count() > 0)
-            {
-                return new { error = userInstance.User.NickName + " has a conflicting shift", shift = EntitySelector.SelectShift(conflictingShifts) };
+                return new { error = conflicts };
             }
             return null;
         }
+        #endregion
+
+        #region JsonResults
         //
         // GET: /Shift/Validate
         [ShiftManagerAccess]
@@ -122,7 +87,7 @@ namespace ShiftCaptain.Controllers
                 return Json(errors, JsonRequestBehavior.AllowGet);
             }
             db.Shifts.Add(shift);
-            db.SaveChanges();
+            SaveChange();
 
             var shifts = db.Shifts.Where(s => s.Id == shift.Id);
             return Json(EntitySelector.SelectShift(shifts), JsonRequestBehavior.AllowGet);
@@ -142,7 +107,7 @@ namespace ShiftCaptain.Controllers
             shift.Duration = Duration;
 
             db.Entry(shift).State = EntityState.Modified;
-            db.SaveChanges();
+            SaveChange();
 
             var shifts = db.Shifts.Where(s => s.Id == shift.Id);
             return Json(EntitySelector.SelectShift(shifts), JsonRequestBehavior.AllowGet);
@@ -165,20 +130,30 @@ namespace ShiftCaptain.Controllers
             var result = db.ShiftPreferences.Where(s => s.VersionId == VersionId && s.UserId == UserId).Select(s => new { s.VersionId, ShiftId = s.Id, s.User.NickName, s.Day, s.StartTime, s.Duration, s.UserId, s.Preference.CanWork, s.Preference.Color });
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+        #endregion
 
         //
         // GET: /Shift/
-        [VersionRequired]
-        public ActionResult Index()
+        [VersionRequired(Order=1)]
+        [BuildingRequired(Order = 2)]
+        [RoomRequired(Order = 3)]
+        [UserRequired(Order = 4)]
+        public ActionResult Index(String VersionName)
         {
-            int VersionId = GetVersionId();
-            var buildings = db.Buildings.Where(b => b.Rooms.Count(r=>r.RoomInstances.Count(ri=>ri.VersionId == VersionId) > 0) > 0);
+            var version = GetVersion(VersionName);
+            AddVersionDropDown(version);
+            var buildings = db.Buildings.Where(b => b.Rooms.Count(r=>r.RoomInstances.Count(ri=>ri.VersionId == version.Id) > 0) > 0);
             if (buildings.Count() > 0)
             {
                 var first = buildings.First();
                 ViewBag.BuildingId = new SelectList(buildings, "Id", "Name", first.Id);
-                var rooms = db.Rooms.Where(r => r.BuildingId == first.Id && r.RoomInstances.Count(ri => ri.VersionId == VersionId) > 0);
+                var rooms = db.Rooms.Where(r => r.BuildingId == first.Id && r.RoomInstances.Count(ri => ri.VersionId == version.Id) > 0);
                 ViewBag.RoomID = new SelectList(rooms, "Id", "Name", rooms.First().Id);
+            }
+            else
+            {
+                ViewBag.BuildingId = new SelectList(buildings, "Id", "Name");
+                ViewBag.RoomID = new SelectList(new List<Room>(), "Id", "Name");
             }
             
             return View();
@@ -189,11 +164,11 @@ namespace ShiftCaptain.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ShiftManagerAccess]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(String VersionName, int id)
         {
             Shift shift = db.Shifts.Find(id);
             db.Shifts.Remove(shift);
-            db.SaveChanges();
+            SaveChange();
 
             return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }

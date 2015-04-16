@@ -15,7 +15,8 @@ namespace ShiftCaptainTest.CRUDOps
     [TestClass]
     [DeploymentItem("DataSources/Versions.csv", "")]
     public class User : CommonActions
-    {    
+    {
+        List<String> VersionNames = new List<string>();
         [TestMethod]
         public void CRUD()
         {
@@ -26,34 +27,17 @@ namespace ShiftCaptainTest.CRUDOps
                     
             foreach (var userObj in createTable)
             {
-                GoToPage("User", true);
                 var version = CreateDefaultVersion(Clean<string>(userObj, "VERSION_NAME"));
-                var user = new UserView
+                if (!VersionNames.Contains(version.Name))
                 {
-                    EmailAddress = Clean<string>(userObj, "EMAIL_ADDRESS") ?? String.Format("{0}-{1}@emails.com", ticks, ++counter),
-                    Pass = Clean<string>(userObj, "PASS"),
-                    FName = Clean<string>(userObj, "FIRST_NAME"),
-                    LName = Clean<string>(userObj, "LAST_NAME"),
-                    NickName = Clean<string>(userObj, "NICK_NAME"),
-                    EmployeeId = Clean<string>(userObj, "EMPLOYEE_ID"),
-                    PhoneNumber = Clean<string>(userObj, "PHONE_NUMBER"),
-                    IsManager = Clean<bool>(userObj, "IS_MANAGER"),
-                    IsShiftManager = Clean<bool>(userObj, "IS_SHIFT_MANAGER"),
-                    IsActive = Clean<bool>(userObj, "IS_ACTIVE"),
-                    IsMale = Clean<bool>(userObj, "IS_MALE"),
-                    VersionId = version.Id,
-                    MinHours = Clean<decimal?>(userObj, "MIN_HOURS"),
-                    MaxHours = Clean<decimal?>(userObj, "MAX_HOURS"),
-                    Line1 = Clean<string>(userObj, "LINE_1"),
-                    Line2 = Clean<string>(userObj, "LINE_2"),
-                    City = Clean<string>(userObj, "CITY"),
-                    State = Clean<string>(userObj, "STATE"),
-                    ZipCode = Clean<string>(userObj, "ZIP_CODE"),
-                    Country = Clean<string>(userObj, "COUNTRY")
-                };
+                    VersionNames.Add(version.Name);
+                }
+                GoToPage(version.Name, "User", true);
+
+                var user = GetUserView(userObj, version.Id, ticks, ++counter);
 
                 //Change version if necessary
-                var created = CreateUser(user);
+                var created = CreateUser(version.Name, user);
                 if (Clean<bool>(userObj, "VALID"))
                 {
                     Assert.IsTrue(created, String.Format("Failed to Create user - {0}", user.EmailAddress));
@@ -75,12 +59,12 @@ namespace ShiftCaptainTest.CRUDOps
                     user.ZipCode = (user.ZipCode ?? "") + counter;
                     user.Country = (user.Country ?? "") + counter;
 
-                    var edited = EditUser(user);
+                    var edited = EditUser(version.Name, user);
                     Assert.IsTrue(edited, String.Format("Failed editing user {0}", user.EmailAddress));
                     createdUser = db.UserViews.FirstOrDefault(uv => uv.EmailAddress == user.EmailAddress);
                     Assert.IsTrue(CompareUser(user, createdUser), String.Format("User does not match {0}", user.EmailAddress));
 
-                    GoToPage("/User/Delete/" + user.UserId);
+                    GoToPage(version.Name, "/User/Delete/" + user.UserId);
                     ClickAndWaitForNextPage(Driver.FindElement(By.CssSelector("form input[type='submit']")), "User");
 
                     createdUser = db.UserViews.FirstOrDefault(uv => uv.EmailAddress == user.EmailAddress);
@@ -94,7 +78,7 @@ namespace ShiftCaptainTest.CRUDOps
         [TestCleanup]
         public void CleanUp()
         {
-            db = new ShiftCaptainEntities();
+            RefreshDB();
             try
             {
                 var createTable = new DataParser("Users.csv").Tables["Create"];
@@ -107,7 +91,10 @@ namespace ShiftCaptainTest.CRUDOps
             catch (Exception)
             {
             }
-            RemoveDefaultVersions();
+            foreach (var VersionName in VersionNames)
+            {
+                RemoveDefaultVersions(VersionName);
+            }
         }
     }
 }

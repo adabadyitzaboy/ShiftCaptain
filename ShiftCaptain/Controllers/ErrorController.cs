@@ -57,6 +57,42 @@ namespace ShiftCaptain.Controllers
         {
             return View();
         }
+        
+        //
+        // GET: /NoBuildings/
+        [ManagerAccess]
+        [ShiftManagerAccess]
+        public ActionResult NoBuildings(String VersionName)
+        {
+            return View();
+        }
+
+        //
+        // GET: /NoRooms/
+        [ManagerAccess]
+        [ShiftManagerAccess]
+        public ActionResult NoRooms(String VersionName)
+        {
+            return View();
+        }
+
+        //
+        // GET: /NoUsers/
+        [ManagerAccess]
+        [ShiftManagerAccess]
+        public ActionResult NoUsers(String VersionName)
+        {
+            return View();
+        }
+
+        //
+        // GET: /NoPreferences/
+        [ManagerAccess]
+        [ShiftManagerAccess]
+        public ActionResult NoPreferences()
+        {
+            return View();
+        }
 
         protected override void Dispose(bool disposing)
         {

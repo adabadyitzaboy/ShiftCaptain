@@ -32,7 +32,9 @@ var compactDays = function (hours) {
                 maxEnd = end;
             }
         }
-        compacted.push({ Day: day, Duration: maxEnd - (minStart.Hours + minStart.Minutes /60), StartTime: minStart });
+        if (minStart != null) {
+            compacted.push({ Day: day, Duration: maxEnd - (minStart.Hours + minStart.Minutes / 60), StartTime: minStart });
+        }
     }
     console.log("hours", compacted);
     return compacted;
@@ -124,6 +126,7 @@ var movedAround = function (event, data) {
     });
 };
 var validateDrop = function (event, data) {
+    console.log("validating drop start");
     var callback = data.callback;
     var $dragElement = $(this);
     var $dropElement = $(data.target);
@@ -136,7 +139,9 @@ var validateDrop = function (event, data) {
         }
     }
     var shiftInfo = getShiftInfo($dragElement, $dropElement);
+    console.log("validating drop", $dropElement);
     sc.ShiftPreference.validate(shiftInfo, callback, function (xhr, textStatus, errorThrown) {
+        console.log("error validating drop", $dropElement);
         sc.app.displayError(xhr.responseText);
         callback(false);
     });
@@ -176,7 +181,7 @@ var dragComplete = function ($newShift, $temp) {
     //    day = parseInt(tr.attr('day'));
     //    var oldEmptyRow = $(".drop-section ." + dayName[day] + ".empty-row");
     //    if (oldEmptyRow.find(".taken").length > 0) {
-    //        oldEmptyRow.removeClass(".empty-row");
+    //        oldEmptyRow.removeClass("empty-row");
     //        var fakeBody = $("<fake></fake>");
     //        var dayData = currentRoomHours[day];
     //        sc.app.makeRow(1/* just can't be zero*/, fakeBody, dayData, dayData.s, dayData.e, [], dayData.MinStart, dayData.MaxEnd, createShiftElement);

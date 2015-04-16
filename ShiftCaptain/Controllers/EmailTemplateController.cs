@@ -14,7 +14,6 @@ namespace ShiftCaptain.Controllers
 {
     public class EmailTemplateController : BaseController
     {
-        private ShiftCaptainEntities db = new ShiftCaptainEntities();
 
         //
         // GET: /EmailTemplate/
@@ -64,7 +63,7 @@ namespace ShiftCaptain.Controllers
             if (ModelState.IsValid)
             {
                 db.Entry(emailtemplate).State = EntityState.Modified;
-                db.SaveChanges();
+                SaveChange();
                 return RedirectToAction("Index");
             }
             return View(emailtemplate);
